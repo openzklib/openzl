@@ -9,7 +9,7 @@
 
 ## OpenZL Goals and Non-Goals
 **Goals:**
-* build a proof-system agnostic ZK library for blockchain production (support [arkworks/groth16](https://github.com/arkworks-rs/groth16), [zk-garage/plonk](https://github.com/zk-garage/plonk), microsoft/nova)
+* build a proof-system agnostic ZK library for blockchain production (support [arkworks/groth16](https://github.com/arkworks-rs/groth16), [zk-garage/plonk](https://github.com/zk-garage/plonk), [microsoft/nova](https://github.com/microsoft/Nova))
 * build a shallow embedded circuit DSL in Rust that can rule out some common errors using Rust's type systems
 * build common gadgets in this shallow embedded DSL
 * able to compile both prover and verifier to standard WASM and WASMI

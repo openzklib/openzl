@@ -34,3 +34,4 @@ OpenZL will be closely curated by Manta Team and will **NOT** accept open-source
 * Shumo Chu (Co-founder, Manta Network)
 * Luke Pearson (Research Partner, Polychain Capital)
 * Bryan Chen (CTO, Acala Network)
+The funding will be managed in a 2/3 multisig.

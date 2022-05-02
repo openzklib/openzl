@@ -8,16 +8,18 @@
 ## OpenZL Design
 
 ## OpenZL Goals and Non-Goals
+
 **Goals:**
-* build a proof-system agnostic ZK library for blockchain production (support [arkworks/groth16](https://github.com/arkworks-rs/groth16), [zk-garage/plonk](https://github.com/zk-garage/plonk), [microsoft/nova](https://github.com/microsoft/Nova))
-* build a shallow embedded circuit DSL in Rust that can rule out some common errors using Rust's type systems
-* build common gadgets in this shallow embedded DSL
-* able to compile both prover and verifier to standard WASM and WASMI
-* support substrate ecosystem zero-knowledge proof development
+* A *production ready* and *proof-system agnostic* ZK library for blockchain applications (support [arkworks/groth16](https://github.com/arkworks-rs/groth16), [zk-garage/plonk](https://github.com/zk-garage/plonk), [microsoft/nova](https://github.com/microsoft/Nova))
+* **ZIR**: A shallow embedded circuit DSL in Rust that can rule out some common errors using Rust's type systems
+* Common gadgets such as hashing, commitment, accumulators in **ZIR**.
+* Able to compile both prover and verifier to standard WASM and substrate flavored WASMI
+* Tutorials support substrate ecosystem zero-knowledge proof development 
 
 **Non-Goals:**
-* build high-level language like Circom/Cairo
-* build "yet another plonk" and create new fragmentation in ZK tooling space
+* Build high-level language like Circom/Cairo (Would love to see someone else build high level language compiled to ZIR though)
+* Build "yet another plonk" 
+* Create new fragmentation in ZK tooling space
 
 ## OpenZL Roadmap and Milestones
 * Milestone 1 (Prototype): July, 2022

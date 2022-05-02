@@ -1,8 +1,6 @@
-[package]
-name = "openzl"
-version = "0.0.0"
-edition = "2021"
-license = "MIT OR Apache-2.0"
-description = "Open Zero-Knowledge Library"
+[workspace]
+members = [
+    "eclair",
+    "openzl",
+]
 
-[dependencies]

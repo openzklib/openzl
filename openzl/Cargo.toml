@@ -1,5 +1,5 @@
 [package]
-name = "eclair"
+name = "openzl"
 version = "0.0.0"
 edition = "2021"
 readme = "README.md"
@@ -9,7 +9,7 @@ homepage = "https://openzl.org"
 documentation = "https://docs.rs/eclair"
 categories = [""]
 keywords = [""]
-description = "Embedded Circuit Language And Intermediate Representation"
+description = "Open Zero-Knowledge Library"
 
 [package.metadata.docs.rs]
 # To build locally:

@@ -14,7 +14,7 @@
 * **ZIR**: A shallow embedded circuit DSL in Rust that can rule out some common errors using Rust's type systems
 * Common gadgets such as hashing, commitment, accumulators in **ZIR**.
 * Able to compile both prover and verifier to standard WASM and substrate flavored WASMI
-* Tutorials support substrate ecosystem zero-knowledge proof development 
+* Tutorials support substrate ecosystem zero-knowledge proof applications
 
 **Non-Goals:**
 * Build high-level language like Circom/Cairo (Would love to see someone else build high level language compiled to ZIR though)

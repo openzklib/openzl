@@ -78,10 +78,32 @@ The above code snippet describes the logic of checking well-formness of the priv
 One observation here is that the code passed in `Compiler` as an argument. This is due to the extensive design of `openzl`. When the `Compiler` argument is `native`, or simply passing in `()` (since `native` is the default compiler), this piece of `eclair` code will do the native execution. When the `Compiler` arguemtn is `Groth16`, this piece of code generates `R1CS` constraints for Groth16 proof system. When the `Compiler` argument is `Plonk`, this piece of code generates constraints in `Plonk` customized gates representations.
 
 ### Adaptors to Proof Systems
+openzl implements adapters to the different constraints systems used in different underlying proof systems. The current supported underlying constaints systems include:
+* R1CS in [arkworks/groth16](https://github.com/arkworks-rs/groth16) (support level: Production)
+* Plonk constraints in [zk-garage/plonk](https://github.com/zk-garage/plonk) (support level: experimental)
+* Relaxed R1CS in [microsoft/nova](https://github.com/microsoft/Nova) (support level: experimental)
+
+These adapters compile `eclair` to the constraints in different constraints systems. This architecture is inspired by the modern compiler frameworks such as [LLVM](https://github.com/llvm/llvm-project).  In addition to merely being adapters, many proof system specific optimizations can be implemented in adapter level. For example, constraint reducing techniques to leverage customized gates in Plonk to reduce the constraints size in Plonk.
 
 ## Existing Prototype
 
-## Tutorials and Documentation
+Openzl is not building out of thin air. The majority of the code is live in Manta's internal infrastructure now ([manta-rs](https://github.com/Manta-Network/manta-rs). Below is the list of existing or migratable features:
+
+| feature  | code |  audit | 
+|----------|------| -------|
+| gadget/hashing |  Complete | Not start | 
+| gadget/commitment |  In progress  |  Not start |
+| gadget/accumulator |  Compelete  |  Not start |
+| eclair | Protype |  Not start |
+| adapter/Groth16 | Complete | Not start |
+| adapter/Plonk | In progress | Not start |
+| adapter/Nova | Not start | Not start |
+
+## Tutorials 
+
+We will provide substrate specific tutorials to show case how to code an end to end example using openzl. Potential examples includes:
+* Build a tornado.cash styled private IOU systems.
+* Build a simple zk-rollup in for substrate-based payment.
 
 
 ## OpenZL Roadmap and Milestones
@@ -91,9 +113,15 @@ One observation here is that the code passed in `Compiler` as an argument. This 
 * Milestone 3 (Audit): Nov. 2022
   Potential auditors: ABDK, Least Authority, Trail of Bits
 
-## Open-Source Contributions
+## Project Budgets:
+| Item  |  Budgets (USD) |  Remark  |
+|-------|----------|---------|
+| Developer salary  | 360,000  | (4 cryptographic engineer * 6 months + 1 devop engineer * 0.5 month )  |
+| Audit   | 600,000 |  `40,000` LOC (currently, manta-rs has about 30,000 LOC) * `15 USD/LOC` (quote from ABDK) |
+| CI/CD      |  4,000  |  CI/CD for openzl |
+| Misc.   | 1,000 | DNS, Website Hosting, ect |
 
-OpenZL will be closely curated by Manta Team and will **NOT** accept open-source contributions unless communicated with Manta Team.
+
 
 ## Openzl team
 
@@ -105,9 +133,12 @@ Oversight commitee will manage the overall execution and the financil budget of 
 
 Funding and spendings will be managed in a 2/3 multisig.
 
-### Cryptographic Advisor
-
-### Developing Team
+### Developing Team (Alphabetical) 
+* Boyuan Feng: Cryptogrpahic Engineer at Manta, PhD Computer Science from UCSB, extensive zero-knowledge proof compiler experiences (e.g. first author of [ZEN](https://eprint.iacr.org/2021/087)).
+* Brandon Gome: Cryptographic Engineer at Manta, BS Math from Rutgers, main author of [manta-rs](https://github.com/Manta-Network/manta-rs).
+* Todd Norton: Cryptographic Engineer at Manta, PhD Physics from Caltech.
+* Tom Shen: Cryptographic Engineer at Manta, BS Computer Science from UC Berkeley, [arkworks](https://github.com/arkworks-rs) core contributor. 
+* Rob Thijssen: Devop Engineer at Manta, ex-Mozilla engineer.
 
 ## References
 1. [poseidon hash](https://eprint.iacr.org/2019/458.pdf)

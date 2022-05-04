@@ -39,7 +39,7 @@ These gadgets are composable and can be combined to build more powerful protocol
 Embedded Circuit Language and Intermediate Representation (eclair) is a shallow embedded DSL within Rust that serves the circuit description language in openzl stack. It has the following design considerations:
 * *Proof system agnostic*: `eclair` is an IR that describe the circuit logic instead of lower level proof systems specific semantics and optimizations.
 * *Unifying native and constraint code*: Writing zero-knowledge proof code in common framework like `arkworks`, it requires the programmers writing the same logic twice, one for constraints generation, one for native execution. This create a huge burden on developers also error prone. `eclair` solves this problem elegantly (see later example) by introducing the concept of "compiler". Openzl developers only need to write the circuit logic in `eclair` once, and it compiles to both native code and constraints. Openzl developers not only write circuit logic one, also don't have to worry the disparity between the native code and constraint generating code (which is certainly a bug). In addition, openzl automatically generates sanity check code for both native execution and constraints generation.
-* *ruling errors using Rust type systems*: TBD 
+* *ruling out common errors*: At *compile time*, openzl's eclair compiler checks that private witness stays private and the public input stays public. For example, if a circuit implementers misuse the private witness allocation, this could cause a leakage of sercret key in the protocol implementation.   
 
 Below is an example of circuit logic in `eclair` (this is Manta testnet V2 code in [manta-rs](https://github.com/Manta-Network/manta-rs) ):
 ```rust
@@ -72,7 +72,10 @@ where
     }
 }
 ```
-TODO: describe the code above in plain English, and argue why this is a nice way of writing circuit.
+
+The above code snippet describes the logic of checking well-formness of the private input in private transfer. Line 57 deverives the public key from the secret key. Then, Line 58 generates the UTXO from the `ephemeral_secret_key`, `public_spend_key`, and the asset. Line 64 checks the membership proof of the UTXO is valid. Line 69 generates the `void_number` from the secret key and the UTXO. Finally, line 70 checks the computed void number is the same as we passed in as a public input. 
+
+One observation here is that the code passed in `Compiler` as an argument. This is due to the extensive design of `openzl`. When the `Compiler` argument is `native`, or simply passing in `()` (since `native` is the default compiler), this piece of `eclair` code will do the native execution. When the `Compiler` arguemtn is `Groth16`, this piece of code generates `R1CS` constraints for Groth16 proof system. When the `Compiler` argument is `Plonk`, this piece of code generates constraints in `Plonk` customized gates representations.
 
 ### Adaptors to Proof Systems
 

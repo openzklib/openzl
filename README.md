@@ -131,6 +131,7 @@ We will provide substrate specific tutorials to show case how to code an end to 
 | CI/CD      |  4,000  |  CI/CD for openzl |
 | Misc.   | 1,000 | DNS, Website Hosting, ect |
 
+Totol budget: 1,001,000 USD (will converted to DOT using the exchange rate on application)
 
 ## Openzl team
 

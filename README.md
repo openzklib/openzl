@@ -106,12 +106,22 @@ We will provide substrate specific tutorials to show case how to code an end to 
 * Build a simple zk-rollup in for substrate-based payment.
 
 
-## OpenZL Roadmap and Milestones
+## Openzl Milestones and Deliveries
 
 * Milestone 1 (Prototype): July, 2022
+   * Code complete for all gadget libraries
+   * Code complete for `eclair`
+   * Code complete for `Groth16` adapter
+   * End to end example and test using `Groth16` backend
 * Milestone 2 (Feature Complete): Sep, 2022
+   * Code complete (experimental) for `plonk` backend
+   * Code complete (experiemental) for `nova` backend
+   * Spec complete for security audit 
 * Milestone 3 (Audit): Nov. 2022
   Potential auditors: ABDK, Least Authority, Trail of Bits
+  * Audit complete for all production level support code
+  * Substrate based tutorials
+  * Trusted-setup toolings 
 
 ## Project Budgets:
 | Item  |  Budgets (USD) |  Remark  |
@@ -122,26 +132,23 @@ We will provide substrate specific tutorials to show case how to code an end to 
 | Misc.   | 1,000 | DNS, Website Hosting, ect |
 
 
-
 ## Openzl team
 
 ### Oversight Committee
 Oversight commitee will manage the overall execution and the financil budget of openzl,
-* Shumo Chu (Co-founder, Manta Network)
-* Luke Pearson (Research Partner, Polychain Capital)
-* Bryan Chen (CTO, Acala Network)
+* **Shumo Chu** (Co-founder, Manta Network)
+* **Luke Pearson** (Research Partner, Polychain Capital)
+* **Bryan Chen** (CTO, Acala Network)
 
 Funding and spendings will be managed in a 2/3 multisig.
 
 ### Developing Team (Alphabetical) 
-* Boyuan Feng: Cryptogrpahic Engineer at Manta, PhD Computer Science from UCSB, extensive zero-knowledge proof compiler experiences (e.g. first author of [ZEN](https://eprint.iacr.org/2021/087)).
-* Brandon Gome: Cryptographic Engineer at Manta, BS Math from Rutgers, main author of [manta-rs](https://github.com/Manta-Network/manta-rs).
-* Todd Norton: Cryptographic Engineer at Manta, PhD Physics from Caltech.
-* Tom Shen: Cryptographic Engineer at Manta, BS Computer Science from UC Berkeley, [arkworks](https://github.com/arkworks-rs) core contributor. 
-* Rob Thijssen: Devop Engineer at Manta, ex-Mozilla engineer.
+* **Boyuan Feng**: Cryptogrpahic Engineer at Manta, PhD Computer Science from UCSB, extensive zero-knowledge proof compiler experiences (e.g. first author of [ZEN](https://eprint.iacr.org/2021/087)).
+* **Brandon Gome**: Cryptographic Engineer at Manta, BS Math from Rutgers, main author of [manta-rs](https://github.com/Manta-Network/manta-rs).
+* **Todd Norton**: Cryptographic Engineer at Manta, PhD Physics from Caltech.
+* **Tom Shen**: Cryptographic Engineer at Manta, BS Computer Science from UC Berkeley, [arkworks](https://github.com/arkworks-rs) core contributor. 
+* **Rob Thijssen**: Devop Engineer at Manta, ex-Mozilla engineer.
 
 ## References
 1. [poseidon hash](https://eprint.iacr.org/2019/458.pdf)
-
-
 

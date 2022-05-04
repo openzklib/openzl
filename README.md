@@ -1,6 +1,6 @@
 # openzl
+![OpenZL](https://user-images.githubusercontent.com/720571/166740650-1870eacb-28ba-4421-86ab-4bd0436897d4.svg)
 
-![openzl](https://user-images.githubusercontent.com/720571/166172246-bf37c77e-51e2-4176-8195-70a9361319d7.svg)
 
 ## Overview
 

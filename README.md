@@ -150,12 +150,12 @@ We will provide `substrate`-specific tutorials to show case how to code an end-t
 ## Project Budgets:
 | Item  |  Budgets (USD) |  Remark  |
 |-------|----------|---------|
-| Developer Salary  | 360,000  | (4 cryptographic engineer * 6 months + 1 devop engineer * 0.5 month )  |
+| Developer Salary  | 360,000  | (4 cryptographic engineers * 6 months + 1 devop engineer * 0.5 month )  |
 | Audit   | 600,000 |  `40,000` LOC (currently, `manta-rs` has about 30,000 LOC) * `15 USD/LOC` (quote from ABDK) |
-| CI/CD      |  4,000  |  CI/CD for openzl |
+| CI/CD      |  40,000  |  CI/CD for openzl |
 | Misc.   | 1,000 | DNS, Website Hosting, ect |
 
-Totol budget: 1,001,000 USD (will converted to DOT using the exchange rate on application)
+Totol budget: 1,001,000 USD (will be converted to DOT using the exchange rate on application)
 
 ## OpenZL team
 

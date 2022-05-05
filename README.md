@@ -1,6 +1,6 @@
 # OpenZL
 
-![OpenZL](https://user-images.githubusercontent.com/720571/166742171-cdf519f6-7af6-46c5-90b7-b24f15503c14.svg)
+![OpenZL](https://user-images.githubusercontent.com/720571/167014503-10117012-c898-4d54-802a-966eb02dab98.svg)
 
 ## Overview
 
@@ -150,9 +150,9 @@ We will provide `substrate`-specific tutorials to show case how to code an end-t
 ## Project Budgets:
 | Item  |  Budgets (USD) |  Remark  |
 |-------|----------|---------|
-| Developer Salary  | 360,000  | (4 cryptographic engineers * 6 months + 1 devop engineer * 0.5 month )  |
+| Developer Salary  | 365,000  | (4 cryptographic engineers * 6 months + 1 devop engineer * 0.5 month )  |
 | Audit   | 600,000 |  `40,000` LOC (currently, `manta-rs` has about 30,000 LOC) * `15 USD/LOC` (quote from ABDK) |
-| CI/CD      |  40,000  |  CI/CD for openzl |
+| CI/CD      |  5,000  |  CI/CD for OpenZL |
 | Misc.   | 1,000 | DNS, Website Hosting, ect |
 
 Totol budget: 1,001,000 USD (will be converted to DOT using the exchange rate on application)

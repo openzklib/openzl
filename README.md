@@ -33,16 +33,16 @@ OpenZL consists of 3 parts:
 
 OpenZL provides list of cryptographic primitives with *optimized* zero-knowledge proof implementations in `eclair`. 
 These gadgets are composable and can be combined to build more powerful protocols such as anonymous payment (ZCash/Manta) or zk-rollups. The gadget library that OpenZL provides on its initial release includes:
-* *hashing gadget*: an optimized implementation of the Poseidon Hash Function[1], with parameterized arity (2, 4, 8)
+* *hashing gadget*: an optimized implementation of the Poseidon Hash Function [1], with parameterized arity (2, 4, 8)
 * *accumulator gadget*: Merkle tree gadget that supports zero-knowlegde membership proofs. The Merkle tree gadget supports incremental updates as well.
-* *commitment gadget*: A commitment scheme that is both *binding* and *hiding*, this commitment scheme is build on top of the *hashing gadget*.
+* *commitment gadget*: A commitment scheme that is both *binding* and *hiding*. This commitment scheme is built on top of the *hashing gadget*.
 
 ### Embedded Circuit Language And Intermediate Representation (`eclair`)
 
 Embedded Circuit Language And Intermediate Representation (`eclair`) is a shallow embedded DSL within Rust that serves the circuit description language in the OpenZL stack. It has the following design considerations:
-* *Proof system agnostic*: `eclair` is an IR that describe the circuit logic instead of lower level proof systems specific semantics and optimizations.
-* *Unifying native and constraint code*: Writing zero-knowledge proof code in common framework like `arkworks`, it requires the programmers writing the same logic twice, one for constraints generation, one for native execution. This create a huge burden on developers and is also error prone. `eclair` solves this problem elegantly (see later example) by introducing the concept of a "compiler". Developers using only need to write the circuit logic in `eclair` once, and it compiles to both native code and constraints. Developers not only write circuit logic one, they also don't have to worry about the disparity between the native code and constraint generating code (which could certainly be an existing bug in current applications). In addition, `eclair` automatically generates sanity check code for both native execution and constraints generation.
-* *ruling out common errors*: At *compile time*, `eclair` checks that private witnesses stay private and the public inputs stay public. For example, if a circuit implementers that are not using `eclair` misuse private witness allocation, this could cause a leakage of sercret key in the protocol implementation.   
+* *Proof system agnostic*: `eclair` is an IR that describes the circuit logic instead of lower-level proof-systems-specific semantics and optimizations.
+* *Unifying native and constraint code*: Writing zero-knowledge proof code in common framework like `arkworks`, it requires programmers to write the same logic twice -- one for constraints generation, one for native execution. This creates a huge burden on developers and is also error-prone. `eclair` solves this problem elegantly (see later an example) by introducing the concept of a "compiler". Developers only need to write the circuit logic in `eclair` once, and it compiles to both native code and constraints. Developers not only write circuit logic once, they also don't have to worry about the disparity between the native code and the constraint generating code (which could certainly be an existing bug in current applications). In addition, `eclair` automatically generates sanity check code for both native execution and constraints generation.
+* *ruling out common errors*: At *compile time*, `eclair` checks that private witnesses stay private and the public inputs stay public. For example, if a circuit implementer that is not using `eclair` misuses private witness allocation, this could cause a leakage of sercret key in the protocol implementation.   
 
 Below is an example of a sub-circuit defined in `eclair` (this is Manta testnet V2 code in [manta-rs](https://github.com/Manta-Network/manta-rs)):
 ```rust
@@ -103,16 +103,16 @@ One observation here is that the code passed in `compiler` as an argument. When 
 
 ### Adaptors to Proof Systems
 
-OpenZL implements adapters to different constraints systems used in different underlying proof systems. The current supported underlying constaints systems include:
+OpenZL implements adaptors to different constraint systems used in different underlying proof systems. The current supported underlying constaint systems include:
 * R1CS in [`arkworks/groth16`](https://github.com/arkworks-rs/groth16) (support level: production)
 * Plonk constraints in [`zk-garage/plonk`](https://github.com/zk-garage/plonk) (support level: experimental)
 * Relaxed R1CS in [`microsoft/nova`](https://github.com/microsoft/Nova) (support level: experimental)
 
-These adapters compile `eclair` to the constraints in different constraint systems. This architecture is inspired by the modern compiler frameworks such as [LLVM](https://github.com/llvm/llvm-project). In addition to merely being adapters, many proof system specific optimizations can be implemented at the adapter level. For example, constraint reducing techniques to leverage customized gates in Plonk to reduce the constraints size in Plonk, that would not be applicable in R1CS systems.
+These adapters compile `eclair` to the constraints in different constraint systems. This architecture is inspired by the modern compiler frameworks such as [LLVM](https://github.com/llvm/llvm-project). In addition to merely being adapters, many proof-system-specific optimizations can be implemented at the adapter level. For example, at the adapter level, we can leverage customized gates in Plonk to reduce the constraint size in Plonk, which would not be applicable in R1CS systems.
 
 ## Existing Prototype
 
-OpenZL is not being built out of thin air. The majority of the code is live in Manta's internal infrastructure now ([manta-rs](https://github.com/Manta-Network/manta-rs). Below is the list of existing or migratable features:
+OpenZL is not being built out of thin air. The majority of the code is live in Manta's internal infrastructure now ([manta-rs](https://github.com/Manta-Network/manta-rs)). Below is the list of existing or migratable features:
 
 | feature  | code |  audit | 
 |----------|------| -------|
@@ -126,17 +126,17 @@ OpenZL is not being built out of thin air. The majority of the code is live in M
 
 ## Tutorials 
 
-We will provide `substrate` specific tutorials to show case how to code an end-to-end example using the OpenZL libraries. Potential examples includes:
+We will provide `substrate`-specific tutorials to show case how to code an end-to-end example using the OpenZL library. Potential examples include:
 * Build a `tornado.cash` styled private IOU system.
-* Build a simple zk-rollup in for substrate-based payment.
+* Build a simple zk-rollup for substrate-based payment.
 
 ## OpenZL Milestones and Deliveries
 
 * Milestone 1 (Prototype): July, 2022
    * Code complete for all gadget libraries
    * Code complete for `eclair`
-   * Code complete for `groth16` adapter
-   * End to end example and test using `groth16` backend
+   * Code complete for `groth16` adaptor
+   * End-to-end example and test using `groth16` backend
 * Milestone 2 (Feature Complete): Sep, 2022
    * Code complete (experimental) for `plonk` backend
    * Code complete (experiemental) for `nova` backend

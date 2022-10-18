@@ -22,5 +22,9 @@ is-it-maintained-issue-resolution = { repository = "OpenZkLib/openzl" }
 is-it-maintained-open-issues = { repository = "OpenZkLib/openzl" }
 maintenance = { status = "actively-developed" }
 
-[dependencies]
+[features]
+# Allocation
+alloc = ["openzl-util/alloc"]
 
+[dependencies]
+openzl-util = { path = "../openzl-util", default-features = false }

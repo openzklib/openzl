@@ -5,4 +5,8 @@
 #![forbid(rustdoc::broken_intra_doc_links)]
 #![forbid(missing_docs)]
 
+#[cfg(feature = "alloc")]
 extern crate alloc;
+
+#[doc(inline)]
+pub use openzl_util as util;

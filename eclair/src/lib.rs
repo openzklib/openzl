@@ -15,6 +15,10 @@ pub mod execution;
 pub mod num;
 pub mod ops;
 
+#[cfg(feature = "derive")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "derive")))]
+pub use eclair_derive::*;
+
 use openzl_util::{create_seal, seal};
 
 /// Native Compiler Marker Trait

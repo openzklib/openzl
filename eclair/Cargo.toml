@@ -26,9 +26,5 @@ maintenance = { status = "actively-developed" }
 # Allocation
 alloc = ["openzl-util/alloc"]
 
-# Derive Macros
-derive = ["eclair-derive"]
-
 [dependencies]
-eclair-derive = { path = "../eclair-derive", optional = true, default-features = false }
 openzl-util = { path = "../openzl-util", default-features = false }

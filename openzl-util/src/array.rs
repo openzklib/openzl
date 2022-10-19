@@ -14,7 +14,7 @@ use {
     alloc::boxed::Box,
 };
 
-#[cfg(all(feature = "serde", feature = "serde_with"))]
+#[cfg(feature = "serde")]
 use crate::serde::{Deserialize, Serialize};
 
 /// Error Message for the [`into_array_unchecked`] and [`into_boxed_array_unchecked`] Functions
@@ -220,7 +220,7 @@ macro_rules! impl_array_traits {
 /// compatibility with [`serde`](https://docs.rs/serde). The type `Array<T, N>` is mostly a drop-in
 /// replacement for `[T; N]`.
 #[cfg_attr(
-    all(feature = "serde", feature = "serde_with"),
+    feature = "serde",
     derive(Deserialize, Serialize),
     serde(
         bound(deserialize = "T: Deserialize<'de>", serialize = "T: Serialize"),
@@ -233,7 +233,7 @@ macro_rules! impl_array_traits {
 pub struct Array<T, const N: usize>(
     /// Array Data
     #[cfg_attr(
-        all(feature = "serde", feature = "serde_with"),
+        feature = "serde",
         serde(with = "serde_with::As::<[serde_with::Same; N]>")
     )]
     pub [T; N],
@@ -333,7 +333,7 @@ impl<T, const N: usize> From<Array<T, N>> for [T; N] {
 #[cfg(feature = "alloc")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "alloc")))]
 #[cfg_attr(
-    all(feature = "serde-alloc", feature = "serde-array"),
+    feature = "serde",
     derive(Deserialize, Serialize),
     serde(
         bound(deserialize = "T: Deserialize<'de>", serialize = "T: Serialize"),
@@ -346,7 +346,7 @@ impl<T, const N: usize> From<Array<T, N>> for [T; N] {
 pub struct BoxArray<T, const N: usize>(
     /// Array Data
     #[cfg_attr(
-        all(feature = "serde-alloc", feature = "serde-array"),
+        feature = "serde",
         serde(with = "serde_with::As::<Box<[serde_with::Same; N]>>")
     )]
     pub Box<[T; N]>,

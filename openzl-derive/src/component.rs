@@ -1,4 +1,4 @@
-//! Alias Attribute Macro
+//! `#[component]` Attribute Macro
 
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
@@ -9,7 +9,7 @@ use syn::{
     Attribute, Ident, Result, Visibility,
 };
 
-/// Alias Declaration
+/// Component Declaration
 pub struct Declaration {
     /// Attributes
     attrs: Vec<Attribute>,
@@ -53,14 +53,25 @@ pub fn transform(args: TokenStream, input: TokenStream) -> TokenStream {
         ident,
     } = parse_macro_input!(input as Declaration);
     let trait_ident = format_ident!("{}Type", ident);
-    let associated_type_doc = format!("{} Type", ident);
-    let type_alias_doc = format!("{} Type Alias for the [`{}`] Trait", ident, trait_ident);
+    let associated_type_doc = "Component Type";
+    let type_alias_doc = format!(
+        "[`{}`]({trait_ident}::{ident}) Type Alias for the [`{}`] Trait",
+        ident, trait_ident
+    );
     TokenStream::from(quote!(
         #(#attrs)*
         #vis #unsafety trait #trait_ident {
             #[doc = #associated_type_doc]
             type #ident;
         }
+
+        impl<T> #trait_ident for &T
+        where
+            T: #trait_ident,
+        {
+            type #ident = T::#ident;
+        }
+
         #[doc = #type_alias_doc]
         #vis type #ident<T> = <T as #trait_ident>::#ident;
     ))

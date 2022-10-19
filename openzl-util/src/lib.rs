@@ -61,8 +61,8 @@ pub use derivative;
 #[doc(inline)]
 pub use serde;
 
-#[cfg(feature = "serde_with")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde_with")))]
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 #[doc(inline)]
 pub use serde_with;
 

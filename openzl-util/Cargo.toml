@@ -24,13 +24,13 @@ maintenance = { status = "actively-developed" }
 
 [features]
 # Allocation
-alloc = ["serde?/alloc"]
+alloc = ["serde?/alloc", "serde_with?/alloc"]
 
 # Enable `getrandom` Entropy Source
 getrandom = ["rand_core/getrandom"]
 
 # Serialization
-serde = ["dep:serde", "rand_chacha?/serde1"]
+serde = ["dep:serde", "rand_chacha?/serde1", "serde_with"]
 
 # Standard Library
 std = ["alloc", "crossbeam-channel?/std", "rand_chacha?/std", "serde?/std"]

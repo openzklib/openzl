@@ -1,15 +1,15 @@
 [package]
-name = "eclair-derive"
+name = "openzl-derive"
 version = "0.0.0"
 edition = "2021"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/openzklib/openzl"
 homepage = "https://openzl.org"
-documentation = "https://docs.rs/eclair-derive"
+documentation = "https://docs.rs/openzl-derive"
 categories = [""]
 keywords = [""]
-description = "ECLAIR Macros"
+description = "OpenZL Macros"
 
 [package.metadata.docs.rs]
 # To build locally:

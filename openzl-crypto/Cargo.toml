@@ -46,6 +46,7 @@ serde = [
 
 # Standard Library
 std = [
+    "alloc",
     "ark-bls12-381?/std",
     "ark-bn254?/std",
     "ark-ec?/std",

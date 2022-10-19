@@ -8,16 +8,15 @@
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-// pub mod accumulator;
+pub mod accumulator;
 pub mod algebra;
-// pub mod commitment;
-// pub mod constraint;
-// pub mod encryption;
+pub mod constraint;
+pub mod encryption;
 pub mod hash;
 pub mod key;
 // pub mod merkle_tree;
-// pub mod password;
-// pub mod permutation;
+pub mod password;
+pub mod permutation;
 pub mod signature;
 
 /* TODO:

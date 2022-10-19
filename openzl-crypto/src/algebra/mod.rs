@@ -1,13 +1,16 @@
 //! Algebraic Constructions
 
-use alloc::vec::Vec;
 use core::borrow::Borrow;
-use eclair::{
-    bool::{Bool, ConditionalSelect},
-    num::Zero,
-    Has,
+
+#[cfg(feature = "alloc")]
+use {
+    eclair::{
+        bool::{Bool, ConditionalSelect},
+        num::Zero,
+        Has,
+    },
+    openzl_util::{into_array_unchecked, vec::Vec},
 };
-use openzl_util::into_array_unchecked;
 
 pub mod diffie_hellman;
 
@@ -101,6 +104,8 @@ impl<G, const N: usize> IntoIterator for PrecomputedBaseTable<G, N> {
 
 impl<G, const N: usize> PrecomputedBaseTable<G, N> {
     /// Builds a new [`PrecomputedBaseTable`] from a given `base`, such that `table[i] = base * 2^i`.
+    #[cfg(feature = "alloc")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "alloc")))]
     #[inline]
     pub fn from_base<COM>(base: G, compiler: &mut COM) -> Self
     where
@@ -117,12 +122,15 @@ impl<G, const N: usize> PrecomputedBaseTable<G, N> {
 }
 
 /// Group Element Table for Windowed Point Multiplication
+#[cfg(feature = "alloc")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "alloc")))]
 #[derive(Clone, Debug, Default, Eq, Hash, PartialEq)]
 pub struct Window<G> {
     /// Multiplication Table
     table: Vec<G>,
 }
 
+#[cfg(feature = "alloc")]
 impl<G> Window<G> {
     /// Creates a new [`Window`] from `table` without checking its correctness.
     #[inline]
@@ -294,11 +302,16 @@ pub mod security {
 #[cfg(feature = "test")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "test")))]
 pub mod test {
-    use super::*;
-    use eclair::{bool::Assert, cmp::PartialEq};
+    #[cfg(feature = "alloc")]
+    use {
+        super::*,
+        eclair::{bool::Assert, cmp::PartialEq},
+    };
 
-    /// Tests if windowed scalar multiplication of the bit decomposition of `scalar` with `point` returns the
-    /// product `scalar` * `point`
+    /// Tests if windowed scalar multiplication of the bit decomposition of `scalar` with `point`
+    /// returns the product `scalar` * `point`
+    #[cfg(feature = "alloc")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "alloc")))]
     #[inline]
     pub fn window_correctness<S, G, F, B, COM>(
         window_size: usize,
@@ -317,9 +330,9 @@ pub mod test {
         COM: Assert,
     {
         let product = point.scalar_mul(scalar, compiler);
-        let window = Window::new(window_size, point, compiler);
-        let bits = Vec::from_iter(bit_conversion(scalar, compiler)); // TODO: use iter instead of Vec.
-        let windowed_product = window.scalar_mul(&bits, compiler);
+        // TODO: use an iterator here instead of `Vec`.
+        let windowed_product = Window::new(window_size, point, compiler)
+            .scalar_mul(&Vec::from_iter(bit_conversion(scalar, compiler)), compiler);
         product.assert_equal(&windowed_product, compiler);
     }
 }

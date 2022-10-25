@@ -49,6 +49,47 @@ where
     }
 }
 
+/// Partial Equivalence Relation Compiler Reflection
+pub trait HasPartialEq<L, R>: Has<bool> {
+    /// Returns `true` if `lhs` and `rhs` are equal inside of the `self` compiler.
+    fn eq(&mut self, lhs: &L, rhs: &R) -> Bool<Self>;
+
+    /// Returns `true` if `lhs` and `rhs` are not equal inside of the `self` compiler.
+    #[inline]
+    fn ne(&mut self, lhs: &L, rhs: &R) -> Bool<Self>
+    where
+        Bool<Self>: Not<Self, Output = Bool<Self>>,
+    {
+        self.eq(lhs, rhs).not(self)
+    }
+
+    /// Asserts that `lhs` and `rhs` are equal inside of the `self` compiler..
+    ///
+    /// # Implementation Note
+    ///
+    /// This method is an optimization path for the case when comparing for equality and then
+    /// asserting is more expensive than a custom assertion.
+    #[inline]
+    fn assert_equal(&mut self, lhs: &L, rhs: &R)
+    where
+        Self: Assert,
+    {
+        let are_equal = self.eq(lhs, rhs);
+        self.assert(&are_equal);
+    }
+}
+
+impl<COM, L, R> HasPartialEq<L, R> for COM
+where
+    L: PartialEq<R, COM>,
+    COM: Has<bool>,
+{
+    #[inline]
+    fn eq(&mut self, lhs: &L, rhs: &R) -> Bool<Self> {
+        lhs.eq(rhs, self)
+    }
+}
+
 /// Implements [`PartialEq`] for the given `$type`.
 macro_rules! impl_partial_eq {
     ($($type:tt),* $(,)?) => {
@@ -204,6 +245,16 @@ where
 /// Equality
 pub trait Eq<COM = ()>: PartialEq<Self, COM>
 where
+    COM: Has<bool>,
+{
+}
+
+/// Equality Compiler Reflection
+pub trait HasEq<T>: HasPartialEq<T, T> {}
+
+impl<COM, T> HasEq<T> for COM
+where
+    T: Eq<COM>,
     COM: Has<bool>,
 {
 }

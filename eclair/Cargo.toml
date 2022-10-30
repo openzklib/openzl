@@ -4,7 +4,7 @@ version = "0.0.0"
 edition = "2021"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/OpenZkLib/openzl"
+repository = "https://github.com/openzklib/openzl"
 homepage = "https://openzl.org"
 documentation = "https://docs.rs/eclair"
 categories = [""]
@@ -18,9 +18,13 @@ all-features = true
 rustdoc-args = ["--cfg", "doc_cfg"]
 
 [badges]
-is-it-maintained-issue-resolution = { repository = "OpenZkLib/openzl" }
-is-it-maintained-open-issues = { repository = "OpenZkLib/openzl" }
+is-it-maintained-issue-resolution = { repository = "openzklib/openzl" }
+is-it-maintained-open-issues = { repository = "openzklib/openzl" }
 maintenance = { status = "actively-developed" }
 
-[dependencies]
+[features]
+# Allocation
+alloc = ["openzl-util/alloc"]
 
+[dependencies]
+openzl-util = { path = "../openzl-util", default-features = false }

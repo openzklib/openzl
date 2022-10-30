@@ -179,4 +179,3 @@ Funding and spendings will be managed in a 2/3 multisig.
 ## References
 
 [1]. [Poseidon Permutation](https://eprint.iacr.org/2019/458.pdf)
-

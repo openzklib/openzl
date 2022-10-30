@@ -1,15 +1,15 @@
 [package]
-name = "openzl"
+name = "openzl-derive"
 version = "0.0.0"
 edition = "2021"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/openzklib/openzl"
 homepage = "https://openzl.org"
-documentation = "https://docs.rs/eclair"
+documentation = "https://docs.rs/openzl-derive"
 categories = [""]
 keywords = [""]
-description = "Open Zero-Knowledge Library"
+description = "OpenZL Macros"
 
 [package.metadata.docs.rs]
 # To build locally:
@@ -22,10 +22,11 @@ is-it-maintained-issue-resolution = { repository = "openzklib/openzl" }
 is-it-maintained-open-issues = { repository = "openzklib/openzl" }
 maintenance = { status = "actively-developed" }
 
-[features]
-# Allocation
-alloc = ["openzl-util/alloc"]
+[lib]
+proc-macro = true
 
 [dependencies]
-openzl-derive = { path = "../openzl-derive", default-features = false }
-openzl-util = { path = "../openzl-util", default-features = false }
+proc-macro2 = { version = "1.0.47", default-features = false, features = ["proc-macro"] }
+quote = { version = "1.0.21", default-features = false, features = ["proc-macro"] }
+syn = { version = "1.0.90", default-features = false, features = ["clone-impls", "derive", "extra-traits", "full", "parsing", "printing", "proc-macro"] }
+

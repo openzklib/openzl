@@ -1,0 +1,17 @@
+name: Release
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  release-on-push:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: rymndhng/release-on-push-action@v0.25.0
+        with:
+          bump_version_scheme: norelease
+          tag_prefix: v
+          use_github_release_notes: true
+          max_commits: 128

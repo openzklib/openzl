@@ -15,4 +15,3 @@ jobs:
           tag_prefix: v
           use_github_release_notes: true
           max_commits: 128
-

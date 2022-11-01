@@ -4,4 +4,3 @@
 - [ ] Added the `L-skip` label and the relevant `release` label to this PR
 - [ ] Updated the [`CHANGELOG.md`](https://github.com/openzklib/openzl/blob/main/CHANGELOG.md)
 - [ ] Updated the version number in all the relevant `Cargo.toml` files
-

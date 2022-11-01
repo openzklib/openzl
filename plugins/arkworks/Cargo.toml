@@ -39,5 +39,5 @@ openzl-crypto = { path = "../../openzl-crypto", default-features = false }
 openzl-util = { path = "../../openzl-util", default-features = false }
 
 [dev-dependencies]
+openzl-plugin-arkworks = { path = ".", default-features = false, features = ["ark-bn254"] }
 openzl-util = { path = "../../openzl-util", default-features = false, features = ["getrandom"] }
-

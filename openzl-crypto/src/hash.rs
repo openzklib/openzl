@@ -48,4 +48,3 @@ pub mod security {
     /// find any collision for any input to break this assumption.
     pub trait CollisionResistance: SecondPreimageResistance {}
 }
-

@@ -8,6 +8,7 @@ use eclair::{
         Constant, Variable,
     },
     bool::Assert,
+    cmp::PartialEq,
     ops::{BitAnd, Not},
     Has,
 };
@@ -62,7 +63,7 @@ where
     }
 }
 
-impl<F, const D: usize> Variable<Public, Compiler<F, D>> for Bool<F, D>
+impl<F, const D: usize> Variable<Secret, Compiler<F, D>> for Bool<F, D>
 where
     F: RichField + Extendable<D>,
 {
@@ -79,7 +80,7 @@ where
     }
 }
 
-impl<F, const D: usize> Variable<Secret, Compiler<F, D>> for Bool<F, D>
+impl<F, const D: usize> Variable<Public, Compiler<F, D>> for Bool<F, D>
 where
     F: RichField + Extendable<D>,
 {
@@ -117,5 +118,15 @@ where
     #[inline]
     fn not(self, compiler: &mut Compiler<F, D>) -> Self::Output {
         Self::new(compiler.0.not(self.target))
+    }
+}
+
+impl<F, const D: usize> PartialEq<Self, Compiler<F, D>> for Bool<F, D>
+where
+    F: RichField + Extendable<D>,
+{
+    #[inline]
+    fn eq(&self, rhs: &Self, compiler: &mut Compiler<F, D>) -> Self {
+        todo!()
     }
 }

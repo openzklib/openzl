@@ -47,23 +47,6 @@ where
     }
 }
 
-impl<F, const D: usize> Variable<Public, Compiler<F, D>> for Field<F, D>
-where
-    F: RichField + Extendable<D>,
-{
-    type Type = F;
-
-    #[inline]
-    fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
-        todo!()
-    }
-
-    #[inline]
-    fn new_unknown(compiler: &mut Compiler<F, D>) -> Self {
-        todo!()
-    }
-}
-
 impl<F, const D: usize> Variable<Secret, Compiler<F, D>> for Field<F, D>
 where
     F: RichField + Extendable<D>,
@@ -72,12 +55,35 @@ where
 
     #[inline]
     fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
+        // FIXME: Review
         todo!()
     }
 
     #[inline]
     fn new_unknown(compiler: &mut Compiler<F, D>) -> Self {
+        // FIXME: Review
+        Self::new(compiler.0.add_virtual_target())
+    }
+}
+
+impl<F, const D: usize> Variable<Public, Compiler<F, D>> for Field<F, D>
+where
+    F: RichField + Extendable<D>,
+{
+    type Type = F;
+
+    #[inline]
+    fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
+        // FIXME: Review
         todo!()
+    }
+
+    #[inline]
+    fn new_unknown(compiler: &mut Compiler<F, D>) -> Self {
+        // FIXME: Review
+        let target = compiler.0.add_virtual_target();
+        compiler.0.register_public_input(target);
+        Self::new(target)
     }
 }
 
@@ -181,8 +187,7 @@ where
 {
     #[inline]
     fn select(bit: &Bool<F, D>, lhs: &Self, rhs: &Self, compiler: &mut Compiler<F, D>) -> Self {
-        // FIXME: Check the parity
-        Self::new(compiler.0._if(bit.target, lhs.target, rhs.target))
+        Self::new(compiler.0.select(bit.target, lhs.target, rhs.target))
     }
 }
 

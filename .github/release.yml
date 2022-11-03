@@ -1,0 +1,26 @@
+changelog:
+  exclude:
+    labels:
+      - L-skip
+  categories:
+    - title: Added
+      labels:
+        - L-added
+    - title: Changed
+      labels:
+        - L-changed
+    - title: Deprecated
+      labels:
+        - L-deprecated
+    - title: Removed
+      labels:
+        - L-removed
+    - title: Fixed
+      labels:
+        - L-fixed
+    - title: Security
+      labels:
+        - L-security
+    - title: Other Unsorted Updates
+      labels:
+        - "*"

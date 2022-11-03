@@ -1,0 +1,28 @@
+name: Benchmark
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+  RUST_BACKTRACE: full
+jobs:
+  cargo-bench:
+    name: Cargo Bench (${{ matrix.os }} + ${{ matrix.channel }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: 
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        channel:
+          - stable
+          - nightly
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: rustup update ${{ matrix.channel }} && rustup default ${{ matrix.channel }}
+      - run: cargo bench --workspace --all-features

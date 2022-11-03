@@ -1,0 +1,12 @@
+[package]
+name = "ecdsa-wasm"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+getrandom = { version = "0.2.8", features = ["js"] }
+openzl-plugin-plonky2 = { path = "../../plugins/plonky2", default-features = false }
+wasm-bindgen = { version = "0.2.83" }

@@ -7,11 +7,10 @@ use eclair::{
         mode::{Public, Secret},
         Constant, Variable,
     },
-    bool::{Assert, ConditionalSelect},
+    bool::ConditionalSelect,
     cmp::PartialEq,
     num::{One, Zero},
     ops::{Add, Div, Mul, Neg, Sub},
-    Has,
 };
 use plonky2::{field::extension::Extendable, hash::hash_types::RichField, iop::target::Target};
 
@@ -56,6 +55,7 @@ where
     #[inline]
     fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
         // FIXME: Review
+        let _ = (this, compiler);
         todo!()
     }
 
@@ -75,6 +75,7 @@ where
     #[inline]
     fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
         // FIXME: Review
+        let _ = (this, compiler);
         todo!()
     }
 
@@ -204,7 +205,8 @@ where
 
     #[inline]
     fn is_zero(&self, compiler: &mut Compiler<F, D>) -> Self::Verification {
-        todo!()
+        // TODO: is there a better choice here?
+        self.eq(&Self::zero(compiler), compiler)
     }
 }
 
@@ -221,6 +223,7 @@ where
 
     #[inline]
     fn is_one(&self, compiler: &mut Compiler<F, D>) -> Self::Verification {
-        todo!()
+        // TODO: is there a better choice here?
+        self.eq(&Self::one(compiler), compiler)
     }
 }

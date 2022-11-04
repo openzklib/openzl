@@ -5,9 +5,7 @@
 #![forbid(rustdoc::broken_intra_doc_links)]
 #![forbid(missing_docs)]
 
-#[doc(inline)]
-pub use plonky2::*;
-
+pub mod base;
 pub mod bool;
 pub mod compiler;
 pub mod field;

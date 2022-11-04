@@ -8,5 +8,10 @@ crate-type = ["cdylib", "lib"]
 
 [dependencies]
 getrandom = { version = "0.2.8", features = ["js"] }
-openzl-plugin-plonky2 = { path = "../../plugins/plonky2", default-features = false }
+openzl-plugin-plonky2 = { path = "../../plugins/plonky2", default-features = false, features = ["ecdsa"] }
 wasm-bindgen = { version = "0.2.83" }
+
+[dev-dependencies]
+web-sys = { version = "0.3.59", default-features = false, features = ["console"] }
+instant = { version = "0.1.12", default-features = false, features = ["wasm-bindgen"] }
+wasm-bindgen-test = { version = "0.3.33", default-features = false }

@@ -71,12 +71,15 @@ where
 
     #[inline]
     fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
+        // FIXME: Review
+        let _ = (this, compiler);
         todo!()
     }
 
     #[inline]
     fn new_unknown(compiler: &mut Compiler<F, D>) -> Self {
-        todo!()
+        // FIXME: Review
+        Self::new(compiler.0.add_virtual_bool_target_safe())
     }
 }
 
@@ -88,12 +91,17 @@ where
 
     #[inline]
     fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
+        // FIXME: Review
+        let _ = (this, compiler);
         todo!()
     }
 
     #[inline]
     fn new_unknown(compiler: &mut Compiler<F, D>) -> Self {
-        todo!()
+        // FIXME: Review
+        let target = compiler.0.add_virtual_bool_target_safe();
+        compiler.0.register_public_input(target.target);
+        Self::new(target)
     }
 }
 
@@ -127,6 +135,6 @@ where
 {
     #[inline]
     fn eq(&self, rhs: &Self, compiler: &mut Compiler<F, D>) -> Self {
-        todo!()
+        Bool::new(compiler.0.is_equal(self.target.target, rhs.target.target))
     }
 }

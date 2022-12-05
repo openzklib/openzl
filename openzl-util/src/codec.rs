@@ -850,6 +850,23 @@ where
     }
 }
 
+#[cfg(feature = "alloc")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "alloc")))]
+impl<T> Decode for Box<[T]>
+where
+    T: Decode,
+{
+    type Error = Option<T::Error>;
+
+    #[inline]
+    fn decode<R>(reader: R) -> Result<Self, DecodeError<R::Error, Self::Error>>
+    where
+        R: Read,
+    {
+        Ok(Vec::decode(reader)?.into())
+    }
+}
+
 /// Option [`Decode`] Error
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum OptionDecodeError<T> {

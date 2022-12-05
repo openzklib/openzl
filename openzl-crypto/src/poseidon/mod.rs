@@ -26,7 +26,10 @@ use crate::{
 use alloc::{boxed::Box, vec::Vec};
 use core::{fmt::Debug, hash::Hash, iter, marker::PhantomData, mem, slice};
 use eclair::alloc::{Allocate, Const, Constant};
-use openzl_util::codec::{Decode, DecodeError, Encode, Read, Write};
+use openzl_util::{
+    codec::{Decode, DecodeError, Encode, Read, Write},
+    rand::{Rand, RngCore, Sample},
+};
 
 #[cfg(feature = "serde")]
 use openzl_util::serde::{Deserialize, Serialize};
@@ -235,25 +238,24 @@ where
     }
 }
 
-// TODO rand
-// impl<S, D> Sample<D> for State<S>
-// where
-//     S: Specification,
-//     S::Field: Sample<D>,
-//     D: Clone,
-// {
-//     #[inline]
-//     fn sample<R>(distribution: D, rng: &mut R) -> Self
-//     where
-//         R: RngCore + ?Sized,
-//     {
-//         Self(
-//             iter::repeat_with(|| rng.sample(distribution.clone()))
-//                 .take(S::WIDTH)
-//                 .collect(),
-//         )
-//     }
-// }
+impl<S, D> Sample<D> for State<S>
+where
+    S: Specification,
+    S::Field: Sample<D>,
+    D: Clone,
+{
+    #[inline]
+    fn sample<R>(distribution: D, rng: &mut R) -> Self
+    where
+        R: RngCore + ?Sized,
+    {
+        Self(
+            iter::repeat_with(|| rng.sample(distribution.clone()))
+                .take(S::WIDTH)
+                .collect(),
+        )
+    }
+}
 
 /// Poseidon Permutation
 #[cfg_attr(
@@ -520,25 +522,23 @@ where
     }
 }
 
-// TODO rand
-
-// impl<S, COM> Sample for Permutation<S, COM>
-// where
-//     S: Specification<COM>,
-//     S::ParameterField: Field + FieldGeneration,
-// {
-//     #[inline]
-//     fn sample<R>(distribution: (), rng: &mut R) -> Self
-//     where
-//         R: RngCore + ?Sized,
-//     {
-//         let _ = (distribution, rng);
-//         Self::new_unchecked(
-//             generate_round_constants(S::WIDTH, S::FULL_ROUNDS, S::PARTIAL_ROUNDS)
-//                 .into_boxed_slice(),
-//             MdsMatrices::generate_mds(S::WIDTH)
-//                 .to_row_major()
-//                 .into_boxed_slice(),
-//         )
-//     }
-// }
+impl<S, COM> Sample for Permutation<S, COM>
+where
+    S: Specification<COM>,
+    S::ParameterField: Field + FieldGeneration,
+{
+    #[inline]
+    fn sample<R>(distribution: (), rng: &mut R) -> Self
+    where
+        R: RngCore + ?Sized,
+    {
+        let _ = (distribution, rng);
+        Self::new_unchecked(
+            generate_round_constants(S::WIDTH, S::FULL_ROUNDS, S::PARTIAL_ROUNDS)
+                .into_boxed_slice(),
+            MdsMatrices::generate_mds(S::WIDTH)
+                .to_row_major()
+                .into_boxed_slice(),
+        )
+    }
+}

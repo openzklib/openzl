@@ -16,18 +16,13 @@
 
 //! Poseidon Hash Implementation
 
-use crate::poseidon::{
-    Field, FieldGeneration, ParameterFieldType, Permutation, Specification,
-};
+use crate::poseidon::{Field, FieldGeneration, ParameterFieldType, Permutation, Specification};
 use alloc::vec::Vec;
 use core::{fmt::Debug, hash::Hash, marker::PhantomData};
-use crate::{
-    // hash::ArrayHashFunction, // TODO
-    // rand::{Rand, RngCore, Sample}, // TODO
-};
 use eclair::alloc::{Allocate, Const, Constant};
 use openzl_util::{
     codec::{Decode, DecodeError, Encode, Read, Write},
+    rand::{Rand, RngCore, Sample},
     vec::VecExt,
 };
 
@@ -192,21 +187,20 @@ where
     }
 }
 
-// TODO rand
-// impl<S, T, const ARITY: usize, COM> Sample for Hasher<S, T, ARITY, COM>
-// where
-//     S: Specification<COM>,
-//     S::ParameterField: Field + FieldGeneration,
-//     T: DomainTag<S>,
-// {
-//     #[inline]
-//     fn sample<R>(distribution: (), rng: &mut R) -> Self
-//     where
-//         R: RngCore + ?Sized,
-//     {
-//         Self::from_permutation(rng.sample(distribution))
-//     }
-// }
+impl<S, T, const ARITY: usize, COM> Sample for Hasher<S, T, ARITY, COM>
+where
+    S: Specification<COM>,
+    S::ParameterField: Field + FieldGeneration,
+    T: DomainTag<S>,
+{
+    #[inline]
+    fn sample<R>(distribution: (), rng: &mut R) -> Self
+    where
+        R: RngCore + ?Sized,
+    {
+        Self::from_permutation(rng.sample(distribution))
+    }
+}
 
 /* TODO: After upgrading to new Poseidon, we have to enable these tests.
 /// Testing Suite

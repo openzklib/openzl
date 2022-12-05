@@ -39,6 +39,7 @@ use eclair::{
 };
 use openzl_util::{
     codec::{self, Decode, DecodeError, Encode},
+    rand::{Rand, RngCore, Sample},
     vec::padded_chunks_with,
     BoxArray,
 };
@@ -635,22 +636,21 @@ where
     }
 }
 
-// TODO rand
-// impl<const N: usize, S, D> Sample<D> for FixedEncryption<N, S>
-// where
-//     S: Specification,
-//     State<S>: Sample<D>,
-// {
-//     #[inline]
-//     fn sample<R>(distribution: D, rng: &mut R) -> Self
-//     where
-//         R: RngCore + ?Sized,
-//     {
-//         Self {
-//             initial_state: rng.sample(distribution),
-//         }
-//     }
-// }
+impl<const N: usize, S, D> Sample<D> for FixedEncryption<N, S>
+where
+    S: Specification,
+    State<S>: Sample<D>,
+{
+    #[inline]
+    fn sample<R>(distribution: D, rng: &mut R) -> Self
+    where
+        R: RngCore + ?Sized,
+    {
+        Self {
+            initial_state: rng.sample(distribution),
+        }
+    }
+}
 
 impl<const N: usize, S, COM> Types<Permutation<S, COM>, COM> for FixedEncryption<N, S, COM>
 where

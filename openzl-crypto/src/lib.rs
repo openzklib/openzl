@@ -19,6 +19,10 @@ pub mod password;
 pub mod permutation;
 pub mod signature;
 
+#[cfg(feature = "alloc")]
+pub mod poseidon;
+
+
 /* TODO:
 #[cfg(feature = "arkworks")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "arkworks")))]

@@ -16,8 +16,8 @@
 
 //! Arkworks Canonical Serialize and Deserialize Backend
 
-use openzl_util::codec::{self, ReadExactError};
 use ark_std::io::{self, Error, ErrorKind};
+use openzl_util::codec::{self, ReadExactError};
 
 #[cfg(feature = "serde")]
 use {

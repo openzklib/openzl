@@ -16,7 +16,10 @@
 
 //! Poseidon Hash Implementation
 
-use crate::poseidon::{Field, FieldGeneration, ParameterFieldType, Permutation, Specification};
+use crate::{
+    hash::ArrayHashFunction,
+    poseidon::{Field, FieldGeneration, ParameterFieldType, Permutation, Specification},
+};
 use alloc::vec::Vec;
 use core::{fmt::Debug, hash::Hash, marker::PhantomData};
 use eclair::alloc::{Allocate, Const, Constant};
@@ -133,20 +136,19 @@ where
     }
 }
 
-// TODO hash
-// impl<S, T, const ARITY: usize, COM> ArrayHashFunction<ARITY, COM> for Hasher<S, T, ARITY, COM>
-// where
-//     S: Specification<COM>,
-//     T: DomainTag<S>,
-// {
-//     type Input = S::Field;
-//     type Output = S::Field;
+impl<S, T, const ARITY: usize, COM> ArrayHashFunction<ARITY, COM> for Hasher<S, T, ARITY, COM>
+where
+    S: Specification<COM>,
+    T: DomainTag<S>,
+{
+    type Input = S::Field;
+    type Output = S::Field;
 
-//     #[inline]
-//     fn hash(&self, input: [&Self::Input; ARITY], compiler: &mut COM) -> Self::Output {
-//         self.hash_untruncated(input, compiler).take_first()
-//     }
-// }
+    #[inline]
+    fn hash(&self, input: [&Self::Input; ARITY], compiler: &mut COM) -> Self::Output {
+        self.hash_untruncated(input, compiler).take_first()
+    }
+}
 
 impl<S, T, const ARITY: usize, COM> Decode for Hasher<S, T, ARITY, COM>
 where

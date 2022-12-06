@@ -110,7 +110,8 @@ where
 pub struct PoseidonSpecification<S>(PhantomData<S>);
 
 impl<S> Constants for PoseidonSpecification<S>
-where S: Specification,
+where
+    S: Specification,
 {
     const WIDTH: usize = S::WIDTH;
     const FULL_ROUNDS: usize = S::FULL_ROUNDS;

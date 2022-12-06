@@ -1,5 +1,122 @@
 //! Hash Functions
 
+/// Hash Function
+pub trait HashFunction<COM = ()> {
+    /// Input Type
+    type Input: ?Sized;
+
+    /// Output Type
+    type Output;
+
+    /// Computes the hash over `input`.
+    fn hash(&self, input: &Self::Input, compiler: &mut COM) -> Self::Output;
+}
+
+impl<H, COM> HashFunction<COM> for &H
+where
+    H: HashFunction<COM>,
+{
+    type Input = H::Input;
+    type Output = H::Output;
+
+    #[inline]
+    fn hash(&self, input: &Self::Input, compiler: &mut COM) -> Self::Output {
+        (*self).hash(input, compiler)
+    }
+}
+
+/// Binary Hash Function
+pub trait BinaryHashFunction<COM = ()> {
+    /// Left Input Type
+    type Left: ?Sized;
+
+    /// Right Input Type
+    type Right: ?Sized;
+
+    /// Output Type
+    type Output;
+
+    /// Computes the hash over `lhs` and `rhs`.
+    fn hash(&self, lhs: &Self::Left, rhs: &Self::Right, compiler: &mut COM) -> Self::Output;
+}
+
+/// Array Hash Function
+pub trait ArrayHashFunction<const ARITY: usize, COM = ()> {
+    /// Input Type
+    type Input: ?Sized;
+
+    /// Output Type
+    type Output;
+
+    /// Computes the hash over `input`.
+    fn hash(&self, input: [&Self::Input; ARITY], compiler: &mut COM) -> Self::Output;
+}
+
+/// Array Hashing Utilities
+pub mod array {
+    use super::*;
+    use core::marker::PhantomData;
+
+    #[cfg(feature = "serde")]
+    use openzl_util::serde::{Deserialize, Serialize};
+
+    /// Converts `hasher` from an [`ArrayHashFunction`] into a [`HashFunction`].
+    #[inline]
+    pub fn as_unary<H, COM>(hasher: H) -> AsUnary<H, COM>
+    where
+        H: ArrayHashFunction<1, COM>,
+    {
+        AsUnary::new(hasher)
+    }
+
+    /// Unary Hash Function Converter
+    #[cfg_attr(
+        feature = "serde",
+        derive(Deserialize, Serialize),
+        serde(crate = "openzl_util::serde", deny_unknown_fields)
+    )]
+    #[derive(derivative::Derivative)]
+    #[derivative(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub struct AsUnary<H, COM = ()>
+    where
+        H: ArrayHashFunction<1, COM>,
+    {
+        /// Array Hasher
+        hasher: H,
+
+        /// Type Parameter Marker
+        __: PhantomData<COM>,
+    }
+
+    impl<H, COM> AsUnary<H, COM>
+    where
+        H: ArrayHashFunction<1, COM>,
+    {
+        /// Builds a new [`HashFunction`] implementation out of an [`ArrayHashFunction`]
+        /// implementation `hasher`.
+        #[inline]
+        pub fn new(hasher: H) -> Self {
+            Self {
+                hasher,
+                __: PhantomData,
+            }
+        }
+    }
+
+    impl<H, COM> HashFunction<COM> for AsUnary<H, COM>
+    where
+        H: ArrayHashFunction<1, COM>,
+    {
+        type Input = H::Input;
+        type Output = H::Output;
+
+        #[inline]
+        fn hash(&self, input: &Self::Input, compiler: &mut COM) -> Self::Output {
+            self.hasher.hash([input], compiler)
+        }
+    }
+}
+
 /// Security Assumptions
 ///
 /// The following outlines some standard security assumptions for hash functions. These security

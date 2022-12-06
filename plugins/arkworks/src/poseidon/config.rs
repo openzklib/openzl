@@ -16,10 +16,12 @@
 
 //! Poseidon Configuration
 
-use crate::poseidon::{Compiler, Specification};
-use crate::constraint::{fp::Fp, FpVar};
-use crate::ff::Field;
-use crate::r1cs_std::fields::FieldVar;
+use crate::{
+    constraint::{fp::Fp, FpVar},
+    ff::Field,
+    poseidon::{Compiler, Specification},
+    r1cs_std::fields::FieldVar,
+};
 use eclair::alloc::Constant;
 use openzl_crypto::poseidon::{self, ParameterFieldType};
 

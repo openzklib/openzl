@@ -16,18 +16,21 @@
 
 //! Poseidon Arkworks Backend
 
-use crate::crypto::poseidon::{
+use core::marker::PhantomData;
+
+use crate::{
+    constraint::{fp::Fp, FpVar, R1CS},
+    ff::{BigInteger, Field as _, FpParameters, PrimeField},
+    r1cs_std::fields::FieldVar,
+};
+use eclair::alloc::Constant;
+use openzl_crypto::poseidon::{
     self, encryption::BlockElement, hash::DomainTag, Constants, Field, FieldGeneration,
     ParameterFieldType,
 };
-use manta_crypto::{
-    arkworks::{
-        constraint::{fp::Fp, FpVar, R1CS},
-        ff::{BigInteger, Field as _, FpParameters, PrimeField},
-        r1cs_std::fields::FieldVar,
-    },
-    eclair::alloc::Constant,
-};
+
+#[cfg(feature = "ark-bn254")]
+pub mod config;
 
 /// Compiler Type.
 type Compiler<S> = R1CS<<S as Specification>::Field>;
@@ -103,14 +106,25 @@ where
     }
 }
 
-impl<S> ParameterFieldType for S
+/// Todo: this is a hack
+pub struct PoseidonSpecification<S>(PhantomData<S>);
+
+impl<S> Constants for PoseidonSpecification<S>
+where S: Specification,
+{
+    const WIDTH: usize = S::WIDTH;
+    const FULL_ROUNDS: usize = S::FULL_ROUNDS;
+    const PARTIAL_ROUNDS: usize = S::PARTIAL_ROUNDS;
+}
+
+impl<S> ParameterFieldType for PoseidonSpecification<S>
 where
     S: Specification,
 {
     type ParameterField = Fp<S::Field>;
 }
 
-impl<S> poseidon::Specification for S
+impl<S> poseidon::Specification for PoseidonSpecification<S>
 where
     S: Specification,
 {
@@ -148,7 +162,7 @@ where
 
     #[inline]
     fn apply_sbox(point: &mut Self::Field, _: &mut ()) {
-        point.0 = point.0.pow([Self::SBOX_EXPONENT, 0, 0, 0]);
+        point.0 = point.0.pow([S::SBOX_EXPONENT, 0, 0, 0]);
     }
 
     #[inline]
@@ -157,7 +171,7 @@ where
     }
 }
 
-impl<S> poseidon::Specification<Compiler<S>> for S
+impl<S> poseidon::Specification<Compiler<S>> for PoseidonSpecification<S>
 where
     S: Specification,
 {
@@ -204,7 +218,7 @@ where
     #[inline]
     fn apply_sbox(point: &mut Self::Field, _: &mut Compiler<S>) {
         *point = point
-            .pow_by_constant([Self::SBOX_EXPONENT])
+            .pow_by_constant([S::SBOX_EXPONENT])
             .expect("Exponentiation is not allowed to fail.");
     }
 
@@ -259,10 +273,10 @@ impl<COM> Constant<COM> for TwoPowerMinusOneDomainTag {
 
 impl<S> DomainTag<S> for TwoPowerMinusOneDomainTag
 where
-    S: Specification,
+    S: Specification + ParameterFieldType<ParameterField = Fp<S::Field>>,
 {
     #[inline]
-    fn domain_tag() -> Fp<S::Field> {
+    fn domain_tag() -> Fp<<S as Specification>::Field> {
         Fp(S::Field::from(((1 << (S::WIDTH - 1)) - 1) as u128))
     }
 }

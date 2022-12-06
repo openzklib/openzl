@@ -43,7 +43,7 @@ pub mod mds;
 pub mod preprocessing;
 pub mod round_constants;
 
-// TODO
+// TODO : I placed the contents of this module in plugins::arkworks::poseidon
 // #[cfg(feature = "arkworks")]
 // #[cfg_attr(doc_cfg, doc(cfg(feature = "arkworks")))]
 // pub mod arkworks;

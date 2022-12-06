@@ -36,3 +36,6 @@ pub mod pairing;
 pub mod rand;
 pub mod ratio;
 pub mod serialize;
+
+#[cfg(feature = "alloc")]
+pub mod poseidon;

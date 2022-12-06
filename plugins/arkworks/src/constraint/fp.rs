@@ -96,6 +96,7 @@ where
     }
 }
 
+#[cfg(feature = "serde")]
 impl<F> Decode for Fp<F>
 where
     F: Field,
@@ -118,6 +119,7 @@ where
     }
 }
 
+#[cfg(feature = "serde")]
 impl<F> Encode for Fp<F>
 where
     F: Field,
@@ -231,6 +233,7 @@ where
     const SIZE: usize = byte_count(<F::Params as FpParameters>::MODULUS_BITS) as usize;
 }
 
+#[cfg(feature = "serde")]
 impl<F> TryFrom<Vec<u8>> for Fp<F>
 where
     F: Field,
@@ -244,6 +247,7 @@ where
 }
 
 /// Converts `element` into its canonical byte-representation.
+#[cfg(feature = "serde")]
 #[inline]
 pub fn field_element_as_bytes<F>(element: &F) -> Vec<u8>
 where

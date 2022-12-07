@@ -7,7 +7,7 @@ use openzl_util::derivative;
 /// Accumulator Membership Model Types
 pub trait Types {
     /// Item Type
-    type Item: ?Sized;
+    type Item;
 
     /// Secret Witness Type
     type Witness;
@@ -358,7 +358,7 @@ pub mod test {
             .collect::<Vec<_>>();
         for (i, x) in outputs.iter().enumerate() {
             for (j, y) in outputs.iter().enumerate().skip(i + 1) {
-                assert_ne!(x, y, "Found matching outputs at {:?} and {:?}.", i, j)
+                assert_ne!(x, y, "Found matching outputs at {i:?} and {j:?}.");
             }
         }
     }

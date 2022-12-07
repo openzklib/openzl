@@ -29,5 +29,6 @@ ecdsa = ["plonky2_ecdsa"]
 eclair = { path = "../../eclair", default-features = false }
 openzl-crypto = { path = "../../openzl-crypto", default-features = false }
 openzl-util = { path = "../../openzl-util", default-features = false }
-plonky2 = { git = "https://github.com/openzklib/plonky2", branch = "feat/no-std-support", default-features = false }
-plonky2_ecdsa = { git = "https://github.com/openzklib/plonky2", branch = "feat/no-std-support", optional = true, default-features = false }
+plonky2 = { git = "https://github.com/openzklib/plonky2", default-features = false }
+plonky2_ecdsa = { git = "https://github.com/openzklib/plonky2", optional = true, default-features = false }
+starky = { git = "https://github.com/openzklib/plonky2", default-features = false }

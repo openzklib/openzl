@@ -9,3 +9,6 @@ pub mod base;
 pub mod bool;
 pub mod compiler;
 pub mod field;
+
+#[doc(inline)]
+pub use starky;

@@ -55,8 +55,7 @@ pub fn transform(args: TokenStream, input: TokenStream) -> TokenStream {
     let trait_ident = format_ident!("{}Type", ident);
     let associated_type_doc = "Component Type";
     let type_alias_doc = format!(
-        "[`{}`]({trait_ident}::{ident}) Type Alias for the [`{}`] Component",
-        ident, trait_ident
+        "[`{ident}`]({trait_ident}::{ident}) Type Alias for the [`{trait_ident}`] Component",
     );
     TokenStream::from(quote!(
         #(#attrs)*

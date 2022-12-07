@@ -20,7 +20,7 @@
 //!
 //! [`preprocessing.rs`]: https://github.com/filecoin-project/neptune/blob/master/src/preprocessing.rs
 
-use crate::poseidon::{matrix::vec_add, mds::MdsMatrices, Field};
+use crate::poseidon::{matrix::vec_add, mds::MdsMatrices, NativeField};
 use alloc::vec::Vec;
 
 /// Compresses constants by pushing them back through linear layers and through the identity components of partial layers.
@@ -33,7 +33,7 @@ pub fn compress_round_constants<F>(
     mds_matrices: &MdsMatrices<F>,
 ) -> Vec<F>
 where
-    F: Clone + Field,
+    F: Clone + NativeField,
 {
     let inverse_matrix = &mds_matrices.m_inv;
     let mut res: Vec<F> = Vec::new();

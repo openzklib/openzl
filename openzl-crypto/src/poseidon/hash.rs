@@ -18,7 +18,7 @@
 
 use crate::{
     hash::ArrayHashFunction,
-    poseidon::{Field, FieldGeneration, ParameterFieldType, Permutation, Specification},
+    poseidon::{NativeField, FieldGeneration, ParameterFieldType, Permutation, Specification},
 };
 use alloc::vec::Vec;
 use core::{fmt::Debug, hash::Hash, marker::PhantomData};
@@ -192,7 +192,7 @@ where
 impl<S, T, const ARITY: usize, COM> Sample for Hasher<S, T, ARITY, COM>
 where
     S: Specification<COM>,
-    S::ParameterField: Field + FieldGeneration,
+    S::ParameterField: NativeField + FieldGeneration,
     T: DomainTag<S>,
 {
     #[inline]

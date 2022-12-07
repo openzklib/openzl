@@ -18,7 +18,7 @@
 
 use crate::poseidon::{
     matrix::{Matrix, MatrixOperations, SquareMatrix},
-    Field, FieldGeneration,
+    NativeField, FieldGeneration,
 };
 use alloc::vec;
 use core::fmt::Debug;
@@ -30,7 +30,7 @@ use openzl_util::vec::{Vec, VecExt};
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct MdsMatrices<F>
 where
-    F: Field,
+    F: NativeField,
 {
     /// MDS Matrix for naive Poseidon Hash.
     pub m: SquareMatrix<F>,
@@ -48,7 +48,7 @@ where
 
 impl<F> MdsMatrices<F>
 where
-    F: Clone + Field,
+    F: Clone + NativeField,
 {
     fn make_v_w(m: &SquareMatrix<F>) -> (Vec<F>, Vec<F>) {
         let v = m[0][1..].to_vec();
@@ -59,7 +59,7 @@ where
 
 impl<F> MdsMatrices<F>
 where
-    F: Clone + Field,
+    F: Clone + NativeField,
 {
     fn make_prime(m: &SquareMatrix<F>) -> SquareMatrix<F> {
         SquareMatrix::new_unchecked(Matrix::new_unchecked(
@@ -84,7 +84,7 @@ where
 
 impl<F> MdsMatrices<F>
 where
-    F: Field,
+    F: NativeField,
 {
     /// Derives MDS matrix of size `dim*dim` and relevant things.
     pub fn new(dim: usize) -> Self
@@ -173,7 +173,7 @@ where
 #[derive(Debug, Clone)]
 pub struct SparseMatrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     /// `w_hat` is the first column of the M'' matrix. It will be directly multiplied (scalar product) with a row of state elements.
     pub w_hat: Vec<F>,
@@ -183,7 +183,7 @@ where
 
 impl<F> SparseMatrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     /// Checks if `self` is square and `self[1..][1..]` is identity.
     pub fn is_sparse(m: &SquareMatrix<F>) -> bool
@@ -237,7 +237,7 @@ pub fn factor_to_sparse_matrixes<F>(
     n: usize,
 ) -> (SquareMatrix<F>, Vec<SparseMatrix<F>>)
 where
-    F: Clone + Field + FieldGeneration + PartialEq,
+    F: Clone + NativeField + FieldGeneration + PartialEq,
 {
     let (pre_sparse, mut sparse_matrices) = (0..n).fold(
         (base_matrix.clone(), Vec::with_capacity(n)),

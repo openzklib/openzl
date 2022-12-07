@@ -49,7 +49,11 @@ pub mod round_constants;
 // pub mod arkworks;
 
 /// Field Element
-pub trait Field {
+/// 
+/// This trait is intended to represent arithmetic operations performed on native 
+/// field elements, specifically the constant parameters of a Poseidon permutation.
+/// See [`Field`] for arithmetic operations that may be performed in-circuit.
+pub trait NativeField {
     /// Returns the additive identity of the field.
     fn zero() -> Self;
 
@@ -525,7 +529,7 @@ where
 impl<S, COM> Sample for Permutation<S, COM>
 where
     S: Specification<COM>,
-    S::ParameterField: Field + FieldGeneration,
+    S::ParameterField: NativeField + FieldGeneration,
 {
     #[inline]
     fn sample<R>(distribution: (), rng: &mut R) -> Self

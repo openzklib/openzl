@@ -16,7 +16,7 @@
 
 //! Basic Linear Algebra Implementations
 
-use crate::poseidon::Field;
+use crate::poseidon::NativeField;
 use core::{
     fmt::Debug,
     ops::{Deref, Index, IndexMut},
@@ -84,11 +84,11 @@ pub trait MatrixOperations {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Matrix<F>(Vec<Vec<F>>)
 where
-    F: Field;
+    F: NativeField;
 
 impl<F> Matrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     /// Constructs a non-empty [`Matrix`] returning `None` if `v` is empty or has the wrong shape
     /// for a matrix.
@@ -221,7 +221,7 @@ where
 
 impl<F> From<SquareMatrix<F>> for Matrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     #[inline]
     fn from(matrix: SquareMatrix<F>) -> Self {
@@ -231,7 +231,7 @@ where
 
 impl<F> Index<usize> for Matrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     type Output = Vec<F>;
 
@@ -243,7 +243,7 @@ where
 
 impl<F> IndexMut<usize> for Matrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     #[inline]
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
@@ -253,7 +253,7 @@ where
 
 impl<F> MatrixOperations for Matrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     type Scalar = F;
 
@@ -352,7 +352,7 @@ where
 
 impl<F> PartialEq<SquareMatrix<F>> for Matrix<F>
 where
-    F: Field + PartialEq,
+    F: NativeField + PartialEq,
 {
     #[inline]
     fn eq(&self, other: &SquareMatrix<F>) -> bool {
@@ -364,11 +364,11 @@ where
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct SquareMatrix<F>(Matrix<F>)
 where
-    F: Field;
+    F: NativeField;
 
 impl<F> SquareMatrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     /// Returns a new [`SquareMatrix`] representation of `m` if it returns `true` to
     /// [`is_square`](Matrix::is_square).
@@ -490,7 +490,7 @@ where
 
 impl<F> AsRef<Matrix<F>> for SquareMatrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     #[inline]
     fn as_ref(&self) -> &Matrix<F> {
@@ -500,7 +500,7 @@ where
 
 impl<F> Deref for SquareMatrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     type Target = Matrix<F>;
 
@@ -512,7 +512,7 @@ where
 
 impl<F> PartialEq<Matrix<F>> for SquareMatrix<F>
 where
-    F: Field + PartialEq,
+    F: NativeField + PartialEq,
 {
     #[inline]
     fn eq(&self, other: &Matrix<F>) -> bool {
@@ -522,7 +522,7 @@ where
 
 impl<F> MatrixOperations for SquareMatrix<F>
 where
-    F: Field,
+    F: NativeField,
 {
     type Scalar = F;
 
@@ -567,7 +567,7 @@ where
 #[inline]
 pub fn inner_product<F>(a: &[F], b: &[F]) -> F
 where
-    F: Field,
+    F: NativeField,
 {
     a.iter()
         .zip(b)
@@ -578,7 +578,7 @@ where
 #[inline]
 pub fn vec_add<F>(a: &[F], b: &[F]) -> Vec<F>
 where
-    F: Field,
+    F: NativeField,
 {
     a.iter().zip(b).map(|(a, b)| F::add(a, b)).collect()
 }
@@ -587,7 +587,7 @@ where
 #[inline]
 pub fn vec_sub<F>(a: &[F], b: &[F]) -> Vec<F>
 where
-    F: Field,
+    F: NativeField,
 {
     a.iter().zip(b.iter()).map(|(a, b)| F::sub(a, b)).collect()
 }
@@ -596,7 +596,7 @@ where
 #[inline]
 pub fn scalar_vec_mul<F>(scalar: &F, v: &[F]) -> Vec<F>
 where
-    F: Field,
+    F: NativeField,
 {
     v.iter().map(|val| F::mul(scalar, val)).collect()
 }
@@ -605,7 +605,7 @@ where
 #[inline]
 fn eliminate_row<F>(row: &[F], factor: &F, pivot: &[F]) -> Vec<F>
 where
-    F: Field,
+    F: NativeField,
 {
     vec_sub(row, &scalar_vec_mul(factor, pivot))
 }
@@ -614,7 +614,7 @@ where
 #[inline]
 pub fn kronecker_delta<F>(i: usize, j: usize) -> F
 where
-    F: Field,
+    F: NativeField,
 {
     if i == j {
         F::one()

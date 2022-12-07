@@ -16,21 +16,21 @@
 
 //! Poseidon Arkworks Backend
 
-use core::marker::PhantomData;
-
 use crate::{
     constraint::{fp::Fp, FpVar, R1CS},
-    ff::{BigInteger, Field as _, FpParameters, PrimeField},
-    r1cs_std::fields::FieldVar,
+    ff::{BigInteger, FpParameters, PrimeField},
 };
 use eclair::alloc::Constant;
 use openzl_crypto::poseidon::{
-    self, encryption::BlockElement, hash::DomainTag, Constants, Field, FieldGeneration,
+    encryption::BlockElement, hash::DomainTag, Constants, NativeField, FieldGeneration,
     ParameterFieldType,
 };
 
 #[cfg(feature = "ark-bn254")]
 pub mod config;
+
+#[cfg(test)]
+pub mod test;
 
 /// Compiler Type.
 type Compiler<S> = R1CS<<S as Specification>::Field>;
@@ -44,7 +44,7 @@ pub trait Specification: Constants {
     const SBOX_EXPONENT: u64;
 }
 
-impl<F> Field for Fp<F>
+impl<F> NativeField for Fp<F>
 where
     F: PrimeField,
 {
@@ -103,129 +103,6 @@ where
     #[inline]
     fn from_u64(elem: u64) -> Self {
         Self(F::from(elem))
-    }
-}
-
-/// Todo: this is a hack
-pub struct PoseidonSpecification<S>(PhantomData<S>);
-
-impl<S> Constants for PoseidonSpecification<S>
-where
-    S: Specification,
-{
-    const WIDTH: usize = S::WIDTH;
-    const FULL_ROUNDS: usize = S::FULL_ROUNDS;
-    const PARTIAL_ROUNDS: usize = S::PARTIAL_ROUNDS;
-}
-
-impl<S> ParameterFieldType for PoseidonSpecification<S>
-where
-    S: Specification,
-{
-    type ParameterField = Fp<S::Field>;
-}
-
-impl<S> poseidon::Specification for PoseidonSpecification<S>
-where
-    S: Specification,
-{
-    type Field = Fp<S::Field>;
-
-    #[inline]
-    fn add(lhs: &Self::Field, rhs: &Self::Field, _: &mut ()) -> Self::Field {
-        Fp(lhs.0 + rhs.0)
-    }
-
-    #[inline]
-    fn add_const(lhs: &Self::Field, rhs: &Self::ParameterField, _: &mut ()) -> Self::Field {
-        Fp(lhs.0 + rhs.0)
-    }
-
-    #[inline]
-    fn mul(lhs: &Self::Field, rhs: &Self::Field, _: &mut ()) -> Self::Field {
-        Fp(lhs.0 * rhs.0)
-    }
-
-    #[inline]
-    fn mul_const(lhs: &Self::Field, rhs: &Self::ParameterField, _: &mut ()) -> Self::Field {
-        Fp(lhs.0 * rhs.0)
-    }
-
-    #[inline]
-    fn add_assign(lhs: &mut Self::Field, rhs: &Self::Field, _: &mut ()) {
-        lhs.0 += rhs.0;
-    }
-
-    #[inline]
-    fn add_const_assign(lhs: &mut Self::Field, rhs: &Self::ParameterField, _: &mut ()) {
-        lhs.0 += rhs.0;
-    }
-
-    #[inline]
-    fn apply_sbox(point: &mut Self::Field, _: &mut ()) {
-        point.0 = point.0.pow([S::SBOX_EXPONENT, 0, 0, 0]);
-    }
-
-    #[inline]
-    fn from_parameter(point: Self::ParameterField) -> Self::Field {
-        point
-    }
-}
-
-impl<S> poseidon::Specification<Compiler<S>> for PoseidonSpecification<S>
-where
-    S: Specification,
-{
-    type Field = FpVar<S::Field>;
-
-    #[inline]
-    fn add(lhs: &Self::Field, rhs: &Self::Field, _: &mut Compiler<S>) -> Self::Field {
-        lhs + rhs
-    }
-
-    #[inline]
-    fn add_const(
-        lhs: &Self::Field,
-        rhs: &Self::ParameterField,
-        _: &mut Compiler<S>,
-    ) -> Self::Field {
-        lhs + FpVar::Constant(rhs.0)
-    }
-
-    #[inline]
-    fn mul(lhs: &Self::Field, rhs: &Self::Field, _: &mut Compiler<S>) -> Self::Field {
-        lhs * rhs
-    }
-
-    #[inline]
-    fn mul_const(
-        lhs: &Self::Field,
-        rhs: &Self::ParameterField,
-        _: &mut Compiler<S>,
-    ) -> Self::Field {
-        lhs * FpVar::Constant(rhs.0)
-    }
-
-    #[inline]
-    fn add_assign(lhs: &mut Self::Field, rhs: &Self::Field, _: &mut Compiler<S>) {
-        *lhs += rhs;
-    }
-
-    #[inline]
-    fn add_const_assign(lhs: &mut Self::Field, rhs: &Self::ParameterField, _: &mut Compiler<S>) {
-        *lhs += FpVar::Constant(rhs.0)
-    }
-
-    #[inline]
-    fn apply_sbox(point: &mut Self::Field, _: &mut Compiler<S>) {
-        *point = point
-            .pow_by_constant([S::SBOX_EXPONENT])
-            .expect("Exponentiation is not allowed to fail.");
-    }
-
-    #[inline]
-    fn from_parameter(point: Self::ParameterField) -> Self::Field {
-        FpVar::Constant(point.0)
     }
 }
 

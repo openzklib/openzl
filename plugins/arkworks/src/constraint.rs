@@ -11,7 +11,6 @@ use crate::{
         },
     },
 };
-use alloc::vec::Vec;
 use eclair::{
     alloc::{
         mode::{self, Public, Secret},
@@ -249,6 +248,17 @@ where
     }
 }
 
+impl<F> BitDecomposition<1, R1CS<F>> for Boolean<F>
+where
+    F: PrimeField,
+{
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut R1CS<F>) -> [Boolean<F>; 1] {
+        let _ = compiler;
+        [self.clone()]
+    }
+}
+
 impl<F> eclair::cmp::PartialEq<Self, R1CS<F>> for FpVar<F>
 where
     F: PrimeField,
@@ -261,14 +271,19 @@ where
     }
 }
 
-impl<F> BitDecomposition<R1CS<F>> for FpVar<F>
+impl<F, const BITS: usize> BitDecomposition<BITS, R1CS<F>> for FpVar<F>
 where
     F: PrimeField,
 {
     #[inline]
-    fn to_bits_le(&self, compiler: &mut R1CS<F>) -> Vec<Boolean<F>> {
+    fn to_bits_le(&self, compiler: &mut R1CS<F>) -> [Boolean<F>; BITS] {
         let _ = compiler;
-        ToBitsGadget::to_bits_le(self).expect("Bit decomposition is not allowed to fail.")
+        assert_eq!(
+            BITS,
+            F::Params::MODULUS_BITS as usize,
+            "BITS must be equal to MODULUS BITS"
+        );
+        ToBitsGadget::to_bits_le(self).expect("Bit decomposition is not allowed to fail.").try_into().expect("Obtaining an array of size BITS from a vector of length BITS is not allowed to fail.")
     }
 }
 

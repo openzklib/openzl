@@ -102,13 +102,13 @@ where
     <<C as ProjectiveCurve>::ScalarField as PrimeField>::Params::MODULUS_BITS as usize
 }
 
-impl<C, CV> BitDecomposition<Compiler<C>> for ScalarVar<C, CV>
+impl<C, CV, const BITS: usize> BitDecomposition<BITS, Compiler<C>> for ScalarVar<C, CV>
 where
     C: ProjectiveCurve,
     CV: CurveVar<C, ConstraintField<C>>,
 {
     #[inline]
-    fn to_bits_le(&self, compiler: &mut Compiler<C>) -> Vec<Bool<Compiler<C>>> {
+    fn to_bits_le(&self, compiler: &mut Compiler<C>) -> [Bool<Compiler<C>>; BITS] {
         self.0.to_bits_le(compiler)
     }
 }

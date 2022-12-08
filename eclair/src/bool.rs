@@ -80,18 +80,18 @@ pub trait AssertEq: Assert {
 impl<COM> AssertEq for COM where COM: Assert {}
 
 /// Bit Decomposition
-pub trait BitDecomposition<COM = ()>
+pub trait BitDecomposition<const BITS: usize, COM = ()>
 where
     COM: Has<bool> + ?Sized,
 {
     /// Returns the little-endian bit representation of `self`, with trailing zeroes.
-    fn to_bits_le(&self, compiler: &mut COM) -> Vec<Bool<COM>>;
+    fn to_bits_le(&self, compiler: &mut COM) -> [Bool<COM>; BITS];
 }
 
-impl BitDecomposition for bool {
+impl BitDecomposition<1> for bool {
     #[inline]
-    fn to_bits_le(&self, _: &mut ()) -> Vec<bool> {
-        [*self].to_vec()
+    fn to_bits_le(&self, _: &mut ()) -> [bool; 1] {
+        [*self]
     }
 }
 
@@ -99,14 +99,16 @@ impl BitDecomposition for bool {
 macro_rules! impl_bit_decomposition {
     ($($type:tt),* $(,)?) => {
         $(
-            impl BitDecomposition for $type {
+            impl BitDecomposition<{Self::BITS as usize}> for $type {
                 #[inline]
-                fn to_bits_le(&self, _: &mut ()) -> Vec<bool> {
-                    let mut bits = Vec::new();
+                fn to_bits_le(&self, _: &mut ()) -> [bool; Self::BITS as usize] {
+                    let mut bits = [false; Self::BITS as usize];
+                    let mut counter = 0;
                     for byte in (*self).to_le_bytes() {
                         for i in 0..8 {
                             let power = 1 << i;
-                            bits.push((power & byte) > 0)
+                            bits[counter] = ((power & byte) > 0);
+                            counter += 1;
                         }
                     }
                     bits

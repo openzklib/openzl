@@ -8,7 +8,6 @@ use crate::{
     Has,
 };
 use core::{borrow::Borrow, ops::Deref};
-use rust_alloc::vec::Vec;
 
 /// Additive Identity
 pub trait Zero<COM = ()> {
@@ -309,13 +308,13 @@ where
     }
 }
 
-impl<T, const BITS: usize, COM> BitDecomposition<COM> for UnsignedInteger<T, BITS>
+impl<T, const BITS: usize, COM> BitDecomposition<BITS, COM> for UnsignedInteger<T, BITS>
 where
     COM: Has<bool>,
-    T: BitDecomposition<COM>,
+    T: BitDecomposition<BITS, COM>,
 {
     #[inline]
-    fn to_bits_le(&self, compiler: &mut COM) -> Vec<Bool<COM>> {
+    fn to_bits_le(&self, compiler: &mut COM) -> [Bool<COM>; BITS] {
         self.0.to_bits_le(compiler)
     }
 }

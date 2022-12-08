@@ -1,8 +1,10 @@
 // move tests that need arkworks types here
 
-use crate::{constraint::fp::Fp, ff::field_new, poseidon::NativeField};
-use ark_bls12_381::Fr;
-use openzl_util::rand::OsRng;
+#[cfg(feature = "ark-bls12-381")]
+use {
+    crate::{constraint::fp::Fp, ff::field_new, poseidon::NativeField},
+    ark_bls12_381::Fr,
+};
 
 // mod constants {
 //     use crate::poseidon::config::Spec2;
@@ -37,6 +39,8 @@ mod hash {
     //     );
     // }
 }
+
+#[cfg(feature = "ark-bls12-381")]
 mod round_constants {
     use super::*;
     use openzl_crypto::poseidon::round_constants::{generate_lfsr, sample_field_element};
@@ -52,6 +56,8 @@ mod round_constants {
         }
     }
 }
+
+#[cfg(feature = "ark-bls12-381")]
 mod matrix {
     use super::*;
     use openzl_crypto::poseidon::matrix::{
@@ -362,6 +368,7 @@ mod matrix {
     }
 }
 
+#[cfg(feature = "ark-bls12-381")]
 mod mds {
     use super::*;
     use crate::ff::UniformRand;
@@ -369,6 +376,7 @@ mod mds {
         matrix::{Matrix, MatrixOperations},
         mds::MdsMatrices,
     };
+    use openzl_util::rand::OsRng;
 
     /// Checks if creating mds matrices is correct.
     #[test]

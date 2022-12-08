@@ -275,9 +275,11 @@ pub mod security {
 /// Testing Suite
 #[cfg(test)]
 mod test {
+    #[cfg(feature = "std")]
     use super::*;
 
     /// Tests if the constants match the known constant values.
+    #[cfg(feature = "std")]
     #[test]
     fn constants_match_known_values() {
         let known_values = [

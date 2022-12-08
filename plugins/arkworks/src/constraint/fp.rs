@@ -29,7 +29,6 @@ use openzl_crypto::{
 };
 use openzl_util::{
     byte_count,
-    codec::{Decode, DecodeError, Encode, Read, Write},
     rand::{RngCore, Sample},
     SizeLimit,
 };
@@ -37,6 +36,7 @@ use openzl_util::{
 #[cfg(feature = "serde")]
 use {
     crate::serialize::{ArkReader, ArkWriter, SerializationError},
+    openzl_util::codec::{Decode, DecodeError, Encode, Read, Write},
     openzl_util::serde::{Deserialize, Serialize, Serializer},
 };
 

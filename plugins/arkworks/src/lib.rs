@@ -20,7 +20,7 @@ pub use ark_bls12_381 as bls12_381;
 #[cfg(feature = "ark-bn254")]
 pub use ark_bn254 as bn254;
 
-#[cfg(feature = "ark-ed-on-bls12-381")]
+#[cfg(feature = "ark-ed-on-bls12-377")]
 pub use ark_ed_on_bls12_377 as ed_on_bls12_377;
 
 #[cfg(feature = "ark-ed-on-bls12-381")]

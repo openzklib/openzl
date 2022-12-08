@@ -43,11 +43,6 @@ pub mod mds;
 pub mod preprocessing;
 pub mod round_constants;
 
-// TODO : I placed the contents of this module in plugins::arkworks::poseidon
-// #[cfg(feature = "arkworks")]
-// #[cfg_attr(doc_cfg, doc(cfg(feature = "arkworks")))]
-// pub mod arkworks;
-
 /// Field Element
 ///
 /// This trait is intended to represent arithmetic operations performed on native

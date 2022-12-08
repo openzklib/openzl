@@ -73,21 +73,3 @@ where
         .take(width * (full_rounds + partial_rounds))
         .collect()
 }
-
-/// Testing Suite
-#[cfg(test)]
-mod test {
-    use super::*;
-    // use manta_crypto::arkworks::{bls12_381::Fr, constraint::fp::Fp, ff::field_new}; // TODO arkworks
-
-    // #[allow(clippy::needless_borrow)] // NOTE: Clippy false positive https://github.com/rust-lang/rust-clippy/issues/9710
-    // /// Checks if [`GrainLFSR`] matches hardcoded sage outputs.
-    // #[test]
-    // fn grain_lfsr_is_consistent() {
-    //     let test_cases = include!("parameters_hardcoded_test/lfsr_values");
-    //     let mut lfsr = generate_lfsr(255, 3, 8, 55);
-    //     for x in test_cases {
-    //         assert_eq!(sample_field_element::<Fp<Fr>, _>(&mut lfsr), x);
-    //     }
-    // }
-}

@@ -205,27 +205,3 @@ where
         Self::from_permutation(rng.sample(distribution))
     }
 }
-
-/* TODO: After upgrading to new Poseidon, we have to enable these tests.
-/// Testing Suite
-#[cfg(test)]
-mod test {
-    use crate::{config::Poseidon2, crypto::constraint::arkworks::Fp};
-    use ark_bls12_381::Fr;
-    use manta_crypto::{
-        arkworks::ff::field_new,
-        rand::{OsRng, Sample},
-    };
-
-    /// Tests if [`Poseidon2`](crate::config::Poseidon2) matches hardcoded sage outputs.
-    #[test]
-    fn poseidon_hash_matches_known_values() {
-        let hasher = Poseidon2::gen(&mut OsRng);
-        let inputs = [&Fp(field_new!(Fr, "1")), &Fp(field_new!(Fr, "2"))];
-        assert_eq!(
-            hasher.hash_untruncated(inputs, &mut ()),
-            include!("permutation_hardcoded_test/width3")
-        );
-    }
-}
-*/

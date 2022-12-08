@@ -318,21 +318,4 @@ mod test {
             );
         }
     }
-
-    /* After upgrading to new Poseidon, we have to enable these tests.
-    // TODO: After upgrading to new Poseidon, we have to enable these tests.
-    // use crate::config::PoseidonSpec;
-    /// Tests if the specifications match the known constant values.
-    #[test]
-    fn specifications_match_known_values() {
-        assert_eq!(
-            Constants::from_arity(2),
-            Constants::from_specification::<PoseidonSpec<2>>()
-        );
-        assert_eq!(
-            Constants::from_arity(4),
-            Constants::from_specification::<PoseidonSpec<4>>()
-        );
-    }
-    */
 }

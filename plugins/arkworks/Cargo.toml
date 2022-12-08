@@ -28,7 +28,7 @@ alloc = ["eclair/alloc", "openzl-crypto/alloc", "openzl-util/alloc"]
 
 # Serde Serialization
 serde = [
-    "openzl-util/serde",
+     "alloc", "openzl-util/serde"
 ]
 
 # Standard Library

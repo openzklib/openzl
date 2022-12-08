@@ -35,10 +35,10 @@ use openzl_util::{
 };
 
 #[cfg(feature = "serde")]
-use crate::serialize::{ArkReader, ArkWriter, SerializationError};
-
-#[cfg(feature = "serde")]
-use openzl_util::serde::{Deserialize, Serialize, Serializer};
+use {
+    crate::serialize::{ArkReader, ArkWriter, SerializationError},
+    openzl_util::serde::{Deserialize, Serialize, Serializer},
+};
 
 /// Field Element
 #[cfg_attr(

@@ -25,6 +25,7 @@ use openzl_util::rand::OsRng;
 // }
 
 mod hash {
+    // TODO: Reconstruct hardcoded test with current domain tag.
     // /// Tests if [`Poseidon2`](crate::config::Poseidon2) matches hardcoded sage outputs.
     // #[test]
     // fn poseidon_hash_matches_known_values() {

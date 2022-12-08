@@ -5,7 +5,10 @@
 use core::{convert::Infallible, fmt::Debug, hash::Hash, marker::PhantomData};
 
 #[cfg(feature = "alloc")]
-use crate::{into_array_unchecked, vec::Vec};
+use {
+    crate::{into_array_unchecked, vec::Vec},
+    alloc::boxed::Box,
+};
 
 /// Implements [`Decode`] and [`Encode`] for a type with no data that implements [`Default`].
 #[macro_export]

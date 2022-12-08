@@ -11,12 +11,13 @@ use crate::{
         },
     },
 };
+use alloc::vec::Vec;
 use eclair::{
     alloc::{
         mode::{self, Public, Secret},
         Constant, Variable,
     },
-    bool::{Assert, ConditionalSwap},
+    bool::{Assert, BitDecomposition, ConditionalSwap},
     num::AssertWithinBitRange,
     ops::Add,
     Has,
@@ -124,9 +125,8 @@ where
             BITS < F::Params::MODULUS_BITS as usize,
             "BITS must be strictly less than modulus bits of `F`."
         );
-        let value_bits = value
-            .to_bits_le()
-            .expect("Bit decomposition is not allowed to fail.");
+        let value_bits =
+            ToBitsGadget::to_bits_le(value).expect("Bit decomposition is not allowed to fail.");
         for bit in &value_bits[BITS..] {
             bit.enforce_equal(&Boolean::FALSE)
                 .expect("Enforcing equality is not allowed to fail.");
@@ -258,6 +258,17 @@ where
         let _ = compiler;
         self.is_eq(rhs)
             .expect("Equality checking is not allowed to fail.")
+    }
+}
+
+impl<F> BitDecomposition<R1CS<F>> for FpVar<F>
+where
+    F: PrimeField,
+{
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut R1CS<F>) -> Vec<Boolean<F>> {
+        let _ = compiler;
+        ToBitsGadget::to_bits_le(self).expect("Bit decomposition is not allowed to fail.")
     }
 }
 

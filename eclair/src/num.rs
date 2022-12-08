@@ -314,10 +314,8 @@ where
     COM: Has<bool>,
     T: BitDecomposition<COM>,
 {
-    type Error = T::Error;
-
     #[inline]
-    fn to_bits_le(&self, compiler: &mut COM) -> Result<Vec<Bool<COM>>, Self::Error> {
+    fn to_bits_le(&self, compiler: &mut COM) -> Vec<Bool<COM>> {
         self.0.to_bits_le(compiler)
     }
 }

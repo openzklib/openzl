@@ -1,10 +1,10 @@
 //! Arkworks Algebra
 
 use crate::{
-    constraint::{SynthesisError, R1CS},
+    constraint::R1CS,
     ec::ProjectiveCurve,
     ff::{BigInteger, Field, FpParameters, PrimeField},
-    r1cs_std::{fields::fp::FpVar, groups::CurveVar, ToBitsGadget},
+    r1cs_std::{fields::fp::FpVar, groups::CurveVar},
     serialize::CanonicalSerialize,
 };
 use alloc::vec::Vec;
@@ -107,14 +107,8 @@ where
     C: ProjectiveCurve,
     CV: CurveVar<C, ConstraintField<C>>,
 {
-    type Error = SynthesisError;
-
     #[inline]
-    fn to_bits_le(
-        &self,
-        compiler: &mut Compiler<C>,
-    ) -> Result<Vec<Bool<Compiler<C>>>, Self::Error> {
-        let _ = compiler;
-        self.0.to_bits_le()
+    fn to_bits_le(&self, compiler: &mut Compiler<C>) -> Vec<Bool<Compiler<C>>> {
+        self.0.to_bits_le(compiler)
     }
 }

@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 ### Added
+- [\#37](https://github.com/openzklib/openzl/pull/37) Add BitDecomposition in eclair
 - [\#3](https://github.com/openzklib/openzl/pull/3) Migrate some of OpenZL from the Manta-Network codebase
 - [\#4](https://github.com/openzklib/openzl/pull/4) Add CI and Relevant Contribution Files
 

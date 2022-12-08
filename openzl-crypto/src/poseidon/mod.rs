@@ -217,7 +217,7 @@ pub trait Specification<COM = ()>: Field<COM> + Constants + Sized // need sized?
 
     /// Computes the full permutation without the first round.
     ///
-    /// Unlike [`full_round`] and [`partial_round`] this takes the
+    /// Unlike [`Self::full_round`] and [`Self::partial_round`] this takes the
     /// full array of additive round constants for the permutation.
     #[inline]
     fn permute_without_first_round(

@@ -1,19 +1,24 @@
 //! Arkworks Algebra
 
 use crate::{
+    constraint::{SynthesisError, R1CS},
     ec::ProjectiveCurve,
     ff::{BigInteger, Field, FpParameters, PrimeField},
-    r1cs_std::{fields::fp::FpVar, groups::CurveVar},
+    r1cs_std::{fields::fp::FpVar, groups::CurveVar, ToBitsGadget},
     serialize::CanonicalSerialize,
 };
 use alloc::vec::Vec;
 use core::marker::PhantomData;
+use eclair::bool::{BitDecomposition, Bool};
 
 #[cfg(feature = "serde")]
 use openzl_util::serde::Serializer;
 
 /// Constraint Field Type
 type ConstraintField<C> = <<C as ProjectiveCurve>::BaseField as Field>::BasePrimeField;
+
+/// Compiler Type
+type Compiler<C> = R1CS<ConstraintField<C>>;
 
 /// Converts `scalar` to the bit representation of `O`.
 #[inline]
@@ -95,4 +100,21 @@ where
     C: ProjectiveCurve,
 {
     <<C as ProjectiveCurve>::ScalarField as PrimeField>::Params::MODULUS_BITS as usize
+}
+
+impl<C, CV> BitDecomposition<Compiler<C>> for ScalarVar<C, CV>
+where
+    C: ProjectiveCurve,
+    CV: CurveVar<C, ConstraintField<C>>,
+{
+    type Error = SynthesisError;
+
+    #[inline]
+    fn to_bits_le(
+        &self,
+        compiler: &mut Compiler<C>,
+    ) -> Result<Vec<Bool<Compiler<C>>>, Self::Error> {
+        let _ = compiler;
+        self.0.to_bits_le()
+    }
 }

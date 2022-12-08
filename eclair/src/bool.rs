@@ -84,14 +84,19 @@ pub trait BitDecomposition<COM = ()>
 where
     COM: Has<bool> + ?Sized,
 {
+    /// Error Type
+    type Error;
+
     /// Returns the little-endian bit representation of `self`, with trailing zeroes.
-    fn to_bits_le(&self, compiler: &mut COM) -> Vec<Bool<COM>>;
+    fn to_bits_le(&self, compiler: &mut COM) -> Result<Vec<Bool<COM>>, Self::Error>;
 }
 
 impl BitDecomposition for bool {
+    type Error = ();
+
     #[inline]
-    fn to_bits_le(&self, _: &mut ()) -> Vec<bool> {
-        [*self].to_vec()
+    fn to_bits_le(&self, _: &mut ()) -> Result<Vec<bool>, Self::Error> {
+        Ok([*self].to_vec())
     }
 }
 
@@ -100,8 +105,10 @@ macro_rules! impl_bit_decomposition {
     ($($type:tt),* $(,)?) => {
         $(
             impl BitDecomposition for $type {
+                type Error = ();
+
                 #[inline]
-                fn to_bits_le(&self, _: &mut ()) -> Vec<bool> {
+                fn to_bits_le(&self, _: &mut ()) -> Result<Vec<bool>, Self::Error> {
                     let mut bits = Vec::new();
                     for byte in (*self).to_le_bytes() {
                         for i in 0..8 {
@@ -109,7 +116,7 @@ macro_rules! impl_bit_decomposition {
                             bits.push((power & byte) > 0)
                         }
                     }
-                    bits
+                    Ok(bits)
                 }
             }
         )*

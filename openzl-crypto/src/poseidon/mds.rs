@@ -18,7 +18,7 @@
 
 use crate::poseidon::{
     matrix::{Matrix, MatrixOperations, SquareMatrix},
-    NativeField, FieldGeneration,
+    FieldGeneration, NativeField,
 };
 use alloc::vec;
 use core::fmt::Debug;

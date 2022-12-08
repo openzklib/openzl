@@ -22,7 +22,7 @@ use crate::{
 };
 use eclair::alloc::Constant;
 use openzl_crypto::poseidon::{
-    encryption::BlockElement, hash::DomainTag, Constants, NativeField, FieldGeneration,
+    encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
     ParameterFieldType,
 };
 

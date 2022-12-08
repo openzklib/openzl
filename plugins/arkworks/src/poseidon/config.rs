@@ -66,7 +66,7 @@ where
     type ParameterField = Fp<<Self as Specification>::Field>;
 }
 
-impl<const ARITY: usize> poseidon::Specification for Spec<ARITY>
+impl<const ARITY: usize> poseidon::Field for Spec<ARITY>
 where
     Self: Specification,
 {
@@ -113,7 +113,7 @@ where
     }
 }
 
-impl<const ARITY: usize> poseidon::Specification<Compiler<Self>> for Spec<ARITY>
+impl<const ARITY: usize> poseidon::Field<Compiler<Self>> for Spec<ARITY>
 where
     Self: Specification,
 {

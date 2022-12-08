@@ -16,7 +16,7 @@
 
 //! Poseidon Permutation Round Numbers
 
-use crate::poseidon::Specification;
+use crate::poseidon::Field;
 
 #[cfg(feature = "std")]
 use {openzl_util::num::Ceil, security::SecurityCondition};
@@ -123,16 +123,16 @@ impl Constants {
         }
     }
 
-    /// Converts a [`Specification`] into [`Constants`].
+    /// Converts a [`Field`] into [`Constants`].
     #[inline]
-    pub fn from_specification<S>() -> Self
+    pub fn from_specification<F>() -> Self
     where
-        S: Specification,
+        F: Field,
     {
         Self {
-            width: S::WIDTH,
-            full_rounds: S::FULL_ROUNDS,
-            partial_rounds: S::PARTIAL_ROUNDS,
+            width: F::WIDTH,
+            full_rounds: F::FULL_ROUNDS,
+            partial_rounds: F::PARTIAL_ROUNDS,
         }
     }
 

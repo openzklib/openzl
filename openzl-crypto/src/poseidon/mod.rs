@@ -49,8 +49,8 @@ pub mod round_constants;
 // pub mod arkworks;
 
 /// Field Element
-/// 
-/// This trait is intended to represent arithmetic operations performed on native 
+///
+/// This trait is intended to represent arithmetic operations performed on native
 /// field elements, specifically the constant parameters of a Poseidon permutation.
 /// See [`Field`] for arithmetic operations that may be performed in-circuit.
 pub trait NativeField {
@@ -111,6 +111,25 @@ pub trait Constants {
 
     /// Number of Partial Rounds
     const PARTIAL_ROUNDS: usize;
+
+    /// Half Number of Full Rounds
+    ///
+    /// Poseidon Hash first has [`HALF_FULL_ROUNDS`]-many full rounds in the beginning,
+    /// followed by [`PARTIAL_ROUNDS`]-many partial rounds in the middle, and finally
+    /// [`HALF_FULL_ROUNDS`]-many full rounds at the end.
+    ///
+    /// [`HALF_FULL_ROUNDS`]: Self::HALF_FULL_ROUNDS
+    /// [`PARTIAL_ROUNDS`]: Constants::PARTIAL_ROUNDS
+    const HALF_FULL_ROUNDS: usize = Self::FULL_ROUNDS / 2;
+
+    /// Total Number of Rounds
+    const ROUNDS: usize = Self::FULL_ROUNDS + Self::PARTIAL_ROUNDS;
+
+    /// Number of Entries in the MDS Matrix
+    const MDS_MATRIX_SIZE: usize = Self::WIDTH * Self::WIDTH;
+
+    /// Total Number of Additive Rounds Keys
+    const ADDITIVE_ROUND_KEYS_COUNT: usize = Self::ROUNDS * Self::WIDTH;
 }
 
 /// Parameter Field Type
@@ -119,8 +138,8 @@ pub trait ParameterFieldType {
     type ParameterField;
 }
 
-/// Poseidon Permutation Specification
-pub trait Specification<COM = ()>: Constants + ParameterFieldType {
+/// Poseidon Permutation Field
+pub trait Field<COM = ()>: Constants + ParameterFieldType {
     /// Field Type used for Permutation State
     type Field;
 
@@ -149,14 +168,120 @@ pub trait Specification<COM = ()>: Constants + ParameterFieldType {
     fn from_parameter(point: Self::ParameterField) -> Self::Field;
 }
 
+/// Poseidon Permutation Specification
+///
+/// This trait includes a blanket implementation of `mds_matrix_multiply` that may
+/// not be optimal for all choices of `COM`. In particular, Plonk-like arithmetizations
+/// should implement `mds_matrix_multiply` in a way that minimizes the cost of
+/// linear combinations.
+pub trait Specification<F, COM = ()>: Sized
+where
+    F: Field<COM>,
+{
+    /// Returns a reference to the additive keys for the given `round`.
+    ///
+    /// It is the responsibility of the implementor to ensure that this
+    /// slice has size `F::WIDTH`.
+    fn additive_keys(&self, round: usize) -> &[F::ParameterField];
+
+    /// Returns a reference to the (flattened) MDS Matrix of the permutation.
+    ///
+    /// It is the responsibility of the implementor to ensure that this
+    /// slice has size `F::WIDTH * F::WIDTH`.
+    fn mds_matrix(&self) -> &[F::ParameterField];
+
+    /// Computes the MDS matrix multiplication against the `state`.
+    #[inline]
+    fn mds_matrix_multiply(&self, state: &mut State<F, COM>, compiler: &mut COM) {
+        let mds_matrix = self.mds_matrix();
+        let mut next = Vec::with_capacity(F::WIDTH);
+        for i in 0..F::WIDTH {
+            // NOTE: clippy false-positive: Without `collect`, the two closures in `map` and
+            //       `reduce` will have simultaneous `&mut` access to `compiler`. Adding `collect`
+            //       allows `map` to be done before `reduce`.
+            #[allow(clippy::needless_collect)]
+            let linear_combination = state
+                .iter()
+                .enumerate()
+                .map(|(j, elem)| F::mul_const(elem, &mds_matrix[F::WIDTH * i + j], compiler))
+                .collect::<Vec<_>>();
+            next.push(
+                linear_combination
+                    .into_iter()
+                    .reduce(|acc, next| F::add(&acc, &next, compiler))
+                    .unwrap(),
+            );
+        }
+        mem::swap(&mut next.into_boxed_slice(), &mut state.0);
+    }
+
+    /// Computes a full round at the given `round` index on the internal permutation `state`.
+    #[inline]
+    fn full_round(&self, round: usize, state: &mut State<F, COM>, compiler: &mut COM) {
+        let keys = self.additive_keys(round);
+        for (i, elem) in state.iter_mut().enumerate() {
+            F::add_const_assign(elem, &keys[i], compiler);
+            F::apply_sbox(elem, compiler);
+        }
+        self.mds_matrix_multiply(state, compiler);
+    }
+
+    /// Computes a partial round at the given `round` index on the internal permutation `state`.
+    #[inline]
+    fn partial_round(&self, round: usize, state: &mut State<F, COM>, compiler: &mut COM) {
+        let keys = self.additive_keys(round);
+        for (i, elem) in state.iter_mut().enumerate() {
+            F::add_const_assign(elem, &keys[i], compiler);
+        }
+        F::apply_sbox(&mut state.0[0], compiler);
+        self.mds_matrix_multiply(state, compiler);
+    }
+
+    /// Computes the full permutation without the first round.
+    #[inline]
+    fn permute_without_first_round(&self, state: &mut State<F, COM>, compiler: &mut COM) {
+        for round in 1..F::HALF_FULL_ROUNDS {
+            self.full_round(round, state, compiler);
+        }
+        for round in F::HALF_FULL_ROUNDS..(F::HALF_FULL_ROUNDS + F::PARTIAL_ROUNDS) {
+            self.partial_round(round, state, compiler);
+        }
+        for round in (F::HALF_FULL_ROUNDS + F::PARTIAL_ROUNDS)..(F::FULL_ROUNDS + F::PARTIAL_ROUNDS)
+        {
+            self.full_round(round, state, compiler);
+        }
+    }
+
+    /// Computes the first round borrowing the `input` and `domain_tag` returning the [`State`]
+    /// after the first round. This method does not check that `N + 1 = S::WIDTH`.
+    #[inline]
+    fn first_round_with_domain_tag_unchecked<const N: usize>(
+        &self,
+        domain_tag: &F::Field,
+        input: [&F::Field; N],
+        compiler: &mut COM,
+    ) -> State<F, COM> {
+        let mut state = Vec::with_capacity(F::WIDTH);
+        let additive_round_keys = self.additive_keys(0);
+        for (i, point) in iter::once(domain_tag).chain(input).enumerate() {
+            let mut elem = F::add_const(point, &additive_round_keys[i], compiler);
+            F::apply_sbox(&mut elem, compiler);
+            state.push(elem);
+        }
+        let mut state = State(state.into_boxed_slice());
+        self.mds_matrix_multiply(&mut state, compiler);
+        state
+    }
+}
+
 /// Poseidon Internal State
 #[cfg_attr(
     feature = "serde",
     derive(Deserialize, Serialize),
     serde(
         bound(
-            deserialize = "S::Field: Deserialize<'de>",
-            serialize = "S::Field: Serialize"
+            deserialize = "F::Field: Deserialize<'de>",
+            serialize = "F::Field: Serialize"
         ),
         crate = "openzl_util::serde",
         deny_unknown_fields
@@ -164,47 +289,47 @@ pub trait Specification<COM = ()>: Constants + ParameterFieldType {
 )]
 #[derive(derivative::Derivative)]
 #[derivative(
-    Clone(bound = "S::Field: Clone"),
-    Debug(bound = "S::Field: Debug"),
-    Eq(bound = "S::Field: Eq"),
-    Hash(bound = "S::Field: Hash"),
-    PartialEq(bound = "S::Field: PartialEq")
+    Clone(bound = "F::Field: Clone"),
+    Debug(bound = "F::Field: Debug"),
+    Eq(bound = "F::Field: Eq"),
+    Hash(bound = "F::Field: Hash"),
+    PartialEq(bound = "F::Field: PartialEq")
 )]
-pub struct State<S, COM = ()>(Box<[S::Field]>)
+pub struct State<F, COM = ()>(Box<[F::Field]>)
 where
-    S: Specification<COM>;
+    F: Field<COM>;
 
-impl<S, COM> State<S, COM>
+impl<F, COM> State<F, COM>
 where
-    S: Specification<COM>,
+    F: Field<COM>,
 {
     /// Builds a new [`State`] from `state`.
     #[inline]
-    pub fn new(state: Box<[S::Field]>) -> Self {
-        assert_eq!(state.len(), S::WIDTH);
+    pub fn new(state: Box<[F::Field]>) -> Self {
+        assert_eq!(state.len(), F::WIDTH);
         Self(state)
     }
 
     /// Returns a slice iterator over the state.
     #[inline]
-    pub fn iter(&self) -> slice::Iter<S::Field> {
+    pub fn iter(&self) -> slice::Iter<F::Field> {
         self.0.iter()
     }
 
     /// Returns a mutable slice iterator over the state.
     #[inline]
-    pub fn iter_mut(&mut self) -> slice::IterMut<S::Field> {
+    pub fn iter_mut(&mut self) -> slice::IterMut<F::Field> {
         self.0.iter_mut()
     }
 }
 
-impl<S, COM> Constant<COM> for State<S, COM>
+impl<F, COM> Constant<COM> for State<F, COM>
 where
-    S: Specification<COM> + Constant<COM>,
-    S::Field: Constant<COM>,
-    S::Type: Specification<Field = Const<S::Field, COM>>,
+    F: Field<COM> + Constant<COM>,
+    F::Field: Constant<COM>,
+    F::Type: Field<Field = Const<F::Field, COM>>,
 {
-    type Type = State<S::Type>;
+    type Type = State<F::Type>;
 
     #[inline]
     fn new_constant(this: &Self::Type, compiler: &mut COM) -> Self {
@@ -212,12 +337,12 @@ where
     }
 }
 
-impl<S> Decode for State<S>
+impl<F> Decode for State<F>
 where
-    S: Specification,
-    S::Field: Decode,
+    F: Field,
+    F::Field: Decode,
 {
-    type Error = Option<<S::Field as Decode>::Error>;
+    type Error = Option<<F::Field as Decode>::Error>;
 
     #[inline]
     fn decode<R>(reader: R) -> Result<Self, DecodeError<R::Error, Self::Error>>
@@ -228,10 +353,10 @@ where
     }
 }
 
-impl<S> Encode for State<S>
+impl<F> Encode for State<F>
 where
-    S: Specification,
-    S::Field: Encode,
+    F: Field,
+    F::Field: Encode,
 {
     #[inline]
     fn encode<W>(&self, writer: W) -> Result<(), W::Error>
@@ -242,10 +367,10 @@ where
     }
 }
 
-impl<S, D> Sample<D> for State<S>
+impl<F, D> Sample<D> for State<F>
 where
-    S: Specification,
-    S::Field: Sample<D>,
+    F: Field,
+    F::Field: Sample<D>,
     D: Clone,
 {
     #[inline]
@@ -255,7 +380,7 @@ where
     {
         Self(
             iter::repeat_with(|| rng.sample(distribution.clone()))
-                .take(S::WIDTH)
+                .take(F::WIDTH)
                 .collect(),
         )
     }
@@ -267,8 +392,8 @@ where
     derive(Deserialize, Serialize),
     serde(
         bound(
-            deserialize = "S::ParameterField: Deserialize<'de>",
-            serialize = "S::ParameterField: Serialize"
+            deserialize = "F::ParameterField: Deserialize<'de>",
+            serialize = "F::ParameterField: Serialize"
         ),
         crate = "openzl_util::serde",
         deny_unknown_fields
@@ -276,49 +401,30 @@ where
 )]
 #[derive(derivative::Derivative)]
 #[derivative(
-    Clone(bound = "S::ParameterField: Clone"),
-    Debug(bound = "S::ParameterField: Debug"),
-    Eq(bound = "S::ParameterField: Eq"),
-    Hash(bound = "S::ParameterField: Hash"),
-    PartialEq(bound = "S::ParameterField: PartialEq")
+    Clone(bound = "F::ParameterField: Clone"),
+    Debug(bound = "F::ParameterField: Debug"),
+    Eq(bound = "F::ParameterField: Eq"),
+    Hash(bound = "F::ParameterField: Hash"),
+    PartialEq(bound = "F::ParameterField: PartialEq")
 )]
-pub struct Permutation<S, COM = ()>
+pub struct Permutation<F, COM = ()>
 where
-    S: Specification<COM>,
+    F: Field<COM>,
 {
     /// Additive Round Keys
-    additive_round_keys: Box<[S::ParameterField]>,
+    additive_round_keys: Box<[F::ParameterField]>,
 
     /// MDS Matrix
-    mds_matrix: Box<[S::ParameterField]>,
+    mds_matrix: Box<[F::ParameterField]>,
 
     /// Type Parameter Marker
     __: PhantomData<COM>,
 }
 
-impl<S, COM> Permutation<S, COM>
+impl<F, COM> Permutation<F, COM>
 where
-    S: Specification<COM>,
+    F: Field<COM>,
 {
-    /// Half Number of Full Rounds
-    ///
-    /// Poseidon Hash first has [`HALF_FULL_ROUNDS`]-many full rounds in the beginning,
-    /// followed by [`PARTIAL_ROUNDS`]-many partial rounds in the middle, and finally
-    /// [`HALF_FULL_ROUNDS`]-many full rounds at the end.
-    ///
-    /// [`HALF_FULL_ROUNDS`]: Self::HALF_FULL_ROUNDS
-    /// [`PARTIAL_ROUNDS`]: Constants::PARTIAL_ROUNDS
-    pub const HALF_FULL_ROUNDS: usize = S::FULL_ROUNDS / 2;
-
-    /// Total Number of Rounds
-    pub const ROUNDS: usize = S::FULL_ROUNDS + S::PARTIAL_ROUNDS;
-
-    /// Number of Entries in the MDS Matrix
-    pub const MDS_MATRIX_SIZE: usize = S::WIDTH * S::WIDTH;
-
-    /// Total Number of Additive Rounds Keys
-    pub const ADDITIVE_ROUND_KEYS_COUNT: usize = Self::ROUNDS * S::WIDTH;
-
     /// Builds a new [`Permutation`] from `additive_round_keys` and `mds_matrix`.
     ///
     /// # Panics
@@ -327,17 +433,17 @@ where
     /// [`Specification`].
     #[inline]
     pub fn new(
-        additive_round_keys: Box<[S::ParameterField]>,
-        mds_matrix: Box<[S::ParameterField]>,
+        additive_round_keys: Box<[F::ParameterField]>,
+        mds_matrix: Box<[F::ParameterField]>,
     ) -> Self {
         assert_eq!(
             additive_round_keys.len(),
-            Self::ADDITIVE_ROUND_KEYS_COUNT,
+            F::ADDITIVE_ROUND_KEYS_COUNT,
             "Additive Rounds Keys are not the correct size."
         );
         assert_eq!(
             mds_matrix.len(),
-            Self::MDS_MATRIX_SIZE,
+            F::MDS_MATRIX_SIZE,
             "MDS Matrix is not the correct size."
         );
         Self::new_unchecked(additive_round_keys, mds_matrix)
@@ -347,8 +453,8 @@ where
     /// checking their sizes.
     #[inline]
     fn new_unchecked(
-        additive_round_keys: Box<[S::ParameterField]>,
-        mds_matrix: Box<[S::ParameterField]>,
+        additive_round_keys: Box<[F::ParameterField]>,
+        mds_matrix: Box<[F::ParameterField]>,
     ) -> Self {
         Self {
             additive_round_keys,
@@ -356,104 +462,31 @@ where
             __: PhantomData,
         }
     }
+}
 
-    /// Returns the additive keys for the given `round`.
+impl<F, COM> Specification<F, COM> for Permutation<F, COM>
+where
+    F: Field<COM>,
+{
     #[inline]
-    pub fn additive_keys(&self, round: usize) -> &[S::ParameterField] {
-        let start = round * S::WIDTH;
-        &self.additive_round_keys[start..start + S::WIDTH]
+    fn additive_keys(&self, round: usize) -> &[F::ParameterField] {
+        let start = round * F::WIDTH;
+        &self.additive_round_keys[start..start + F::WIDTH]
     }
 
-    /// Computes the MDS matrix multiplication against the `state`.
     #[inline]
-    pub fn mds_matrix_multiply(&self, state: &mut State<S, COM>, compiler: &mut COM) {
-        let mut next = Vec::with_capacity(S::WIDTH);
-        for i in 0..S::WIDTH {
-            // NOTE: clippy false-positive: Without `collect`, the two closures in `map` and
-            //       `reduce` will have simultaneous `&mut` access to `compiler`. Adding `collect`
-            //       allows `map` to be done before `reduce`.
-            #[allow(clippy::needless_collect)]
-            let linear_combination = state
-                .iter()
-                .enumerate()
-                .map(|(j, elem)| S::mul_const(elem, &self.mds_matrix[S::WIDTH * i + j], compiler))
-                .collect::<Vec<_>>();
-            next.push(
-                linear_combination
-                    .into_iter()
-                    .reduce(|acc, next| S::add(&acc, &next, compiler))
-                    .unwrap(),
-            );
-        }
-        mem::swap(&mut next.into_boxed_slice(), &mut state.0);
-    }
-
-    /// Computes a full round at the given `round` index on the internal permutation `state`.
-    #[inline]
-    pub fn full_round(&self, round: usize, state: &mut State<S, COM>, compiler: &mut COM) {
-        let keys = self.additive_keys(round);
-        for (i, elem) in state.iter_mut().enumerate() {
-            S::add_const_assign(elem, &keys[i], compiler);
-            S::apply_sbox(elem, compiler);
-        }
-        self.mds_matrix_multiply(state, compiler);
-    }
-
-    /// Computes a partial round at the given `round` index on the internal permutation `state`.
-    #[inline]
-    pub fn partial_round(&self, round: usize, state: &mut State<S, COM>, compiler: &mut COM) {
-        let keys = self.additive_keys(round);
-        for (i, elem) in state.iter_mut().enumerate() {
-            S::add_const_assign(elem, &keys[i], compiler);
-        }
-        S::apply_sbox(&mut state.0[0], compiler);
-        self.mds_matrix_multiply(state, compiler);
-    }
-
-    /// Computes the full permutation without the first round.
-    #[inline]
-    fn permute_without_first_round(&self, state: &mut State<S, COM>, compiler: &mut COM) {
-        for round in 1..Self::HALF_FULL_ROUNDS {
-            self.full_round(round, state, compiler);
-        }
-        for round in Self::HALF_FULL_ROUNDS..(Self::HALF_FULL_ROUNDS + S::PARTIAL_ROUNDS) {
-            self.partial_round(round, state, compiler);
-        }
-        for round in
-            (Self::HALF_FULL_ROUNDS + S::PARTIAL_ROUNDS)..(S::FULL_ROUNDS + S::PARTIAL_ROUNDS)
-        {
-            self.full_round(round, state, compiler);
-        }
-    }
-
-    /// Computes the first round borrowing the `input` and `domain_tag` returning the [`State`]
-    /// after the first round. This method does not check that `N + 1 = S::WIDTH`.
-    #[inline]
-    fn first_round_with_domain_tag_unchecked<const N: usize>(
-        &self,
-        domain_tag: &S::Field,
-        input: [&S::Field; N],
-        compiler: &mut COM,
-    ) -> State<S, COM> {
-        let mut state = Vec::with_capacity(S::WIDTH);
-        for (i, point) in iter::once(domain_tag).chain(input).enumerate() {
-            let mut elem = S::add_const(point, &self.additive_round_keys[i], compiler);
-            S::apply_sbox(&mut elem, compiler);
-            state.push(elem);
-        }
-        let mut state = State(state.into_boxed_slice());
-        self.mds_matrix_multiply(&mut state, compiler);
-        state
+    fn mds_matrix(&self) -> &[<F>::ParameterField] {
+        &self.mds_matrix
     }
 }
 
-impl<S, COM> Constant<COM> for Permutation<S, COM>
+impl<F, COM> Constant<COM> for Permutation<F, COM>
 where
-    S: Specification<COM> + Constant<COM>,
-    S::Type: Specification<ParameterField = Const<S::ParameterField, COM>>,
-    S::ParameterField: Constant<COM>,
+    F: Field<COM> + Constant<COM>,
+    F::Type: Field<ParameterField = Const<F::ParameterField, COM>>,
+    F::ParameterField: Constant<COM>,
 {
-    type Type = Permutation<S::Type>;
+    type Type = Permutation<F::Type>;
 
     #[inline]
     fn new_constant(this: &Self::Type, compiler: &mut COM) -> Self {
@@ -470,12 +503,12 @@ where
     }
 }
 
-impl<S, COM> Decode for Permutation<S, COM>
+impl<F, COM> Decode for Permutation<F, COM>
 where
-    S: Specification<COM>,
-    S::ParameterField: Decode,
+    F: Field<COM>,
+    F::ParameterField: Decode,
 {
-    type Error = <S::ParameterField as Decode>::Error;
+    type Error = <F::ParameterField as Decode>::Error;
 
     #[inline]
     fn decode<R>(mut reader: R) -> Result<Self, DecodeError<R::Error, Self::Error>>
@@ -483,20 +516,20 @@ where
         R: Read,
     {
         Ok(Self::new_unchecked(
-            (0..Self::ADDITIVE_ROUND_KEYS_COUNT)
+            (0..F::ADDITIVE_ROUND_KEYS_COUNT)
                 .map(|_| Decode::decode(&mut reader))
                 .collect::<Result<_, _>>()?,
-            (0..Self::MDS_MATRIX_SIZE)
+            (0..F::MDS_MATRIX_SIZE)
                 .map(|_| Decode::decode(&mut reader))
                 .collect::<Result<_, _>>()?,
         ))
     }
 }
 
-impl<S, COM> Encode for Permutation<S, COM>
+impl<F, COM> Encode for Permutation<F, COM>
 where
-    S: Specification<COM>,
-    S::ParameterField: Encode,
+    F: Field<COM>,
+    F::ParameterField: Encode,
 {
     #[inline]
     fn encode<W>(&self, mut writer: W) -> Result<(), W::Error>
@@ -513,11 +546,11 @@ where
     }
 }
 
-impl<S, COM> PseudorandomPermutation<COM> for Permutation<S, COM>
+impl<F, COM> PseudorandomPermutation<COM> for Permutation<F, COM>
 where
-    S: Specification<COM>,
+    F: Field<COM>,
 {
-    type Domain = State<S, COM>;
+    type Domain = State<F, COM>;
 
     #[inline]
     fn permute(&self, state: &mut Self::Domain, compiler: &mut COM) {
@@ -526,10 +559,10 @@ where
     }
 }
 
-impl<S, COM> Sample for Permutation<S, COM>
+impl<F, COM> Sample for Permutation<F, COM>
 where
-    S: Specification<COM>,
-    S::ParameterField: NativeField + FieldGeneration,
+    F: Field<COM>,
+    F::ParameterField: NativeField + FieldGeneration,
 {
     #[inline]
     fn sample<R>(distribution: (), rng: &mut R) -> Self
@@ -538,9 +571,9 @@ where
     {
         let _ = (distribution, rng);
         Self::new_unchecked(
-            generate_round_constants(S::WIDTH, S::FULL_ROUNDS, S::PARTIAL_ROUNDS)
+            generate_round_constants(F::WIDTH, F::FULL_ROUNDS, F::PARTIAL_ROUNDS)
                 .into_boxed_slice(),
-            MdsMatrices::generate_mds(S::WIDTH)
+            MdsMatrices::generate_mds(F::WIDTH)
                 .to_row_major()
                 .into_boxed_slice(),
         )

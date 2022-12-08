@@ -2,9 +2,7 @@
 
 use crate::{
     hash::ArrayHashFunction,
-    poseidon::{
-        Field, FieldGeneration, NativeField, ParameterFieldType, Permutation, Specification,
-    },
+    poseidon::{FieldGeneration, NativeField, ParameterFieldType, Permutation, Specification},
 };
 use alloc::vec::Vec;
 use core::{fmt::Debug, hash::Hash, marker::PhantomData};
@@ -33,8 +31,8 @@ where
     derive(Deserialize, Serialize),
     serde(
         bound(
-            deserialize = "Permutation<F, COM>: Deserialize<'de>, F::Field: Deserialize<'de>",
-            serialize = "Permutation<F, COM>: Serialize, F::Field: Serialize"
+            deserialize = "Permutation<S, COM>: Deserialize<'de>, S::Field: Deserialize<'de>",
+            serialize = "Permutation<S, COM>: Serialize, S::Field: Serialize"
         ),
         crate = "openzl_util::serde",
         deny_unknown_fields
@@ -42,36 +40,36 @@ where
 )]
 #[derive(derivative::Derivative)]
 #[derivative(
-    Clone(bound = "Permutation<F, COM>: Clone, F::Field: Clone"),
-    Debug(bound = "Permutation<F, COM>: Debug, F::Field: Debug"),
-    Eq(bound = "Permutation<F, COM>: Eq, F::Field: Eq"),
-    Hash(bound = "Permutation<F, COM>: Hash, F::Field: Hash"),
-    PartialEq(bound = "Permutation<F, COM>: PartialEq, F::Field: PartialEq")
+    Clone(bound = "Permutation<S, COM>: Clone, S::Field: Clone"),
+    Debug(bound = "Permutation<S, COM>: Debug, S::Field: Debug"),
+    Eq(bound = "Permutation<S, COM>: Eq, S::Field: Eq"),
+    Hash(bound = "Permutation<S, COM>: Hash, S::Field: Hash"),
+    PartialEq(bound = "Permutation<S, COM>: PartialEq, S::Field: PartialEq")
 )]
-pub struct Hasher<F, T, const ARITY: usize, COM = ()>
+pub struct Hasher<S, T, const ARITY: usize, COM = ()>
 where
-    F: Field<COM>,
-    T: DomainTag<F>,
+    S: Specification<COM>,
+    T: DomainTag<S>,
 {
     /// Poseidon Permutation
-    permutation: Permutation<F, COM>,
+    permutation: Permutation<S, COM>,
 
     /// Domain Tag
-    domain_tag: F::Field,
+    domain_tag: S::Field,
 
     /// Type Parameter Marker
     __: PhantomData<T>,
 }
 
-impl<F, T, const ARITY: usize, COM> Hasher<F, T, ARITY, COM>
+impl<S, T, const ARITY: usize, COM> Hasher<S, T, ARITY, COM>
 where
-    F: Field<COM>,
-    T: DomainTag<F>,
+    S: Specification<COM>,
+    T: DomainTag<S>,
 {
     /// Builds a new [`Hasher`] over `permutation` and `domain_tag` without checking that
     /// `ARITY + 1 == S::WIDTH`.
     #[inline]
-    fn new_unchecked(permutation: Permutation<F, COM>, domain_tag: F::Field) -> Self {
+    fn new_unchecked(permutation: Permutation<S, COM>, domain_tag: S::Field) -> Self {
         Self {
             permutation,
             domain_tag,
@@ -81,20 +79,20 @@ where
 
     /// Builds a new [`Hasher`] over `permutation` and `domain_tag`.
     #[inline]
-    pub fn new(permutation: Permutation<F, COM>, domain_tag: F::Field) -> Self {
-        assert_eq!(ARITY + 1, F::WIDTH);
+    pub fn new(permutation: Permutation<S, COM>, domain_tag: S::Field) -> Self {
+        assert_eq!(ARITY + 1, S::WIDTH);
         Self::new_unchecked(permutation, domain_tag)
     }
 
     /// Builds a new [`Hasher`] over `permutation` using `T` to generate the domain tag.
     #[inline]
-    pub fn from_permutation(permutation: Permutation<F, COM>) -> Self {
-        Self::new(permutation, F::from_parameter(T::domain_tag()))
+    pub fn from_permutation(permutation: Permutation<S, COM>) -> Self {
+        Self::new(permutation, S::from_parameter(T::domain_tag()))
     }
 
     /// Computes the hash over `input` in the given `compiler` and returns the untruncated state.
     #[inline]
-    pub fn hash_untruncated(&self, input: [&F::Field; ARITY], compiler: &mut COM) -> Vec<F::Field> {
+    pub fn hash_untruncated(&self, input: [&S::Field; ARITY], compiler: &mut COM) -> Vec<S::Field> {
         let mut state = self.permutation.first_round_with_domain_tag_unchecked(
             &self.domain_tag,
             input,
@@ -106,15 +104,15 @@ where
     }
 }
 
-impl<F, T, const ARITY: usize, COM> Constant<COM> for Hasher<F, T, ARITY, COM>
+impl<S, T, const ARITY: usize, COM> Constant<COM> for Hasher<S, T, ARITY, COM>
 where
-    F: Field<COM> + Constant<COM>,
-    F::Type: Field<ParameterField = Const<F::ParameterField, COM>>,
-    F::ParameterField: Constant<COM>,
-    T: DomainTag<F> + Constant<COM>,
-    T::Type: DomainTag<F::Type>,
+    S: Specification<COM> + Constant<COM>,
+    S::Type: Specification<ParameterField = Const<S::ParameterField, COM>>,
+    S::ParameterField: Constant<COM>,
+    T: DomainTag<S> + Constant<COM>,
+    T::Type: DomainTag<S::Type>,
 {
-    type Type = Hasher<F::Type, T::Type, ARITY>;
+    type Type = Hasher<S::Type, T::Type, ARITY>;
 
     #[inline]
     fn new_constant(this: &Self::Type, compiler: &mut COM) -> Self {
@@ -122,13 +120,13 @@ where
     }
 }
 
-impl<F, T, const ARITY: usize, COM> ArrayHashFunction<ARITY, COM> for Hasher<F, T, ARITY, COM>
+impl<S, T, const ARITY: usize, COM> ArrayHashFunction<ARITY, COM> for Hasher<S, T, ARITY, COM>
 where
-    F: Field<COM>,
-    T: DomainTag<F>,
+    S: Specification<COM>,
+    T: DomainTag<S>,
 {
-    type Input = F::Field;
-    type Output = F::Field;
+    type Input = S::Field;
+    type Output = S::Field;
 
     #[inline]
     fn hash(&self, input: [&Self::Input; ARITY], compiler: &mut COM) -> Self::Output {
@@ -136,14 +134,14 @@ where
     }
 }
 
-impl<F, T, const ARITY: usize, COM> Decode for Hasher<F, T, ARITY, COM>
+impl<S, T, const ARITY: usize, COM> Decode for Hasher<S, T, ARITY, COM>
 where
-    F: Field<COM>,
-    F::Field: Decode,
-    F::ParameterField: Decode<Error = <F::Field as Decode>::Error>,
-    T: DomainTag<F>,
+    S: Specification<COM>,
+    S::Field: Decode,
+    S::ParameterField: Decode<Error = <S::Field as Decode>::Error>,
+    T: DomainTag<S>,
 {
-    type Error = <F::Field as Decode>::Error;
+    type Error = <S::Field as Decode>::Error;
 
     #[inline]
     fn decode<R>(mut reader: R) -> Result<Self, DecodeError<R::Error, Self::Error>>
@@ -157,12 +155,12 @@ where
     }
 }
 
-impl<F, T, const ARITY: usize, COM> Encode for Hasher<F, T, ARITY, COM>
+impl<S, T, const ARITY: usize, COM> Encode for Hasher<S, T, ARITY, COM>
 where
-    F: Field<COM>,
-    F::Field: Encode,
-    F::ParameterField: Encode,
-    T: DomainTag<F>,
+    S: Specification<COM>,
+    S::Field: Encode,
+    S::ParameterField: Encode,
+    T: DomainTag<S>,
 {
     #[inline]
     fn encode<W>(&self, mut writer: W) -> Result<(), W::Error>
@@ -175,11 +173,11 @@ where
     }
 }
 
-impl<F, T, const ARITY: usize, COM> Sample for Hasher<F, T, ARITY, COM>
+impl<S, T, const ARITY: usize, COM> Sample for Hasher<S, T, ARITY, COM>
 where
-    F: Field<COM>,
-    F::ParameterField: NativeField + FieldGeneration,
-    T: DomainTag<F>,
+    S: Specification<COM>,
+    S::ParameterField: NativeField + FieldGeneration,
+    T: DomainTag<S>,
 {
     #[inline]
     fn sample<R>(distribution: (), rng: &mut R) -> Self

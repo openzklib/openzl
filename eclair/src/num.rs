@@ -2,12 +2,13 @@
 
 use crate::{
     alloc::{Allocator, Variable},
-    bool::{Assert, Bool, ConditionalSelect, ConditionalSwap},
+    bool::{Assert, BitDecomposition, Bool, ConditionalSelect, ConditionalSwap},
     cmp::PartialEq,
     ops::{Add, AddAssign, Mul, MulAssign, Not},
     Has,
 };
 use core::{borrow::Borrow, ops::Deref};
+use rust_alloc::vec::Vec;
 
 /// Additive Identity
 pub trait Zero<COM = ()> {
@@ -305,6 +306,17 @@ where
         COM: Assert,
     {
         self.0.assert_equal(&rhs.0, compiler)
+    }
+}
+
+impl<T, const BITS: usize, COM> BitDecomposition<COM> for UnsignedInteger<T, BITS>
+where
+    COM: Has<bool>,
+    T: BitDecomposition<COM>,
+{
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut COM) -> Vec<Bool<COM>> {
+        self.0.to_bits_le(compiler)
     }
 }
 

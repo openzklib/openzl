@@ -343,7 +343,7 @@ pub mod measure {
             let before = self.base.measure();
             let value = f(self.base);
             self.measurements.push((
-                format!("{}", label),
+                format!("{label}"),
                 self.base
                     .measure()
                     .checked_sub(before)

@@ -79,6 +79,45 @@ pub trait AssertEq: Assert {
 
 impl<COM> AssertEq for COM where COM: Assert {}
 
+/// Bit Decomposition
+pub trait BitDecomposition<COM = ()>
+where
+    COM: Has<bool> + ?Sized,
+{
+    /// Returns the little-endian bit representation of `self`, with trailing zeroes.
+    fn to_bits_le(&self, compiler: &mut COM) -> Vec<Bool<COM>>;
+}
+
+impl BitDecomposition for bool {
+    #[inline]
+    fn to_bits_le(&self, _: &mut ()) -> Vec<bool> {
+        [*self].to_vec()
+    }
+}
+
+/// Implements [`BitDecomposition`] for the given `$type`.
+macro_rules! impl_bit_decomposition {
+    ($($type:tt),* $(,)?) => {
+        $(
+            impl BitDecomposition for $type {
+                #[inline]
+                fn to_bits_le(&self, _: &mut ()) -> Vec<bool> {
+                    let mut bits = Vec::new();
+                    for byte in (*self).to_le_bytes() {
+                        for i in 0..8 {
+                            let power = 1 << i;
+                            bits.push((power & byte) > 0)
+                        }
+                    }
+                    bits
+                }
+            }
+        )*
+    }
+}
+
+impl_bit_decomposition!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
+
 /// Conditional Selection
 pub trait ConditionalSelect<COM = ()>: Sized
 where

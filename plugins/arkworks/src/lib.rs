@@ -36,3 +36,7 @@ pub mod pairing;
 pub mod rand;
 pub mod ratio;
 pub mod serialize;
+
+#[cfg(feature = "ark-groth16")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "ark-groth16")))]
+pub mod groth16;

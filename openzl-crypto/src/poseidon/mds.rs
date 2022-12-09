@@ -1,7 +1,7 @@
 //! MDS Data Generation
 
 use crate::poseidon::{
-    matrix::{Matrix, MatrixOperations, SquareMatrix},
+    matrix::{Matrix, MatrixOperations, SparseMatrix, SquareMatrix},
     FieldGeneration, NativeField,
 };
 use alloc::vec;
@@ -148,70 +148,6 @@ where
             m_prime,
             m_double_prime,
         }
-    }
-}
-
-/// A `SparseMatrix` is specifically one of the form of M''.
-/// This means its first row and column are each dense, and the interior matrix
-/// (minor to the element in both the row and column) is the identity.
-#[derive(Debug, Clone)]
-pub struct SparseMatrix<F>
-where
-    F: NativeField,
-{
-    /// `w_hat` is the first column of the M'' matrix. It will be directly multiplied (scalar product) with a row of state elements.
-    pub w_hat: Vec<F>,
-    /// `v_rest` contains all but the first (already included in `w_hat`).
-    pub v_rest: Vec<F>,
-}
-
-impl<F> SparseMatrix<F>
-where
-    F: NativeField,
-{
-    /// Checks if `self` is square and `self[1..][1..]` is identity.
-    pub fn is_sparse(m: &SquareMatrix<F>) -> bool
-    where
-        F: Clone + PartialEq,
-    {
-        match m.minor(0, 0) {
-            Some(minor_matrix) => minor_matrix.is_identity(),
-            None => false,
-        }
-    }
-
-    /// Generates sparse matrix from m_double_prime matrix.
-    pub fn new(m_double_prime: SquareMatrix<F>) -> Option<Self>
-    where
-        F: Clone + PartialEq,
-    {
-        if !Self::is_sparse(&m_double_prime) {
-            return None;
-        }
-        let m_double_prime = Matrix::from(m_double_prime);
-        let w_hat = m_double_prime.rows().map(|r| r[0].clone()).collect();
-        let v_rest = m_double_prime[0][1..].to_vec();
-        Some(Self { w_hat, v_rest })
-    }
-
-    /// Size of the sparse matrix.
-    pub fn size(&self) -> usize {
-        self.w_hat.len()
-    }
-
-    /// Generates dense-matrix representation from sparse matrix representation.
-    pub fn to_matrix(self) -> Matrix<F>
-// where
-    //     F: Clone,
-    {
-        let mut matrix = Matrix::identity(self.size());
-        for (j, elem) in self.w_hat.into_iter().enumerate() {
-            matrix[j][0] = elem;
-        }
-        for (i, elem) in self.v_rest.into_iter().enumerate() {
-            matrix[0][i + 1] = elem;
-        }
-        matrix
     }
 }
 

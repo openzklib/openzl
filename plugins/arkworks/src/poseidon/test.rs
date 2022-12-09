@@ -1,18 +1,58 @@
 // move tests that need arkworks types here
 
-#[cfg(feature = "ark-bls12-381")]
+#[cfg(feature = "bls12-381")]
 use {
     crate::{constraint::fp::Fp, ff::field_new, poseidon::NativeField},
-    ark_bls12_381::Fr,
+    bls12_381::Fr,
 };
 
-#[cfg(feature = "ark-bls12-381")]
+#[cfg(feature = "bn254")]
+mod duplexer {
+    use crate::{constraint::fp::Fp, poseidon::Spec};
+    use alloc::boxed::Box;
+    use openzl_crypto::{
+        encryption::{Decrypt, Encrypt},
+        poseidon::{
+            encryption::{BlockArray, FixedDuplexer, PlaintextBlock},
+            Constants,
+        },
+    };
+    use openzl_util::rand::{OsRng, Sample};
+
+    /// Tests Poseidon duplexer encryption works.
+    #[test]
+    fn poseidon_duplexer_test() {
+        const N: usize = 3;
+        let mut rng = OsRng;
+        let duplexer = FixedDuplexer::<1, Spec<bn254::Fr, N>>::gen(&mut rng);
+        let field_elements = <[Fp<bn254::Fr>; Spec::<bn254::Fr, N>::WIDTH - 1]>::gen(&mut rng);
+        let plaintext_block = PlaintextBlock(Box::new(field_elements));
+        let plaintext = BlockArray::<_, 1>([plaintext_block].into());
+        let mut key = Vec::new();
+        let key_element_1 = Fp::<bn254::Fr>::gen(&mut rng);
+        let key_element_2 = Fp::<bn254::Fr>::gen(&mut rng);
+        key.push(key_element_1);
+        key.push(key_element_2);
+        let header = vec![];
+        let ciphertext = duplexer.encrypt(&key, &(), &header, &plaintext, &mut ());
+        let (tag_matches, decrypted_plaintext) =
+            duplexer.decrypt(&key, &header, &ciphertext, &mut ());
+        assert!(tag_matches, "Tag doesn't match");
+        assert_eq!(
+            plaintext, decrypted_plaintext,
+            "Decrypted plaintext is not equal to original one."
+        );
+    }
+}
+
+#[cfg(feature = "bls12-381")]
 mod round_constants {
     use super::*;
     use openzl_crypto::poseidon::round_constants::{generate_lfsr, sample_field_element};
 
-    #[allow(clippy::needless_borrow)] // NOTE: Clippy false positive https://github.com/rust-lang/rust-clippy/issues/9710
+    // NOTE: Clippy false positive https://github.com/rust-lang/rust-clippy/issues/9710
     /// Checks if [`GrainLFSR`] matches hardcoded sage outputs.
+    #[allow(clippy::needless_borrow)]
     #[test]
     fn grain_lfsr_is_consistent() {
         let test_cases = include!("parameters_hardcoded_test/lfsr_values");
@@ -23,7 +63,7 @@ mod round_constants {
     }
 }
 
-#[cfg(feature = "ark-bls12-381")]
+#[cfg(feature = "bls12-381")]
 mod matrix {
     use super::*;
     use openzl_crypto::poseidon::matrix::{
@@ -334,7 +374,7 @@ mod matrix {
     }
 }
 
-#[cfg(feature = "ark-bls12-381")]
+#[cfg(feature = "bls12-381")]
 mod mds {
     use super::*;
     use crate::ff::UniformRand;

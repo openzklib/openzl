@@ -22,7 +22,6 @@ where
     let inverse_matrix = &mds_matrices.m_inv;
     let mut res: Vec<F> = Vec::new();
     let round_keys = |r: usize| &round_constants[r * width..(r + 1) * width];
-    // This is half full-rounds.
     let half_full_rounds = full_rounds / 2;
     // First round constants are unchanged.
     res.extend(round_keys(0).to_vec());

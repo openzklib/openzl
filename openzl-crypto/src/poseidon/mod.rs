@@ -153,8 +153,7 @@ pub trait Field<COM = ()>: ParameterFieldType {
 /// linear combinations.
 ///
 /// [`mds_matrix_multiply`]: Self::mds_matrix_multiply
-pub trait Specification<COM = ()>: Field<COM> + Constants + Sized // need sized?
-{
+pub trait Specification<COM = ()>: Field<COM> + Constants + Sized {
     /// Applies the S-BOX to `point`.
     fn apply_sbox(point: &mut Self::Field, compiler: &mut COM);
 

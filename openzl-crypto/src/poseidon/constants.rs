@@ -137,6 +137,9 @@ impl Constants {
 }
 
 /// Security
+///
+/// The security conditions for each attack in this module are taken from the [Poseidon
+/// paper](https://eprint.iacr.org/2019/458.pdf), Section 5.
 pub mod security {
     #[cfg(feature = "std")]
     use {core::cmp, openzl_util::num::Ceil};
@@ -147,16 +150,33 @@ pub mod security {
     /// present in section 5.5 of the Poseidon paper.
     pub trait SecurityCondition {
         /// Computes the lower bound on the secure number of full rounds required for a poseidon
-        /// with `width` and `partial_rounds` constants and `n` prime field modulus bits for `m`
+        /// with `width` and `partial_rounds` constants and prime field of size `modulus_bits` for `security_level`
         /// bits of security.
-        fn full_rounds_lower_bound(width: f32, partial_rounds: f32, n: f32, m: f32) -> usize;
+        fn full_rounds_lower_bound(
+            width: f32,
+            partial_rounds: f32,
+            modulus_bits: f32,
+            security_level: f32,
+        ) -> usize;
 
         /// Returns `true` if Poseidon with constants given by `full_rounds`, `width`,
-        /// `partial_rounds` are safe over a prime field with modulus bits `n` and target security
-        /// of `m` bits.
+        /// `partial_rounds` are safe over a  prime field of size `modulus_bits` for `security_level`
+        /// bits of security.
         #[inline]
-        fn is_secure(full_rounds: usize, width: f32, partial_rounds: f32, n: f32, m: f32) -> bool {
-            full_rounds >= Self::full_rounds_lower_bound(width, partial_rounds, n, m)
+        fn is_secure(
+            full_rounds: usize,
+            width: f32,
+            partial_rounds: f32,
+            modulus_bits: f32,
+            security_level: f32,
+        ) -> bool {
+            full_rounds
+                >= Self::full_rounds_lower_bound(
+                    width,
+                    partial_rounds,
+                    modulus_bits,
+                    security_level,
+                )
         }
     }
 

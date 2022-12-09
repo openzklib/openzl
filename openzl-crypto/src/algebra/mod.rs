@@ -302,16 +302,11 @@ pub mod security {
 #[cfg(feature = "test")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "test")))]
 pub mod test {
-    #[cfg(feature = "alloc")]
-    use {
-        super::*,
-        eclair::{bool::Assert, cmp::PartialEq},
-    };
+    use super::*;
+    use eclair::{bool::Assert, cmp::PartialEq};
 
     /// Tests if windowed scalar multiplication of the bit decomposition of `scalar` with `point`
     /// returns the product `scalar` * `point`
-    #[cfg(feature = "alloc")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "alloc")))]
     #[inline]
     pub fn window_correctness<S, G, F, B, COM>(
         window_size: usize,

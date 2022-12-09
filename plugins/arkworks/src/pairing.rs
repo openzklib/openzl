@@ -114,7 +114,7 @@ pub mod test {
     }
 
     /// Checks that BLS12-381 has a valid pairing ratio.
-    #[cfg(feature = "ark-bls12-381")]
+    #[cfg(feature = "bls12-381")]
     #[test]
     fn bls12_381_has_valid_pairing_ratio() {
         let mut rng = OsRng;
@@ -122,7 +122,7 @@ pub mod test {
     }
 
     /// Checks that BN254 has a valid pairing ratio.
-    #[cfg(feature = "ark-bn254")]
+    #[cfg(feature = "bn254")]
     #[test]
     fn bn254_has_valid_pairing_ratio() {
         let mut rng = OsRng;

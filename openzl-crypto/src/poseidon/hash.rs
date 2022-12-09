@@ -4,14 +4,13 @@ use crate::{
     hash::ArrayHashFunction,
     poseidon::{FieldGeneration, NativeField, ParameterFieldType, Permutation, Specification},
 };
-use alloc::vec::Vec;
 use core::{fmt::Debug, hash::Hash, marker::PhantomData};
 use eclair::alloc::{Allocate, Const, Constant};
 use openzl_util::{
     codec::{Decode, DecodeError, Encode, Read, Write},
     derivative,
     rand::{Rand, RngCore, Sample},
-    vec::VecExt,
+    vec::{Vec, VecExt},
 };
 
 #[cfg(feature = "serde")]
@@ -174,14 +173,15 @@ where
     }
 }
 
-impl<S, T, const ARITY: usize, COM> Sample for Hasher<S, T, ARITY, COM>
+impl<D, S, T, const ARITY: usize, COM> Sample<D> for Hasher<S, T, ARITY, COM>
 where
     S: Specification<COM>,
+    Permutation<S, COM>: Sample<D>,
     S::ParameterField: NativeField + FieldGeneration,
     T: DomainTag<S>,
 {
     #[inline]
-    fn sample<R>(distribution: (), rng: &mut R) -> Self
+    fn sample<R>(distribution: D, rng: &mut R) -> Self
     where
         R: RngCore + ?Sized,
     {

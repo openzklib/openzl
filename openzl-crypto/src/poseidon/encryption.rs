@@ -4,7 +4,7 @@ use crate::{
     constraint::{HasInput, Input},
     permutation::{
         duplex::{self, Setup, Types, Verify},
-        sponge::{Read, Write},
+        sponge,
     },
     poseidon::{Permutation, Specification, State},
 };
@@ -62,6 +62,7 @@ pub trait BlockElement<COM = ()> {
 #[derivative(
     Clone(bound = "S::Field: Clone"),
     Debug(bound = "S::Field: Debug"),
+    Default(bound = "S::Field: Default"),
     Eq(bound = "S::Field: Eq"),
     Hash(bound = "S::Field: Hash"),
     PartialEq(bound = "S::Field: PartialEq")
@@ -70,7 +71,7 @@ pub struct SetupBlock<S, COM = ()>(Box<[S::Field]>)
 where
     S: Specification<COM>;
 
-impl<S, COM> Write<Permutation<S, COM>, COM> for SetupBlock<S, COM>
+impl<S, COM> sponge::Write<Permutation<S, COM>, COM> for SetupBlock<S, COM>
 where
     S: Specification<COM>,
     S::Field: BlockElement<COM>,
@@ -123,6 +124,7 @@ where
 #[derivative(
     Clone(bound = "S::Field: Clone"),
     Debug(bound = "S::Field: Debug"),
+    Default(bound = "S::Field: Default"),
     Eq(bound = "S::Field: Eq"),
     Hash(bound = "S::Field: Hash"),
     PartialEq(bound = "S::Field: PartialEq")
@@ -131,7 +133,7 @@ pub struct PlaintextBlock<S, COM = ()>(pub Box<[S::Field]>)
 where
     S: Specification<COM>;
 
-impl<S, COM> Write<Permutation<S, COM>, COM> for PlaintextBlock<S, COM>
+impl<S, COM> sponge::Write<Permutation<S, COM>, COM> for PlaintextBlock<S, COM>
 where
     S: Specification<COM>,
     S::Field: Clone + BlockElement<COM>,
@@ -235,6 +237,7 @@ where
 #[derivative(
     Clone(bound = "S::Field: Clone"),
     Debug(bound = "S::Field: Debug"),
+    Default(bound = "S::Field: Default"),
     Eq(bound = "S::Field: Eq"),
     Hash(bound = "S::Field: Hash"),
     PartialEq(bound = "S::Field: PartialEq")
@@ -243,7 +246,7 @@ pub struct CiphertextBlock<S, COM = ()>(pub Box<[S::Field]>)
 where
     S: Specification<COM>;
 
-impl<S, COM> Write<Permutation<S, COM>, COM> for CiphertextBlock<S, COM>
+impl<S, COM> sponge::Write<Permutation<S, COM>, COM> for CiphertextBlock<S, COM>
 where
     S: Specification<COM>,
     S::Field: Clone + BlockElement<COM>,
@@ -346,6 +349,7 @@ where
 #[derivative(
     Clone(bound = "B: Clone"),
     Debug(bound = "B: Debug"),
+    Default(bound = "B: Default"),
     Eq(bound = "B: Eq"),
     Hash(bound = "B: Hash"),
     PartialEq(bound = "B: PartialEq")
@@ -474,7 +478,7 @@ pub struct Tag<S, COM = ()>(pub S::Field)
 where
     S: Specification<COM>;
 
-impl<S, COM> Read<Permutation<S, COM>, COM> for Tag<S, COM>
+impl<S, COM> sponge::Read<Permutation<S, COM>, COM> for Tag<S, COM>
 where
     S: Specification<COM>,
     S::Field: Clone,

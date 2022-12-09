@@ -1,17 +1,17 @@
 //! Poseidon Arkworks Backend
 
+use core::marker::PhantomData;
+
 use crate::{
     constraint::{fp::Fp, FpVar, R1CS},
-    ff::{BigInteger, FpParameters, PrimeField},
+    ff::{BigInteger, Field, FpParameters, PrimeField},
+    r1cs_std::fields::FieldVar,
 };
 use eclair::alloc::Constant;
 use openzl_crypto::poseidon::{
-    encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
+    self, encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
     ParameterFieldType,
 };
-
-#[cfg(feature = "ark-bn254")]
-pub mod config;
 
 #[cfg(test)]
 pub mod test;
@@ -142,3 +142,194 @@ where
         Fp(S::Field::from(((1 << (S::WIDTH - 1)) - 1) as u128))
     }
 }
+
+/// Poseidon Specification Configuration
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct Spec<F, const ARITY: usize>(PhantomData<F>)
+where
+    F: PrimeField;
+
+impl<F, const ARITY: usize> Specification for Spec<F, ARITY>
+where
+    F: PrimeField,
+    Self: poseidon::Constants,
+{
+    type Field = F;
+
+    const SBOX_EXPONENT: u64 = 5;
+}
+
+impl<F, const ARITY: usize, COM> Constant<COM> for Spec<F, ARITY>
+where
+    F: PrimeField,
+{
+    type Type = Self;
+
+    #[inline]
+    fn new_constant(this: &Self::Type, compiler: &mut COM) -> Self {
+        let _ = (this, compiler);
+        Self(PhantomData)
+    }
+}
+
+impl<F, const ARITY: usize> ParameterFieldType for Spec<F, ARITY>
+where
+    Self: Specification,
+    F: PrimeField,
+{
+    type ParameterField = Fp<<Self as Specification>::Field>;
+}
+
+impl<F, const ARITY: usize> poseidon::Field for Spec<F, ARITY>
+where
+    Self: Specification,
+    F: PrimeField,
+{
+    type Field = Fp<<Self as Specification>::Field>;
+
+    #[inline]
+    fn add(lhs: &Self::Field, rhs: &Self::Field, _: &mut ()) -> Self::Field {
+        Fp(lhs.0 + rhs.0)
+    }
+
+    #[inline]
+    fn add_const(lhs: &Self::Field, rhs: &Self::ParameterField, _: &mut ()) -> Self::Field {
+        Fp(lhs.0 + rhs.0)
+    }
+
+    #[inline]
+    fn mul(lhs: &Self::Field, rhs: &Self::Field, _: &mut ()) -> Self::Field {
+        Fp(lhs.0 * rhs.0)
+    }
+
+    #[inline]
+    fn mul_const(lhs: &Self::Field, rhs: &Self::ParameterField, _: &mut ()) -> Self::Field {
+        Fp(lhs.0 * rhs.0)
+    }
+
+    #[inline]
+    fn add_assign(lhs: &mut Self::Field, rhs: &Self::Field, _: &mut ()) {
+        lhs.0 += rhs.0;
+    }
+
+    #[inline]
+    fn add_const_assign(lhs: &mut Self::Field, rhs: &Self::ParameterField, _: &mut ()) {
+        lhs.0 += rhs.0;
+    }
+
+    #[inline]
+    fn from_parameter(point: Self::ParameterField) -> Self::Field {
+        point
+    }
+}
+
+impl<F, const ARITY: usize> poseidon::Field<Compiler<Self>> for Spec<F, ARITY>
+where
+    Self: Specification,
+    F: PrimeField,
+{
+    type Field = FpVar<<Self as Specification>::Field>;
+
+    #[inline]
+    fn add(lhs: &Self::Field, rhs: &Self::Field, _: &mut Compiler<Self>) -> Self::Field {
+        lhs + rhs
+    }
+
+    #[inline]
+    fn add_const(
+        lhs: &Self::Field,
+        rhs: &Self::ParameterField,
+        _: &mut Compiler<Self>,
+    ) -> Self::Field {
+        lhs + FpVar::Constant(rhs.0)
+    }
+
+    #[inline]
+    fn mul(lhs: &Self::Field, rhs: &Self::Field, _: &mut Compiler<Self>) -> Self::Field {
+        lhs * rhs
+    }
+
+    #[inline]
+    fn mul_const(
+        lhs: &Self::Field,
+        rhs: &Self::ParameterField,
+        _: &mut Compiler<Self>,
+    ) -> Self::Field {
+        lhs * FpVar::Constant(rhs.0)
+    }
+
+    #[inline]
+    fn add_assign(lhs: &mut Self::Field, rhs: &Self::Field, _: &mut Compiler<Self>) {
+        *lhs += rhs;
+    }
+
+    #[inline]
+    fn add_const_assign(lhs: &mut Self::Field, rhs: &Self::ParameterField, _: &mut Compiler<Self>) {
+        *lhs += FpVar::Constant(rhs.0)
+    }
+
+    #[inline]
+    fn from_parameter(point: Self::ParameterField) -> Self::Field {
+        FpVar::Constant(point.0)
+    }
+}
+
+impl<F, const ARITY: usize> poseidon::Specification for Spec<F, ARITY>
+where
+    Self: Specification,
+    F: PrimeField,
+{
+    #[inline]
+    fn apply_sbox(point: &mut Self::Field, _: &mut ()) {
+        point.0 = point.0.pow([Self::SBOX_EXPONENT, 0, 0, 0]);
+    }
+}
+
+impl<F, const ARITY: usize> poseidon::Specification<Compiler<Self>> for Spec<F, ARITY>
+where
+    Self: Specification,
+    F: PrimeField,
+{
+    #[inline]
+    fn apply_sbox(point: &mut Self::Field, _: &mut Compiler<Self>) {
+        *point = point
+            .pow_by_constant([Self::SBOX_EXPONENT])
+            .expect("Exponentiation is not allowed to fail.");
+    }
+}
+
+impl poseidon::Constants for Spec<bn254::Fr, 2> {
+    const WIDTH: usize = 3;
+    const FULL_ROUNDS: usize = 8;
+    const PARTIAL_ROUNDS: usize = 55;
+}
+
+impl poseidon::Constants for Spec<bn254::Fr, 3> {
+    const WIDTH: usize = 4;
+    const FULL_ROUNDS: usize = 8;
+    const PARTIAL_ROUNDS: usize = 55;
+}
+
+impl poseidon::Constants for Spec<bn254::Fr, 4> {
+    const WIDTH: usize = 5;
+    const FULL_ROUNDS: usize = 8;
+    const PARTIAL_ROUNDS: usize = 56;
+}
+
+impl poseidon::Constants for Spec<bn254::Fr, 5> {
+    const WIDTH: usize = 6;
+    const FULL_ROUNDS: usize = 8;
+    const PARTIAL_ROUNDS: usize = 56;
+}
+
+/// Arity 2 Poseidon Specification
+pub type Spec2 = Spec<bn254::Fr, 2>;
+
+/// Arity 3 Poseidon Specification
+pub type Spec3 = Spec<bn254::Fr, 3>;
+
+/// Arity 4 Poseidon Specification
+pub type Spec4 = Spec<bn254::Fr, 4>;
+
+/// Arity 5 Poseidon Specification
+pub type Spec5 = Spec<bn254::Fr, 5>;

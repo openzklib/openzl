@@ -3,7 +3,7 @@
 use openzl_util::{byte_count, into_array_unchecked};
 
 #[doc(inline)]
-pub use ark_ff::*;
+pub use ff::*;
 
 /// Implements a fallible conversion from `F` to `$type`.
 macro_rules! field_try_into {

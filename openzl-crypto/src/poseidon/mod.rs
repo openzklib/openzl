@@ -146,12 +146,12 @@ pub trait Field<COM = ()>: ParameterFieldType {
 /// Poseidon Permutation Specification
 ///
 /// Implementation Note
-/// 
+///
 /// This trait includes a blanket implementation of [`mds_matrix_multiply`] that may
 /// not be optimal for all choices of `COM`. In particular, Plonk-like arithmetizations
 /// should implement [`mds_matrix_multiply`] in a way that minimizes the cost of
 /// linear combinations.
-/// 
+///
 /// [`mds_matrix_multiply`]: Self::mds_matrix_multiply
 pub trait Specification<COM = ()>: Field<COM> + Constants + Sized // need sized?
 {
@@ -223,7 +223,7 @@ pub trait Specification<COM = ()>: Field<COM> + Constants + Sized // need sized?
     ///
     /// Unlike [`full_round`] and [`partial_round`] this takes the
     /// full array of additive round constants for the permutation.
-    /// 
+    ///
     /// [`full_round`]: Self::full_round
     /// [`partial_round`]: Self::partial_round
     #[inline]

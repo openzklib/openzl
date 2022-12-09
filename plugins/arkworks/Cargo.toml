@@ -27,7 +27,7 @@ maintenance = { status = "actively-developed" }
 alloc = ["eclair/alloc", "openzl-crypto/alloc", "openzl-util/alloc"]
 
 # Serde Serialization
-serde = ["alloc", "openzl-util/serde"]
+serde = ["alloc", "ark-std", "openzl-util/serde"]
 
 # Standard Library
 std = [

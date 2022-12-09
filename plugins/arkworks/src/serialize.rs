@@ -1,12 +1,17 @@
 //! Arkworks Canonical Serialize and Deserialize Backend
 
-use ark_std::io::{self, Error, ErrorKind};
-use openzl_util::codec::{self, ReadExactError};
+use openzl_util::codec;
 
 #[cfg(feature = "serde")]
 use {
     alloc::vec::Vec,
     openzl_util::serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer},
+};
+
+#[cfg(feature = "ark-std")]
+use {
+    ark_std::io::{self, Error, ErrorKind},
+    openzl_util::codec::ReadExactError,
 };
 
 #[doc(inline)]
@@ -44,6 +49,7 @@ where
     }
 
     /// Updates the internal reader state by performing the `f` computation.
+    #[cfg(feature = "ark-std")]
     #[inline]
     fn update<T, F>(&mut self, f: F) -> Option<T>
     where
@@ -66,6 +72,7 @@ where
     }
 }
 
+#[cfg(feature = "ark-std")]
 impl<R> io::Read for ArkReader<R>
 where
     R: codec::Read,
@@ -113,6 +120,7 @@ where
     }
 
     /// Updates the internal writer state by performing the `f` computation.
+    #[cfg(feature = "ark-std")]
     #[inline]
     fn update<T, F>(&mut self, f: F) -> Option<T>
     where
@@ -135,6 +143,7 @@ where
     }
 }
 
+#[cfg(feature = "ark-std")]
 impl<W> io::Write for ArkWriter<W>
 where
     W: codec::Write,

@@ -108,8 +108,16 @@ impl Constants {
     }
 
     /// Converts a [`Specification`] into [`Constants`].
+    ///
+    /// # Safety
+    ///
+    /// This constructor does not check the security of the paramteters which should be checked by
+    /// calling [`are_secure`] or by using the [`from_specification`] constructor instead.
+    ///
+    /// [`are_secure`]: Self::are_secure
+    /// [`from_specification`]: Self::from_specification
     #[inline]
-    pub fn from_specification<S>() -> Self
+    pub fn from_specification_unchecked<S>() -> Self
     where
         S: Specification,
     {
@@ -118,6 +126,30 @@ impl Constants {
             full_rounds: S::FULL_ROUNDS,
             partial_rounds: S::PARTIAL_ROUNDS,
         }
+    }
+
+    /// Converts a [`Specification`] into [`Constants`].
+    ///
+    /// # Panics
+    ///
+    /// This constructor panics if the constants are not secure by calling [`are_secure`]. To skip
+    /// this check use [`from_specification_unchecked`] instead.
+    ///
+    /// [`are_secure`]: Self::are_secure
+    /// [`from_specification_unchecked`]: Self::from_specification_unchecked
+    #[cfg(feature = "std")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "std")))]
+    #[inline]
+    pub fn from_specification<S>() -> Self
+    where
+        S: Specification,
+    {
+        let constants = Self::from_specification_unchecked::<S>();
+        assert!(
+            constants.are_secure(),
+            "Poseidon constants need to be secure."
+        );
+        constants
     }
 
     /// Returns `true` if `self` are secure constants under the conditions set out in the Poseidon

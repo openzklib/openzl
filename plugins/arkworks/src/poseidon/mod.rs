@@ -1,12 +1,11 @@
 //! Poseidon Arkworks Backend
 
-use core::marker::PhantomData;
-
 use crate::{
     constraint::{fp::Fp, FpVar, R1CS},
     ff::{BigInteger, Field, FpParameters, PrimeField},
     r1cs_std::fields::FieldVar,
 };
+use core::marker::PhantomData;
 use eclair::alloc::Constant;
 use openzl_crypto::poseidon::{
     self, encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
@@ -321,15 +320,3 @@ impl poseidon::Constants for Spec<bn254::Fr, 5> {
     const FULL_ROUNDS: usize = 8;
     const PARTIAL_ROUNDS: usize = 56;
 }
-
-/// Arity 2 Poseidon Specification
-pub type Spec2 = Spec<bn254::Fr, 2>;
-
-/// Arity 3 Poseidon Specification
-pub type Spec3 = Spec<bn254::Fr, 3>;
-
-/// Arity 4 Poseidon Specification
-pub type Spec4 = Spec<bn254::Fr, 4>;
-
-/// Arity 5 Poseidon Specification
-pub type Spec5 = Spec<bn254::Fr, 5>;

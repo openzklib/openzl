@@ -91,28 +91,32 @@ pub use sponge;
 #[cfg(feature = "vesta")]
 pub use vesta;
 
-#[cfg(feature = "algebra")]
-pub mod algebra;
-
-#[cfg(feature = "constraint")]
-pub mod constraint;
-
-#[cfg(all(feature = "ec", feature = "ff"))]
-pub mod pairing;
-
 pub mod rand;
 
 #[cfg(feature = "algebra")]
-pub mod ratio;
+#[cfg_attr(doc_cfg, doc(cfg(feature = "algebra")))]
+pub mod algebra;
+
+#[cfg(feature = "constraint")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "constraint")))]
+pub mod constraint;
 
 #[cfg(feature = "ff")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "ff")))]
 pub mod ff;
 
-#[cfg(feature = "serialize")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serialize")))]
-pub mod serialize;
+#[cfg(all(feature = "ec", feature = "ff"))]
+#[cfg_attr(doc_cfg, doc(cfg(all(feature = "ec", feature = "ff"))))]
+pub mod pairing;
 
 #[cfg(all(feature = "alloc", feature = "constraint"))]
 #[cfg_attr(doc_cfg, doc(cfg(all(feature = "alloc", feature = "constraint"))))]
 pub mod poseidon;
+
+#[cfg(feature = "algebra")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "algebra")))]
+pub mod ratio;
+
+#[cfg(feature = "serialize")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serialize")))]
+pub mod serialize;

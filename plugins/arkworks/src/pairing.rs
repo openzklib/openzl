@@ -1,10 +1,9 @@
 //! Pairing Utilities
 
-use crate::{
-    ec::{AffineCurve, PairingEngine},
-    ff::PrimeField,
-};
+use crate::{ec::AffineCurve, ff::PrimeField};
 use core::iter;
+
+pub use crate::ec::PairingEngine;
 
 /// Pairing Configuration
 pub trait Pairing {

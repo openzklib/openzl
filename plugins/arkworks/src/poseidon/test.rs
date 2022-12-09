@@ -6,40 +6,6 @@ use {
     ark_bls12_381::Fr,
 };
 
-// mod constants {
-//     use crate::poseidon::config::Spec2;
-//     use openzl_crypto::poseidon::constants::Constants;
-
-//     // TODO: After upgrading to new Poseidon, we have to enable these tests.
-//     /// Tests if the specifications match the known constant values.
-//     #[cfg(feature = "std")] // TODO: How do I get the test to enforce this feature?
-//     #[test]
-//     fn specifications_match_known_values() {
-//         assert_eq!(
-//             Constants::from_arity(2),
-//             Constants::from_specification::<Spec2>()
-//         );
-//         assert_eq!(
-//             Constants::from_arity(4),
-//             Constants::from_specification::<Spec2>()
-//         );
-//     }
-// }
-
-mod hash {
-    // TODO: Reconstruct hardcoded test with current domain tag.
-    // /// Tests if [`Poseidon2`](crate::config::Poseidon2) matches hardcoded sage outputs.
-    // #[test]
-    // fn poseidon_hash_matches_known_values() {
-    //     let hasher = Spec2::gen(&mut OsRng);
-    //     let inputs = [&Fp(field_new!(Fr, "1")), &Fp(field_new!(Fr, "2"))];
-    //     assert_eq!(
-    //         hasher.hash_untruncated(inputs, &mut ()),
-    //         include!("permutation_hardcoded_test/width3") // Why doesn't this work?
-    //     );
-    // }
-}
-
 #[cfg(feature = "ark-bls12-381")]
 mod round_constants {
     use super::*;

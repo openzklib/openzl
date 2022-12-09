@@ -41,7 +41,6 @@ std = [
 test = ["alloc"]
 
 [dependencies]
-derivative = { version = "2.2.0", default-features = false, features = ["use_core"] }
 eclair = { path = "../eclair", default-features = false }
 openzl-derive = { path = "../openzl-derive", default-features = false }
 openzl-util = { path = "../openzl-util", default-features = false }

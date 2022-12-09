@@ -12,7 +12,7 @@ use openzl_crypto::{
     constraint::{Input, ProofSystem},
 };
 use openzl_util::{
-    byte_count,
+    byte_count, derivative,
     rand::{RngCore, Sample},
     SizeLimit,
 };

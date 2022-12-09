@@ -22,15 +22,5 @@ pub mod signature;
 #[cfg(feature = "alloc")]
 pub mod poseidon;
 
-/* TODO:
-#[cfg(feature = "arkworks")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "arkworks")))]
-pub mod arkworks;
-
-#[cfg(feature = "dalek")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "dalek")))]
-pub mod dalek;
-*/
-
 #[doc(inline)]
 pub use openzl_derive::*;

@@ -162,6 +162,7 @@ impl<const ARITY: usize> poseidon::Specification for Spec<ARITY>
 where
     Self: Specification,
 {
+    #[inline]
     fn apply_sbox(point: &mut Self::Field, _: &mut ()) {
         point.0 = point.0.pow([Self::SBOX_EXPONENT, 0, 0, 0]);
     }
@@ -171,6 +172,7 @@ impl<const ARITY: usize> poseidon::Specification<Compiler<Self>> for Spec<ARITY>
 where
     Self: Specification,
 {
+    #[inline]
     fn apply_sbox(point: &mut Self::Field, _: &mut Compiler<Self>) {
         *point = point
             .pow_by_constant([Self::SBOX_EXPONENT])

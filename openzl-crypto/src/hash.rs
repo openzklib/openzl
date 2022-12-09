@@ -1,5 +1,7 @@
 //! Hash Functions
 
+use openzl_util::derivative;
+
 /// Hash Function
 pub trait HashFunction<COM = ()> {
     /// Input Type

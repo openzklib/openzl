@@ -1,6 +1,7 @@
 //! Poseidon Permutation Implementation
 
 use crate::{
+    component,
     permutation::PseudorandomPermutation,
     poseidon::{
         matrix::MatrixOperations, mds::MdsMatrices, round_constants::generate_round_constants,
@@ -11,6 +12,7 @@ use core::{fmt::Debug, hash::Hash, iter, marker::PhantomData, mem, slice};
 use eclair::alloc::{Allocate, Const, Constant};
 use openzl_util::{
     codec::{Decode, DecodeError, Encode, Read, Write},
+    derivative,
     rand::{Rand, RngCore, Sample},
 };
 
@@ -111,10 +113,8 @@ pub trait Constants {
 }
 
 /// Parameter Field Type
-pub trait ParameterFieldType {
-    /// Field Type used for Constant Parameters
-    type ParameterField;
-}
+#[component]
+pub type ParameterField;
 
 /// Poseidon Permutation Field
 pub trait Field<COM = ()>: ParameterFieldType {
@@ -145,10 +145,14 @@ pub trait Field<COM = ()>: ParameterFieldType {
 
 /// Poseidon Permutation Specification
 ///
-/// This trait includes a blanket implementation of `mds_matrix_multiply` that may
+/// Implementation Note
+/// 
+/// This trait includes a blanket implementation of [`mds_matrix_multiply`] that may
 /// not be optimal for all choices of `COM`. In particular, Plonk-like arithmetizations
-/// should implement `mds_matrix_multiply` in a way that minimizes the cost of
+/// should implement [`mds_matrix_multiply`] in a way that minimizes the cost of
 /// linear combinations.
+/// 
+/// [`mds_matrix_multiply`]: Self::mds_matrix_multiply
 pub trait Specification<COM = ()>: Field<COM> + Constants + Sized // need sized?
 {
     /// Applies the S-BOX to `point`.
@@ -217,8 +221,11 @@ pub trait Specification<COM = ()>: Field<COM> + Constants + Sized // need sized?
 
     /// Computes the full permutation without the first round.
     ///
-    /// Unlike [`Self::full_round`] and [`Self::partial_round`] this takes the
+    /// Unlike [`full_round`] and [`partial_round`] this takes the
     /// full array of additive round constants for the permutation.
+    /// 
+    /// [`full_round`]: Self::full_round
+    /// [`partial_round`]: Self::partial_round
     #[inline]
     fn permute_without_first_round(
         additive_round_keys: &[Self::ParameterField],

@@ -2,7 +2,6 @@
 
 ## Code Structure
 
-* `compat.rs`: Contains legacy implementation for Poseidon hash that is kept for compatibility.
 * `constants.rs`: Generates poseidon permutation round numbers.
 * `lfsr.rs`: Implements linear feedback shift register as a random number generator.
 * `matrix.rs`: Implements basic linear algebra.

@@ -9,6 +9,7 @@ use core::{fmt::Debug, hash::Hash, marker::PhantomData};
 use eclair::alloc::{Allocate, Const, Constant};
 use openzl_util::{
     codec::{Decode, DecodeError, Encode, Read, Write},
+    derivative,
     rand::{Rand, RngCore, Sample},
     vec::VecExt,
 };

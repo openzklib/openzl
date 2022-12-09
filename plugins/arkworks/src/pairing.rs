@@ -95,7 +95,7 @@ impl<E> PairingEngineExt for E where E: PairingEngine {}
 #[cfg_attr(doc_cfg, doc(cfg(any(feature = "test", test))))]
 pub mod test {
     use super::*;
-    use crate::{ec::ProjectiveCurve, rand::Standard};
+    use crate::ec::ProjectiveCurve;
 
     #[cfg(test)]
     use openzl_util::rand::{OsRng, Rand};
@@ -118,11 +118,7 @@ pub mod test {
     #[test]
     fn bls12_381_has_valid_pairing_ratio() {
         let mut rng = OsRng;
-        assert_valid_pairing_ratio::<crate::bls12_381::Bls12_381>(
-            rng.gen::<Standard, _>(),
-            rng.gen::<Standard, _>(),
-            rng.gen::<Standard, _>(),
-        );
+        assert_valid_pairing_ratio::<crate::bls12_381::Bls12_381>(rng.gen(), rng.gen(), rng.gen());
     }
 
     /// Checks that BN254 has a valid pairing ratio.
@@ -130,10 +126,6 @@ pub mod test {
     #[test]
     fn bn254_has_valid_pairing_ratio() {
         let mut rng = OsRng;
-        assert_valid_pairing_ratio::<crate::bn254::Bn254>(
-            rng.gen::<Standard, _>(),
-            rng.gen::<Standard, _>(),
-            rng.gen::<Standard, _>(),
-        );
+        assert_valid_pairing_ratio::<crate::bn254::Bn254>(rng.gen(), rng.gen(), rng.gen());
     }
 }

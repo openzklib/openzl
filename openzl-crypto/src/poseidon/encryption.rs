@@ -23,6 +23,7 @@ use eclair::{
 };
 use openzl_util::{
     codec::{self, Decode, DecodeError, Encode},
+    derivative,
     rand::{Rand, RngCore, Sample},
     vec::padded_chunks_with,
     BoxArray,

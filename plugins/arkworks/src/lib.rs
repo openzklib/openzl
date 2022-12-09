@@ -37,5 +37,8 @@ pub mod rand;
 pub mod ratio;
 pub mod serialize;
 
+#[cfg(feature = "groth16")]
+pub mod groth16;
+
 #[cfg(feature = "alloc")]
 pub mod poseidon;

@@ -1,5 +1,42 @@
 //! Hash Functions
 
+/// Hash Function
+pub trait HashFunction<COM = ()> {
+    /// Input Type
+    type Input: ?Sized;
+
+    /// Output Type
+    type Output;
+
+    /// Computes the hash over `input`.
+    fn hash(&self, input: &Self::Input, compiler: &mut COM) -> Self::Output;
+}
+
+impl<H, COM> HashFunction<COM> for &H
+where
+    H: HashFunction<COM>,
+{
+    type Input = H::Input;
+    type Output = H::Output;
+
+    #[inline]
+    fn hash(&self, input: &Self::Input, compiler: &mut COM) -> Self::Output {
+        (*self).hash(input, compiler)
+    }
+}
+
+/// Array Hash Function
+pub trait ArrayHashFunction<const ARITY: usize, COM = ()> {
+    /// Input Type
+    type Input: ?Sized;
+
+    /// Output Type
+    type Output;
+
+    /// Computes the hash over `input`.
+    fn hash(&self, input: [&Self::Input; ARITY], compiler: &mut COM) -> Self::Output;
+}
+
 /// Security Assumptions
 ///
 /// The following outlines some standard security assumptions for hash functions. These security

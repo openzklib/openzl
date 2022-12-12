@@ -29,6 +29,8 @@ pub use crate::{
     relations::r1cs::SynthesisError,
 };
 
+pub mod fp;
+
 /// Synthesis Result
 pub type SynthesisResult<T = ()> = Result<T, SynthesisError>;
 

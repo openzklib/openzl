@@ -15,7 +15,7 @@ use {
 };
 
 #[doc(inline)]
-pub use ark_serialize::*;
+pub use serialize::*;
 
 /// Serialization Hook
 pub trait HasSerialization<'s>: 's {

@@ -1,27 +1,29 @@
 //! Groth16 Proof System
 
-use crate::{
-    constraint::R1CS,
-    ec::PairingEngine,
-    serialize::{
-        CanonicalDeserialize, CanonicalSerialize, HasDeserialization, HasSerialization, Read,
-        SerializationError, Write,
-    },
-};
+use crate::{constraint::R1CS, ec::PairingEngine};
 use alloc::vec::Vec;
 use ark_groth16::{Groth16 as ArkGroth16, PreparedVerifyingKey, ProvingKey};
-use ark_snark::SNARK;
 use core::marker::PhantomData;
 use openzl_crypto::constraint::{Input, ProofSystem};
 use openzl_util::{
-    codec, derivative,
+    derivative,
     rand::{CryptoRng, RngCore, SizedRng},
 };
+use snark::SNARK;
 
 #[cfg(feature = "serde")]
 use openzl_util::serde::{Deserialize, Serialize, Serializer};
 
-#[cfg(feature = "ark-std")]
+#[cfg(feature = "serialize")]
+use {
+    crate::serialize::{
+        CanonicalDeserialize, CanonicalSerialize, HasDeserialization, HasSerialization, Read,
+        SerializationError, Write,
+    },
+    openzl_util::codec,
+};
+
+#[cfg(all(feature = "ark-std", feature = "serialize"))]
 use {
     crate::serialize::{ArkReader, ArkWriter},
     openzl_util::codec::DecodeError,
@@ -63,6 +65,7 @@ pub struct Proof<E>(
 where
     E: PairingEngine;
 
+#[cfg(feature = "serialize")]
 impl<E> codec::Encode for Proof<E>
 where
     E: PairingEngine,
@@ -76,6 +79,7 @@ where
     }
 }
 
+#[cfg(feature = "serialize")]
 impl<E> TryFrom<Vec<u8>> for Proof<E>
 where
     E: PairingEngine,
@@ -89,6 +93,7 @@ where
 }
 
 /// Converts `proof` into its canonical byte-representation.
+#[cfg(feature = "serialize")]
 #[inline]
 pub fn proof_as_bytes<E>(proof: &ark_groth16::Proof<E>) -> Vec<u8>
 where
@@ -113,7 +118,11 @@ where
 }
 
 /// Proving Context
-#[derive(derivative::Derivative, CanonicalSerialize, CanonicalDeserialize)]
+#[cfg_attr(
+    feature = "serialize",
+    derive(CanonicalDeserialize, CanonicalSerialize)
+)]
+#[derive(derivative::Derivative)]
 #[derivative(Clone, Debug, Eq, PartialEq)]
 pub struct ProvingContext<E>(pub ProvingKey<E>)
 where
@@ -130,7 +139,7 @@ where
     }
 }
 
-#[cfg(feature = "ark-std")]
+#[cfg(all(feature = "ark-std", feature = "serialize"))]
 impl<E> codec::Decode for ProvingContext<E>
 where
     E: PairingEngine,
@@ -153,7 +162,7 @@ where
     }
 }
 
-#[cfg(feature = "ark-std")]
+#[cfg(all(feature = "ark-std", feature = "serialize"))]
 impl<E> codec::Encode for ProvingContext<E>
 where
     E: PairingEngine,
@@ -176,6 +185,8 @@ pub struct VerifyingContext<E>(pub PreparedVerifyingKey<E>)
 where
     E: PairingEngine;
 
+#[cfg(feature = "serialize")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serialize")))]
 impl<E> CanonicalSerialize for VerifyingContext<E>
 where
     E: PairingEngine,
@@ -274,6 +285,8 @@ where
     }
 }
 
+#[cfg(feature = "serialize")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serialize")))]
 impl<E> CanonicalDeserialize for VerifyingContext<E>
 where
     E: PairingEngine,
@@ -341,7 +354,7 @@ where
     }
 }
 
-#[cfg(feature = "ark-std")]
+#[cfg(all(feature = "ark-std", feature = "serde"))]
 impl<E> codec::Decode for VerifyingContext<E>
 where
     E: PairingEngine,
@@ -365,7 +378,7 @@ where
     }
 }
 
-#[cfg(feature = "ark-std")]
+#[cfg(all(feature = "ark-std", feature = "serde"))]
 impl<E> codec::Encode for VerifyingContext<E>
 where
     E: PairingEngine,

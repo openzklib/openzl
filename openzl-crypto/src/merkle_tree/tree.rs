@@ -288,7 +288,7 @@ where
     }
 
     /// Appends an iterator of leaf digests at the end of the tree, returning the iterator back
-    /// if it could not be inserted because the tree has exhausted its capacity.
+    /// if it could not be inserted because the operation would exceed the tree's capacity.
     ///
     /// # Implementation Note
     ///
@@ -321,7 +321,7 @@ where
     }
 
     /// Appends an iterator of leaves at the end of the tree, returning `false` if the `leaves`
-    /// could not be inserted because the tree has exhausted its capacity.
+    /// could not be inserted because the operation would exceed the tree's capacity.
     ///
     /// # Implementation Note
     ///
@@ -339,7 +339,7 @@ where
     }
 
     /// Appends a slice of leaves at the end of the tree, returning `false` if the
-    /// `leaves` could not be inserted because the tree has exhausted its capacity.
+    /// `leaves` could not be inserted because the operation would exceed the tree's capacity.
     ///
     /// # Implementation Note
     ///
@@ -408,7 +408,7 @@ where
     }
 
     /// Checks if a leaf can be inserted into the tree and if it can, it runs `leaf_digest` to
-    /// extract a leaf digest to insert, returning `None` if there was no leaf digest. If this
+    /// extract a leaf digest to insert, returning `None` if there was no leaf digest and returning `Some(false)` if the tree is at capacity. If this
     /// method is successful, the digest inserted will have an accompanying proof that can be
     /// returned by a call to the [`path`](Self::path) method.
     fn maybe_push_provable_digest<F>(
@@ -850,7 +850,7 @@ where
         capacity::<C, _>()
     }
 
-    /// Returns the number of items this merkle tree.
+    /// Returns the number of items in this merkle tree.
     ///
     /// See [`Tree::len`] for more.
     #[inline]
@@ -890,7 +890,7 @@ where
         self.tree.current_path(&self.parameters)
     }
 
-    /// Inserts `leaf` at the next avaiable leaf node of the tree, returning `false` if the
+    /// Inserts `leaf` at the next available leaf node of the tree, returning `false` if the
     /// leaf could not be inserted because the tree has exhausted its capacity.
     ///
     /// See [`Tree::push`] for more.
@@ -900,7 +900,7 @@ where
     }
 
     /// Appends an iterator of leaves at the end of the tree, returning `false` if the `leaves`
-    /// could not be inserted because the tree has exhausted its capacity.
+    /// could not be inserted because the operation would exceed the tree's capacity.
     ///
     /// See [`Tree::extend`] for more.
     #[inline]
@@ -913,7 +913,7 @@ where
     }
 
     /// Appends a slice of leaves at the end of the tree, returning `false` if the `leaves` could
-    /// not be inserted because the tree has exhausted its capacity.
+    /// not be inserted because the operation would exceed the tree's capacity.
     ///
     /// See [`Tree::extend_slice`] for more.
     #[inline]
@@ -925,7 +925,7 @@ where
     }
 
     /// Appends an iterator of leaf digests at the end of the tree, returning the iterator back
-    /// if it could not be inserted because the tree has exhausted its capacity.
+    /// if it could not be inserted because the operation would exceed the tree's capacity.
     ///
     /// See [`Tree::extend_digests`] for more.
     #[inline]

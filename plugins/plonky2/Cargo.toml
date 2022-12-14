@@ -23,9 +23,20 @@ is-it-maintained-open-issues = { repository = "openzklib/openzl" }
 maintenance = { status = "actively-developed" }
 
 [features]
+# ECDSA Library
 ecdsa = ["plonky2_ecdsa"]
 
+# Standard Library
+std = [
+    "anyhow/std",
+    "openzl-crypto/std",
+    "openzl-util/std",
+    "plonky2/std",
+    "starky/std",
+]
+
 [dependencies]
+anyhow = { version = "1.0.66", default-features = false }
 eclair = { path = "../../eclair", default-features = false }
 openzl-crypto = { path = "../../openzl-crypto", default-features = false }
 openzl-util = { path = "../../openzl-util", default-features = false }

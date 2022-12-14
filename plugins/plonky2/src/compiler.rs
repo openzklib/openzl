@@ -11,7 +11,13 @@ use plonky2::{
         target::{BoolTarget, Target},
         witness::{PartialWitness, WitnessWrite},
     },
-    plonk::circuit_builder::CircuitBuilder,
+    plonk::{
+        circuit_builder::CircuitBuilder,
+        circuit_data::{CircuitData, ProverCircuitData, VerifierCircuitData},
+        config::GenericConfig,
+        proof,
+        proof::ProofWithPublicInputs,
+    },
 };
 
 /// Compiler
@@ -122,49 +128,46 @@ where
     }
 }
 
-///
-pub struct ProvingContext;
-
-///
-pub struct VerifyingContext;
-
-///
-pub struct Proof;
-
-///
-pub struct Error;
-
-///
-pub struct Plonky2<F, const D: usize>(PhantomData<F>)
+/// Proving Context
+pub struct ProvingContext<C, const D: usize>(ProverCircuitData<C::F, C, D>)
 where
-    F: RichField + Extendable<D>;
+    C: GenericConfig<D>;
 
-impl<F, const D: usize> ProofSystem for Plonky2<F, D>
+/// Verifying Context
+pub struct VerifyingContext<C, const D: usize>(VerifierCircuitData<C::F, C, D>)
 where
-    F: RichField + Extendable<D>,
+    C: GenericConfig<D>;
+
+/// Proof
+pub struct Proof<C, const D: usize>(proof::Proof<C::F, C, D>)
+where
+    C: GenericConfig<D>;
+
+/// Plonky2 Proving System
+pub struct Plonky2<C, const D: usize>(PhantomData<C>)
+where
+    C: GenericConfig<D>;
+
+impl<C, const D: usize> ProofSystem for Plonky2<C, D>
+where
+    C: GenericConfig<D>,
 {
-    type Compiler = Compiler<F, D>;
+    type Compiler = Compiler<C::F, D>;
     type PublicParameters = ();
-    type ProvingContext = ProvingContext;
-    type VerifyingContext = VerifyingContext;
-    type Input = Vec<F>;
-    type Proof = Proof;
-    type Error = Error;
+    type ProvingContext = ProvingContext<C, D>;
+    type VerifyingContext = VerifyingContext<C, D>;
+    type Input = Vec<C::F>;
+    type Proof = Proof<C, D>;
+    type Error = anyhow::Error;
 
     #[inline]
     fn context_compiler() -> Self::Compiler {
-        /*
-        Self::Compiler::for_contexts()
-        */
-        todo!()
+        Default::default()
     }
 
     #[inline]
     fn proof_compiler() -> Self::Compiler {
-        /*
-        Self::Compiler::for_proofs()
-        */
-        todo!()
+        Default::default()
     }
 
     #[inline]
@@ -176,16 +179,22 @@ where
     where
         R: CryptoRng + RngCore + ?Sized,
     {
-        /*
-        let _ = public_parameters;
-        let (proving_key, verifying_key) =
-            ArkGroth16::circuit_specific_setup(compiler, &mut SizedRng(rng)).map_err(|_| Error)?;
+        let _ = (public_parameters, rng);
+        let CircuitData {
+            prover_only,
+            verifier_only,
+            common,
+        } = compiler.builder.build::<C>();
         Ok((
-            ProvingContext(proving_key),
-            VerifyingContext(ArkGroth16::process_vk(&verifying_key).map_err(|_| Error)?),
+            ProvingContext(ProverCircuitData {
+                prover_only,
+                common: common.clone(),
+            }),
+            VerifyingContext(VerifierCircuitData {
+                verifier_only,
+                common,
+            }),
         ))
-        */
-        todo!()
     }
 
     #[inline]
@@ -197,12 +206,8 @@ where
     where
         R: CryptoRng + RngCore + ?Sized,
     {
-        /*
-        ArkGroth16::prove(&context.0, compiler, &mut SizedRng(rng))
-            .map(Proof)
-            .map_err(|_| Error)
-        */
-        todo!()
+        let _ = rng;
+        Ok(Proof(context.0.prove(compiler.partial_witness)?.proof))
     }
 
     #[inline]
@@ -211,9 +216,10 @@ where
         input: &Self::Input,
         proof: &Self::Proof,
     ) -> Result<bool, Self::Error> {
-        /*
-        ArkGroth16::verify_with_processed_vk(&context.0, input, &proof.0).map_err(|_| Error)
-        */
-        todo!()
+        context.0.verify(ProofWithPublicInputs {
+            proof: proof.0.clone(),
+            public_inputs: input.clone(),
+        })?;
+        Ok(true)
     }
 }

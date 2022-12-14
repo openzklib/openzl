@@ -264,7 +264,8 @@ where
     fn current_path(&self, parameters: &Parameters<C>) -> CurrentPath<C>;
 
     /// Checks if a leaf can be inserted into the tree and if it can, it runs `leaf_digest` to
-    /// extract a leaf digest to insert, returning `None` if there was no leaf digest.
+    /// extract a leaf digest to insert, returning `None` if there was no leaf digest. Returns 
+    /// `Some(false)` if the insertion would exceed the tree's capacity.
     fn maybe_push_digest<F>(&mut self, parameters: &Parameters<C>, leaf_digest: F) -> Option<bool>
     where
         F: FnOnce() -> Option<LeafDigest<C>>;

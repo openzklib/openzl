@@ -55,3 +55,45 @@ pub trait Assert: Has<bool> {
 If `compiler` is of a type `COM` that implements `Assert` then `compiler.assert(bit)` should generate a constraint that is satisfied if and only if `bit` represents `true` according to `COM`'s implementation of `Has<bool>`. In the native compiler `COM = ()` the computation simply panics if `bit = false`. 
 
 The requirement `COM: Assert` is a prerequisite for the trait `PartialEq<Rhs, COM>`. More on that [here](./cmp.md).
+
+## Conditional Selection and Swap
+Another common operation involving booleans is selection, expressed in ECLAIR through the `ConditionalSelect<COM>` trait:
+```rust
+/// Conditional Selection
+pub trait ConditionalSelect<COM = ()>: Sized
+where
+    COM: Has<bool> + ?Sized,
+{
+    /// Selects `true_value` when `bit == true` and `false_value` when `bit == false`.
+    fn select(
+        bit: &Bool<COM>, 
+        true_value: &Self, 
+        false_value: &Self, 
+        compiler: &mut COM
+    ) -> Self;
+}
+```
+If an ECLAIR circuit contains the line
+```rust
+output = select(bit, true_value, false_value, &mut compiler);
+```
+then this generates a constraint in `compiler` that enforces `output == true_value` if `bit` represents `true` and `output == false_value` otherwise. Of course this only makes sense if `compiler` knows how to interpret `bit` as a boolean value, hence the requirement `COM: Has<bool>`.
+
+A similar operation is conditionally swapping values based on a boolean. For this we have the `ConditionalSwap<COM>` trait:
+```rust
+/// Conditional Swap
+pub trait ConditionalSwap<COM = ()>: Sized
+where
+    COM: Has<bool> + ?Sized,
+{
+    /// Swaps `lhs` and `rhs` whenever `bit == true` and keeps 
+    /// them in the same order when `bit == false`.
+    fn swap(
+        bit: &Bool<COM>, 
+        lhs: &Self, 
+        rhs: &Self, 
+        compiler: &mut COM
+    ) -> (Self, Self);
+}
+```
+This trait is self-explanatory.

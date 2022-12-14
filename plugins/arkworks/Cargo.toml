@@ -30,7 +30,7 @@ algebra = ["ec", "ff", "r1cs-std", "serialize"]
 alloc = ["eclair/alloc", "openzl-crypto/alloc", "openzl-util/alloc"]
 
 # Constraint
-constraint = ["ff", "r1cs-std", "relations"]
+constraint = ["ff", "num-integer", "r1cs-std", "relations"]
 
 # Full Feature Set
 full = [
@@ -132,6 +132,7 @@ mnt4-298 = { package = "ark-mnt4-298", version = "0.3.0", optional = true, defau
 mnt4-753 = { package = "ark-mnt4-753", version = "0.3.0", optional = true, default-features = false }
 mnt6-298 = { package = "ark-mnt6-298", version = "0.3.0", optional = true, default-features = false }
 mnt6-753 = { package = "ark-mnt6-753", version = "0.3.0", optional = true, default-features = false }
+num-integer = { version = "0.1.45", optional = true, default-features = false } 
 openzl-crypto = { path = "../../openzl-crypto", default-features = false }
 openzl-util = { path = "../../openzl-util", default-features = false }
 pallas = { package = "ark-pallas", version = "0.3.0", optional = true, default-features = false }

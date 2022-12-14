@@ -1,10 +1,14 @@
 //! Field Element Wrapper
 
-use crate::ff::{Field, FpParameters, PrimeField, ToConstraintField};
+use crate::{
+    constraint::R1CS,
+    ff::{Field, FpParameters, PrimeField, ToConstraintField},
+};
 use alloc::vec::Vec;
 use core::iter;
 use eclair::{
     self,
+    alloc::Constant,
     bool::{Bool, ConditionalSelect},
 };
 use openzl_crypto::{
@@ -160,6 +164,19 @@ where
     #[inline]
     fn is_one(&self, _: &mut ()) -> Self::Verification {
         self.0.is_one()
+    }
+}
+
+impl<F> Constant<R1CS<F>> for Fp<F>
+where
+    F: PrimeField,
+{
+    type Type = Self;
+
+    #[inline]
+    fn new_constant(this: &Self::Type, compiler: &mut R1CS<F>) -> Self {
+        let _ = compiler;
+        *this
     }
 }
 

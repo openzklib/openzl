@@ -1,14 +1,12 @@
 # Tutorial: Poseidon Permutation
 
-This tutorial will walk through building the Poseidon permutation [todo: cite]  in ECLAIR. The Poseidon permutation operates on vectors of field elements. It is composed of three operations: addition, exponentiation, and matrix multiplication.
+The Poseidon permutation, defined in [GKRRS '19](https://eprint.iacr.org/2019/458.pdf) operates on vectors of field elements. For a fixed width, the permutation transforms a vector of `width`-many field elements in repeated rounds. Each round consists of the following operations:
 
-All OpenZL tutorials are accompanied by code examples, see [here](https://github.com/openzklib). (TODO: Real link) Note that this code differs somewhat from our [optimized Poseidon implementation](https://github.com/openzklib). (TODO: Real link)
+1. **Add Round Keys**: Add a constant to each component of the vector.
+2. **S-Box**: Raise each component of the resulting vector to a power (in a full round), or raise just one component of the vector to a power (in a partial round).
+3. **MDS Matrix**: Multiply the resulting vector by a constant matrix.
 
-[TODO: Insert some overview of the key ingredients]
-### The Permutation
-1. Add a constant to each component of the vector.
-2. Raise each component of the resulting vector to a power (in a full round), or raise just one component of the vector to a power (in a partial round).
-3. Multiply the resulting vector by a constant matrix.
+This tutorial will walk through building the Poseidon permutation in ECLAIR. All OpenZL tutorials are accompanied by code examples, see [here](https://github.com/openzklib). (TODO: Real link) Note that this code differs somewhat from our [optimized Poseidon implementation](https://github.com/openzklib). (TODO: Real link)
 
 ### trait `Specification`
 The Poseidon permutation requires a choice of finite field. We will keep this example generic by using a Rust trait `Specification` to specify our assumptions on the field and defining the Poseidon permutation relative to any type that implements `Specification`.
@@ -51,7 +49,7 @@ pub trait Specification<COM = ()>: Constants {
     fn from_parameter(point: Self::ParameterField) -> Self::Field;
 }
 ```
-The trait requires two types, `Field` and `ParameterField`. The permutation acts on vectors of elements of type `Field`. The constant parameters that define the permutation are of type `ParameterField`. At first it may seem strange to distinguish between these two types, since they coincide for native computation of the Poseidon permutation. But remember that one of the reasons to use ECLAIR is to specify computation in a language that applies to both [*native and non-native* computation](/chapter_1.md).
+The trait requires two types, `Field` and `ParameterField`. The permutation acts on vectors of elements of type `Field`. The constant parameters that define the permutation are of type `ParameterField`. At first it may seem strange to distinguish between these two types, since they coincide for native computation of the Poseidon permutation. But remember that one of the reasons to use ECLAIR is to specify computation in a language that applies to both [*native and non-native* computation](./native_nonnative.md).
 
 In practice we may need to compute Poseidon in-circuit as part of a ZK-proof. In this case the type `Field` would be some representation of private witnesses to the circuit, whereas `ParameterField` would be public input constants. These are quite different types indeed! Therefore it is appropriate to treat them as distinct for now and let the `compiler` deal with them in whatever way is appropriate for the mode of computation specified by the type `COM`.
 
@@ -105,7 +103,7 @@ pub trait Constants {
     const ADDITIVE_ROUND_KEYS_COUNT: usize = Self::ROUNDS * Self::WIDTH;
 }
 ```
-Here `WIDTH` is the length of the vector of field elements that the permutation acts on via addition and matrix multiplication. `FULL_ROUNDS` and `PARTIAL_ROUNDS` specify the number of full and partial rounds of iteration that are performed on the state vector to achieve the desired security level. The remaining constants are computed in terms of the first three; they specify the number of "Additive Round Constants" and the size of the "MDS Matrix."
+Here `WIDTH` is the length of the vector of field elements that the permutation acts on via addition and matrix multiplication. `FULL_ROUNDS` and `PARTIAL_ROUNDS` specify the number of full and partial rounds of iteration that are performed on the state vector to achieve the desired security level. The remaining constants are computed in terms of the first three; they specify the number of "Additive Round Keys" and the size of the "MDS Matrix."
 
 ### struct `State`
 Given some type `S` that implements the above `Specification` trait we next define a state for the permutation to act on. This state is a vector of length `WIDTH`. We'll use a struct `State` to represent it:
@@ -141,7 +139,7 @@ Observe that although the compiler type `COM` plays no direct role in the defini
 For Rust-related reasons we choose not to specify the width as part of `State`'s type. Observe however that the constructor `fn new` enforces that `State` must have the size specified by `S` via the `Constants` trait.
 
 ### struct `Permutation`
-The final ingredient is the parameters, a collection of constants that define a particular instance of the Poseidon permutation. In each round the permutation adds some constants, the `additive_round_keys`, to the `State` and multiplies the `State` by a constant matrix, the `mds_matrix`. These pre-computed constants are considered to be part of the definition of a Poseidon permutation. For information on generating secure constants, please refer to [todo: cite].
+The final ingredient is the parameters, a collection of constants that define a particular instance of the Poseidon permutation. In each round the permutation adds some constants, the `additive_round_keys`, to the `State` and multiplies the `State` by a constant matrix, the `mds_matrix`. These pre-computed constants are considered to be part of the definition of a Poseidon permutation. For information on generating secure constants, please refer to [GKRRS '19](https://eprint.iacr.org/2019/458.pdf).
 
 Since these parameters define a specific instance of the Poseidon implementation, we call this struct `Permutation`. We define the `Permutation` to be generic over a type `S` that implements `Specification`:
 ```rust
@@ -197,9 +195,9 @@ where
 ```
 
 ### `fn full_round`, `fn partial_round`
-A full round of permutation begins by adding the next `WIDTH`-many additive round constants to the `State` vector, then applying the "S-box" to each entry of the vector. Observe that the S-box operation is part of the `Specification` trait, `fn apply_sbox`. This operation on field elements is typically exponentiation to the power 3, 5, or -1.
+A full round of permutation begins by adding the next `WIDTH`-many additive round keys to the `State` vector, then applying the "S-box" to each entry of the vector. Observe that the S-box operation is part of the `Specification` trait, `fn apply_sbox`. This operation on field elements is typically exponentiation to the power 3, 5, or -1.
 
-A partial round of permutation also adds the next `WIDTH`-many additive round constants to the `State` vector, but then applies the S-box only to *first* element of this vector. The reason for mixing full and partial rounds is explained in [todo cite].
+A partial round of permutation also adds the next `WIDTH`-many additive round keys to the `State` vector, but then applies the S-box only to *first* element of this vector. The reason for mixing full and partial rounds is explained in [GKRRS '19](https://eprint.iacr.org/2019/458.pdf).
 
 Both rounds finish by applying the MDS Matrix to the `State` vector. Let's add these methods to the `Permutation`:
 ```rust

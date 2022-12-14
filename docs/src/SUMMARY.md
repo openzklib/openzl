@@ -2,9 +2,16 @@
 
 [Introduction](./introduction.md)
 
-# Basic Concepts
+# ECLAIR Basics
 
 - [Native vs Non-Native Computation](./native_nonnative.md)
+- [ECLAIR Standard Library](./std/eclair_std_lib.md)
+    - [Alloc](./std/alloc.md)
+    - [Bool](./std/bool.md)
+    - [Cmp](./std/cmp.md)
+    - [Num](./std/num.md)
+    - [Ops](./std/ops.md)
+
 
 <!-- # Writing ZK Applications
 
@@ -13,8 +20,6 @@
 
 # Tutorials
 
-    <!-- - [Chapter 3](./chapter_3.md)
-    - [Example: Poseidon Hash (OMIT, DO TUTORIAL)](./poseidon_hash_example.md) -->
 - [Tutorial: Poseidon Permutation](./poseidon_permutation_tutorial.md)
 
 # Proof System Backends

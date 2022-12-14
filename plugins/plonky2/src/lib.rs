@@ -5,6 +5,8 @@
 #![forbid(rustdoc::broken_intra_doc_links)]
 #![forbid(missing_docs)]
 
+extern crate alloc;
+
 pub mod base;
 pub mod bool;
 pub mod compiler;

@@ -42,7 +42,7 @@ where
 
     #[inline]
     fn new_constant(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
-        Self::new(compiler.0.constant(*this))
+        Self::new(compiler.builder.constant(*this))
     }
 }
 
@@ -54,15 +54,12 @@ where
 
     #[inline]
     fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
-        // FIXME: Review
-        let _ = (this, compiler);
-        todo!()
+        Self::new(compiler.add_target(*this))
     }
 
     #[inline]
     fn new_unknown(compiler: &mut Compiler<F, D>) -> Self {
-        // FIXME: Review
-        Self::new(compiler.0.add_virtual_target())
+        Self::new(compiler.add_virtual_target())
     }
 }
 
@@ -74,17 +71,12 @@ where
 
     #[inline]
     fn new_known(this: &Self::Type, compiler: &mut Compiler<F, D>) -> Self {
-        // FIXME: Review
-        let _ = (this, compiler);
-        todo!()
+        Self::new(compiler.add_public_target(*this))
     }
 
     #[inline]
     fn new_unknown(compiler: &mut Compiler<F, D>) -> Self {
-        // FIXME: Review
-        let target = compiler.0.add_virtual_target();
-        compiler.0.register_public_input(target);
-        Self::new(target)
+        Self::new(compiler.add_virtual_public_target())
     }
 }
 
@@ -96,7 +88,7 @@ where
 
     #[inline]
     fn add(self, rhs: Self, compiler: &mut Compiler<F, D>) -> Self::Output {
-        Self::new(compiler.0.add(self.target, rhs.target))
+        Self::new(compiler.builder.add(self.target, rhs.target))
     }
 }
 
@@ -108,7 +100,7 @@ where
 
     #[inline]
     fn add(self, rhs: F, compiler: &mut Compiler<F, D>) -> Self::Output {
-        Self::new(compiler.0.add_const(self.target, rhs))
+        Self::new(compiler.builder.add_const(self.target, rhs))
     }
 }
 
@@ -120,7 +112,7 @@ where
 
     #[inline]
     fn sub(self, rhs: Self, compiler: &mut Compiler<F, D>) -> Self::Output {
-        Self::new(compiler.0.sub(self.target, rhs.target))
+        Self::new(compiler.builder.sub(self.target, rhs.target))
     }
 }
 
@@ -132,7 +124,7 @@ where
 
     #[inline]
     fn mul(self, rhs: Self, compiler: &mut Compiler<F, D>) -> Self::Output {
-        Self::new(compiler.0.mul(self.target, rhs.target))
+        Self::new(compiler.builder.mul(self.target, rhs.target))
     }
 }
 
@@ -144,7 +136,7 @@ where
 
     #[inline]
     fn mul(self, rhs: F, compiler: &mut Compiler<F, D>) -> Self::Output {
-        Self::new(compiler.0.mul_const(rhs, self.target))
+        Self::new(compiler.builder.mul_const(rhs, self.target))
     }
 }
 
@@ -156,7 +148,7 @@ where
 
     #[inline]
     fn div(self, rhs: Self, compiler: &mut Compiler<F, D>) -> Self::Output {
-        Self::new(compiler.0.div(self.target, rhs.target))
+        Self::new(compiler.builder.div(self.target, rhs.target))
     }
 }
 
@@ -168,7 +160,7 @@ where
 
     #[inline]
     fn neg(self, compiler: &mut Compiler<F, D>) -> Self::Output {
-        Self::new(compiler.0.neg(self.target))
+        Self::new(compiler.builder.neg(self.target))
     }
 }
 
@@ -178,7 +170,7 @@ where
 {
     #[inline]
     fn eq(&self, rhs: &Self, compiler: &mut Compiler<F, D>) -> Bool<F, D> {
-        Bool::new(compiler.0.is_equal(self.target, rhs.target))
+        Bool::new(compiler.builder.is_equal(self.target, rhs.target))
     }
 }
 
@@ -188,7 +180,7 @@ where
 {
     #[inline]
     fn select(bit: &Bool<F, D>, lhs: &Self, rhs: &Self, compiler: &mut Compiler<F, D>) -> Self {
-        Self::new(compiler.0.select(bit.target, lhs.target, rhs.target))
+        Self::new(compiler.builder.select(bit.target, lhs.target, rhs.target))
     }
 }
 
@@ -200,7 +192,7 @@ where
 
     #[inline]
     fn zero(compiler: &mut Compiler<F, D>) -> Self {
-        Self::new(compiler.0.zero())
+        Self::new(compiler.builder.zero())
     }
 
     #[inline]
@@ -218,7 +210,7 @@ where
 
     #[inline]
     fn one(compiler: &mut Compiler<F, D>) -> Self {
-        Self::new(compiler.0.one())
+        Self::new(compiler.builder.one())
     }
 
     #[inline]

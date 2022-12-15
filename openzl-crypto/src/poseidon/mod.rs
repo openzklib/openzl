@@ -112,6 +112,16 @@ pub trait Constants {
     const ADDITIVE_ROUND_KEYS_COUNT: usize = Self::ROUNDS * Self::WIDTH;
 }
 
+/// Poseidon S-Box Exponent
+///
+/// For Poseidon implementations that use an `x^n` s-box with `n > 0`, this helper `trait` can be
+/// used to mark the exponent `n` for convenience. For `n = -1` the s-box "power" needs to be
+/// specified in the [`Specification::apply_sbox`] method.
+pub trait SBoxExponent {
+    /// S-Box Exponent Value
+    const SBOX_EXPONENT: u64;
+}
+
 /// Parameter Field Type
 #[component]
 pub type ParameterField;

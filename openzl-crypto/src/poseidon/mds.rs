@@ -85,7 +85,7 @@ where
     where
         F: FieldGeneration,
     {
-        let ys: Vec<F> = (t as u64..2 * t as u64).map(F::from_u64).collect();
+        let ys: Vec<F> = (t as u64..2 * t as u64).map(F::from_u64).collect(); // Change u64 to integer mod order(F)
         SquareMatrix::new_unchecked(Matrix::new_unchecked(
             (0..t as u64)
                 .map(|x| {

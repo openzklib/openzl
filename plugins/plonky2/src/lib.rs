@@ -11,6 +11,7 @@ pub mod base;
 pub mod bool;
 pub mod compiler;
 pub mod field;
+pub mod poseidon;
 
 #[doc(inline)]
 pub use starky;

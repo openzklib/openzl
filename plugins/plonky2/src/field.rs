@@ -12,9 +12,16 @@ use eclair::{
     num::{One, Zero},
     ops::{Add, Div, Mul, Neg, Sub},
 };
-use plonky2::{field::extension::Extendable, hash::hash_types::RichField, iop::target::Target};
+use openzl_util::derivative;
 
-/// Boolean Type
+pub use plonky2::{field::extension::Extendable, hash::hash_types::RichField, iop::target::Target};
+
+///
+pub struct Fp<F>(pub F);
+
+/// Variable Field Type
+#[derive(derivative::Derivative)]
+#[derivative(Clone, Copy)]
 pub struct Field<F, const D: usize> {
     /// Target
     pub target: Target,

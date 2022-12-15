@@ -208,7 +208,7 @@ where
 
     /// Computes the full permutation without the first round.
     #[inline]
-    fn permute(&self, state: &mut State<S, COM>, compiler: &mut COM) {
+    pub fn permute(&self, state: &mut State<S, COM>, compiler: &mut COM) {
         for round in 0..S::HALF_FULL_ROUNDS {
             self.full_round(round, state, compiler);
         }
@@ -229,11 +229,9 @@ pub mod bls12_381 {
     use super::*;
     use arkworks::{
         bls12_381::Fr,
-        ff::{field_new, BigInteger, Field, PrimeField, Zero},
+        ff::{BigInteger, Field, PrimeField, Zero},
     };
-    use openzl_crypto::poseidon::{
-        mds::MdsMatrices, round_constants::generate_round_constants, FieldGeneration, NativeField,
-    };
+    use openzl_crypto::poseidon::{FieldGeneration, NativeField};
 
     /// Poseidon Permutation for native computation
     #[derive(Debug)]
@@ -286,11 +284,11 @@ pub mod bls12_381 {
         }
 
         fn add_assign(lhs: &mut Self::Field, rhs: &Self::Field, _: &mut ()) {
-            *lhs = *lhs + rhs
+            *lhs += rhs
         }
 
         fn add_const_assign(lhs: &mut Self::Field, rhs: &Self::ParameterField, _: &mut ()) {
-            *lhs = *lhs + rhs
+            *lhs += rhs
         }
 
         fn apply_sbox(point: &mut Self::Field, _: &mut ()) {
@@ -302,7 +300,8 @@ pub mod bls12_381 {
         }
     }
 
-    type Poseidon2 = NativePoseidon<Arity2>;
+    /// Poseidon with Arity 2
+    pub type Poseidon2 = NativePoseidon<Arity2>;
 
     /// Wrapper around Bls12-381 Scalar Field element so
     /// we can implement [`FieldGeneration`] and

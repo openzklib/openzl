@@ -11,6 +11,7 @@ use openzl_crypto::poseidon::{
     self, encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
     ParameterFieldType, SBoxExponent,
 };
+use openzl_util::derivative;
 
 #[cfg(test)]
 pub mod test;
@@ -140,10 +141,9 @@ where
 }
 
 /// Poseidon Specification Configuration
-#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Spec<F, const ARITY: usize>(PhantomData<F>)
-where
-    F: PrimeField;
+#[derive(derivative::Derivative)]
+#[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct Spec<F, const ARITY: usize>(PhantomData<F>);
 
 impl<F, const ARITY: usize> Specification for Spec<F, ARITY>
 where

@@ -1,12 +1,9 @@
 //! Poseidon Arkworks Backend
 
 use crate::{
-    base::util::bits_u64,
+    base::{field::goldilocks_field::GoldilocksField, util::bits_u64},
     compiler::Compiler as PlonkCompiler,
     field::{Extendable, Field, Fp, RichField},
-    // constraint::{fp::Fp, FpVar, R1CS},
-    // ff::{BigInteger, Field, FpParameters, PrimeField},
-    // r1cs_std::fields::FieldVar,
 };
 use core::marker::PhantomData;
 use eclair::{
@@ -15,20 +12,18 @@ use eclair::{
 };
 use openzl_crypto::poseidon::{
     self, encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
-    ParameterFieldType,
+    ParameterFieldType, SBoxExponent,
 };
+use openzl_util::derivative;
 use plonky2::field::types::Field as _;
 
 /// Compiler Type.
 type Compiler<S, const D: usize> = PlonkCompiler<<S as Specification>::Field, D>;
 
 /// Poseidon Permutation Specification.
-pub trait Specification: Constants {
+pub trait Specification: Constants + SBoxExponent {
     /// Field Type
     type Field: RichField;
-
-    /// S-BOX Exponenet
-    const SBOX_EXPONENT: u64;
 }
 
 impl<F> NativeField for Fp<F>
@@ -150,19 +145,16 @@ where
 }
 
 /// Poseidon Specification Configuration
-#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Spec<F, const D: usize, const ARITY: usize>(PhantomData<F>)
-where
-    F: RichField + Extendable<D>;
+#[derive(derivative::Derivative)]
+#[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct Spec<F, const D: usize, const ARITY: usize>(PhantomData<F>);
 
 impl<F, const D: usize, const ARITY: usize> Specification for Spec<F, D, ARITY>
 where
     F: RichField + Extendable<D>,
-    Self: poseidon::Constants,
+    Self: poseidon::Constants + SBoxExponent,
 {
     type Field = F;
-
-    const SBOX_EXPONENT: u64 = 5;
 }
 
 impl<F, const D: usize, const ARITY: usize, COM> Constant<COM> for Spec<F, D, ARITY>
@@ -317,6 +309,12 @@ where
         }
         *point = product
     }
+}
+
+impl<const D: usize, const ARITY: usize> poseidon::SBoxExponent
+    for Spec<GoldilocksField, D, ARITY>
+{
+    const SBOX_EXPONENT: u64 = 7;
 }
 
 // impl poseidon::Constants for Spec<bn254::Fr, 2> {

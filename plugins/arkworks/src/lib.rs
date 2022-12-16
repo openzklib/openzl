@@ -52,9 +52,6 @@ pub use ed_on_mnt4_753;
 #[cfg(feature = "gm17")]
 pub use gm17;
 
-#[cfg(feature = "groth16")]
-pub use groth16;
-
 #[cfg(feature = "mnt4-298")]
 pub use mnt4_298;
 
@@ -104,6 +101,10 @@ pub mod constraint;
 #[cfg(feature = "ff")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "ff")))]
 pub mod ff;
+
+#[cfg(feature = "groth16")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "groth16")))]
+pub mod groth16;
 
 #[cfg(all(feature = "ec", feature = "ff"))]
 #[cfg_attr(doc_cfg, doc(cfg(all(feature = "ec", feature = "ff"))))]

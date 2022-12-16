@@ -2,7 +2,7 @@
 
 /// Rollback Trait
 ///
-/// This trait should be implemented by strucutres which have a canonical working state which can be
+/// This trait should be implemented by structures which have a canonical working state which can be
 /// discarded easily.
 pub trait Rollback {
     /// Rolls back `self` to the previous state.

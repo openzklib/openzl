@@ -9,4 +9,10 @@
 extern crate alloc;
 
 #[doc(inline)]
+pub use openzl_crypto as crypto;
+
+#[doc(inline)]
 pub use openzl_util as util;
+
+#[doc(inline)]
+pub use openzl_derive::*;

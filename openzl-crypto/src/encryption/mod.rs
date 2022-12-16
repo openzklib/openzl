@@ -302,6 +302,168 @@ where
     }
 }
 
+/// Unsafe Empty Output
+///
+/// For protocols that need some unconstrained behavior in-circuit, we can use this
+/// type to return from the computation.
+///
+/// # Crypto Safety
+///
+/// This kind of structure should be used carefully! For now it is only used in [`UnsafeNoEncrypt`]
+/// as a way to enable un-checked encryption, please see its documentation for an example use-case.
+#[derive(derivative::Derivative)]
+#[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct UnsafeOutput<T, COM = ()>(PhantomData<(T, COM)>);
+
+impl<T, COM> Constant<COM> for UnsafeOutput<T, COM> {
+    type Type = T;
+
+    #[inline]
+    fn new_constant(this: &Self::Type, compiler: &mut COM) -> Self {
+        let _ = (this, compiler);
+        Self::default()
+    }
+}
+
+impl<T, M, COM> Variable<M, COM> for UnsafeOutput<T, COM> {
+    type Type = T;
+
+    #[inline]
+    fn new_unknown(compiler: &mut COM) -> Self {
+        let _ = compiler;
+        Self::default()
+    }
+
+    #[inline]
+    fn new_known(this: &Self::Type, compiler: &mut COM) -> Self {
+        let _ = (this, compiler);
+        Self::default()
+    }
+}
+
+impl<T, COM> eclair::cmp::PartialEq<Self, COM> for UnsafeOutput<T, COM>
+where
+    COM: Has<bool>,
+    Bool<COM>: Constant<COM, Type = bool>,
+{
+    #[inline]
+    fn eq(&self, rhs: &Self, compiler: &mut COM) -> Bool<COM> {
+        let _ = rhs;
+        Bool::<COM>::new_constant(&true, compiler)
+    }
+
+    #[inline]
+    fn ne(&self, rhs: &Self, compiler: &mut COM) -> Bool<COM> {
+        let _ = rhs;
+        Bool::<COM>::new_constant(&false, compiler)
+    }
+
+    #[inline]
+    fn assert_equal(&self, rhs: &Self, compiler: &mut COM) {
+        // NOTE: We could also assert on the constant `true` boolean as a way to "cause" an assert
+        // here, but any reasonable implementation of `COM` should make this a no-op anyway.
+        let _ = (rhs, compiler);
+    }
+}
+
+impl<T> Encode for UnsafeOutput<T> {
+    #[inline]
+    fn encode<W>(&self, writer: W) -> Result<(), W::Error>
+    where
+        W: Write,
+    {
+        let _ = writer;
+        Ok(())
+    }
+}
+
+impl<P, T> Input<P> for UnsafeOutput<T>
+where
+    P: ProofSystem + ?Sized,
+{
+    #[inline]
+    fn extend(&self, input: &mut P::Input) {
+        let _ = input;
+    }
+}
+
+/// Empty Encryption Scheme returning [`UnsafeOutput`]
+///
+/// # Crypto Safety
+///
+/// In a protocol where we want to use encryption but disable its verification in-circuit, we can
+/// lift an encryption scheme (using [allocation](eclair::alloc)) to an "unsafe non-encrypting"
+/// scheme. This should be used with caution as it can lead to underconstrained circuits!
+#[derive(derivative::Derivative)]
+#[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct UnsafeNoEncrypt<E, COM = ()>(PhantomData<(E, COM)>);
+
+impl<E, COM> Constant<COM> for UnsafeNoEncrypt<E, COM>
+where
+    E: Constant<COM>,
+{
+    type Type = E::Type;
+
+    #[inline]
+    fn new_constant(this: &Self::Type, compiler: &mut COM) -> Self {
+        let _ = (this, compiler);
+        Self::default()
+    }
+}
+
+impl<E, COM> RandomnessType for UnsafeNoEncrypt<E, COM>
+where
+    E: RandomnessType,
+{
+    type Randomness = E::Randomness;
+}
+
+impl<E, COM> PlaintextType for UnsafeNoEncrypt<E, COM>
+where
+    E: PlaintextType,
+{
+    type Plaintext = E::Plaintext;
+}
+
+impl<E, COM> HeaderType for UnsafeNoEncrypt<E, COM>
+where
+    E: HeaderType,
+{
+    type Header = E::Header;
+}
+
+impl<E, COM> EncryptionKeyType for UnsafeNoEncrypt<E, COM>
+where
+    E: EncryptionKeyType,
+{
+    type EncryptionKey = E::EncryptionKey;
+}
+
+impl<E, COM> CiphertextType for UnsafeNoEncrypt<E, COM>
+where
+    E: CiphertextType,
+{
+    type Ciphertext = UnsafeOutput<E::Ciphertext, COM>;
+}
+
+impl<E, COM> Encrypt<COM> for UnsafeNoEncrypt<E, COM>
+where
+    E: EncryptionTypes,
+{
+    #[inline]
+    fn encrypt(
+        &self,
+        encryption_key: &Self::EncryptionKey,
+        randomness: &Self::Randomness,
+        header: &Self::Header,
+        plaintext: &Self::Plaintext,
+        compiler: &mut COM,
+    ) -> Self::Ciphertext {
+        let _ = (encryption_key, randomness, header, plaintext, compiler);
+        UnsafeOutput::default()
+    }
+}
+
 /// Message
 #[cfg_attr(
     feature = "serde",

@@ -30,7 +30,7 @@ algebra = ["ec", "ff", "r1cs-std", "serialize"]
 alloc = ["eclair/alloc", "openzl-crypto/alloc", "openzl-util/alloc"]
 
 # Constraint
-constraint = ["ff", "r1cs-std", "relations"]
+constraint = ["ff", "num-integer", "r1cs-std", "relations"]
 
 # Full Feature Set
 full = [
@@ -68,11 +68,15 @@ full = [
     "vesta",
 ]
 
+# Groth16 Proving System
+groth16 = ["ark-groth16", "constraint", "ec", "snark"]
+
 # Serde Serialization
 serde = ["alloc", "ark-std", "openzl-util/serde", "serialize"]
 
 # Standard Library
 std = [
+    "ark-groth16?/std",
     "ark-std",
     "bls12-377?/std",
     "bls12-381?/std",
@@ -89,7 +93,6 @@ std = [
     "ed-on-mnt4-753?/std",
     "ff?/std",
     "gm17?/std",
-    "groth16?/std",
     "mnt4-298?/std",
     "mnt4-753?/std",
     "mnt6-298?/std",
@@ -107,6 +110,7 @@ std = [
 ]
 
 [dependencies]
+ark-groth16 = { version = "0.3.0", optional = true, default-features = false }
 ark-std = { version = "0.3.0", optional = true, default-features = false }
 bls12-377 = { package = "ark-bls12-377", version = "0.3.0", optional = true, default-features = false, features = ["curve"] }
 bls12-381 = { package = "ark-bls12-381", version = "0.3.0", optional = true, default-features = false, features = ["curve"] }
@@ -124,11 +128,11 @@ ed-on-mnt4-298 = { package = "ark-ed-on-mnt4-298", version = "0.3.0", optional =
 ed-on-mnt4-753 = { package = "ark-ed-on-mnt4-753", version = "0.3.0", optional = true, default-features = false, features = ["r1cs"] }
 ff = { package = "ark-ff", version = "0.3.0", optional = true, default-features = false }
 gm17 = { package = "ark-gm17", version = "0.3.0", optional = true, default-features = false }
-groth16 = { package = "ark-groth16", version = "0.3.0", optional = true, default-features = false }
 mnt4-298 = { package = "ark-mnt4-298", version = "0.3.0", optional = true, default-features = false }
 mnt4-753 = { package = "ark-mnt4-753", version = "0.3.0", optional = true, default-features = false }
 mnt6-298 = { package = "ark-mnt6-298", version = "0.3.0", optional = true, default-features = false }
 mnt6-753 = { package = "ark-mnt6-753", version = "0.3.0", optional = true, default-features = false }
+num-integer = { version = "0.1.45", optional = true, default-features = false } 
 openzl-crypto = { path = "../../openzl-crypto", default-features = false }
 openzl-util = { path = "../../openzl-util", default-features = false }
 pallas = { package = "ark-pallas", version = "0.3.0", optional = true, default-features = false }

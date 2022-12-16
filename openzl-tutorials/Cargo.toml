@@ -17,4 +17,4 @@ curve = ["arkworks/ec", "arkworks/ff"]
 [dependencies]
 arkworks = { package = "openzl-plugin-arkworks", path = "../plugins/arkworks", optional = true, default-features = false }
 eclair = { path = "../eclair", default-features = false }
-openzl-crypto = { path = "../openzl-crypto", optional = true, default-features = false }
+openzl-crypto = { path = "../openzl-crypto", default-features = false }

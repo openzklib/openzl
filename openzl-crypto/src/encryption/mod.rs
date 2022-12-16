@@ -320,6 +320,11 @@ where
 ///
 /// For protocols that need some unconstrained behavior in-circuit, we can use this
 /// type to return from the computation.
+///
+/// # Crypto Safety
+///
+/// This kind of structure should be used carefully! For now it is only used in [`UnsafeNoEncrypt`]
+/// as a way to enable un-checked encryption, please see its documentation for an example use-case.
 #[derive(derivative::Derivative)]
 #[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct UnsafeOutput<T, COM = ()>(PhantomData<(T, COM)>);
@@ -369,6 +374,8 @@ where
 
     #[inline]
     fn assert_equal(&self, rhs: &Self, compiler: &mut COM) {
+        // NOTE: We could also assert on the constant `true` boolean as a way to "cause" an assert
+        // here, but any reasonable implementation of `COM` should make this a no-op anyway.
         let _ = (rhs, compiler);
     }
 }
@@ -394,7 +401,13 @@ where
     }
 }
 
-/// Empty Encryption Scheme returning [`UnsafeOutput`].
+/// Empty Encryption Scheme returning [`UnsafeOutput`]
+///
+/// # Crypto Safety
+///
+/// In a protocol where we want to use encryption but disable its verification in-circuit, we can
+/// lift an encryption scheme (using [allocation](eclair::alloc)) to an "unsafe non-encrypting"
+/// scheme. This should be used with caution as it can lead to underconstrained circuits!
 #[derive(derivative::Derivative)]
 #[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct UnsafeNoEncrypt<E, COM = ()>(PhantomData<(E, COM)>);

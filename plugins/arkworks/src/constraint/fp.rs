@@ -1,14 +1,10 @@
 //! Field Element Wrapper
 
-use crate::{
-    constraint::R1CS,
-    ff::{Field, FpParameters, PrimeField, ToConstraintField},
-};
+use crate::ff::{Field, FpParameters, PrimeField, ToConstraintField};
 use alloc::vec::Vec;
 use core::iter;
 use eclair::{
     self,
-    alloc::Constant,
     bool::{Bool, ConditionalSelect},
 };
 use openzl_crypto::{

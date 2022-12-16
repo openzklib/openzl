@@ -28,7 +28,7 @@ where
 /// Array Hash Function
 pub trait ArrayHashFunction<const ARITY: usize, COM = ()> {
     /// Input Type
-    type Input: ?Sized;
+    type Input;
 
     /// Output Type
     type Output;

@@ -2,8 +2,8 @@
 
 use eclair::{
     alloc::{
-        mode::{Public, Secret},
-        Variable,
+        mode::{Derived, Public, Secret},
+        Allocate, Allocator, Constant, Variable,
     },
     bool::{Assert, Bool},
     cmp::PartialEq,
@@ -11,122 +11,302 @@ use eclair::{
 };
 use openzl_crypto::{
     accumulator::{Model, Types},
-    hash::ArrayHashFunction,
+    hash::ArrayHashFunction as Hash,
 };
 
 /// Semaphore Circuit Specification
-/// TODO: What compatibility is needed among these types?
 pub trait Specification<COM = ()>
 where
     COM: Assert,
 {
-    /// Concrete Accumulator Model
-    type AccumulatorModel: Model<
-        Item = Self::HashOutput,
-        Output = Self::AccumulatorOutput,
-        Witness = Self::Witness,
-    >;
-    /// Accumulator Model Variable Type
-    type AccumulatorModelVar: Model<
+    /// Accumulator Model
+    type Accumulator: Model<
         COM,
-        Item = Self::HashOutputVar,
-        Output = Self::AccumulatorOutputVar,
-        Witness = Self::WitnessVar,
+        Item = <Self::Hasher as Hash<2, COM>>::Output,
         Verification = Bool<COM>,
     >;
-    /// Accumulator Witness Type
-    type Witness;
-    /// Accumulator Witness Variable Type
-    type WitnessVar: Variable<Secret, COM, Type = Self::Witness>;
-    /// Concrete Input Type for Hash Functions
-    type Input;
-    /// Input Variable Type
-    type InputVar: Variable<Secret, COM, Type = Self::Input>
-        + Variable<Public, COM, Type = Self::Input>;
-    /// Accumulator Output Type
-    type AccumulatorOutput;
-    /// Accumulator Output Variable Type
-    type AccumulatorOutputVar: Variable<Public, COM, Type = Self::AccumulatorOutput>;
-    /// Rename this hash
-    type Hash: ArrayHashFunction<2usize, Input = Self::Input, Output = Self::HashOutput>;
-    /// Should these really be two different types?
-    type HashVar: ArrayHashFunction<
-        2usize,
-        COM,
-        Input = Self::InputVar,
-        Output = Self::HashOutputVar,
-    >;
-    /// Hash Output Type
-    type HashOutput;
-    /// Hash Output Variable Type
-    type HashOutputVar: Variable<Public, COM, Type = Self::HashOutput>
-        + PartialEq<Self::HashOutputVar, COM>;
+    /// Hash function
+    type Hasher: Hash<2usize, COM>;
     /// Message Type
-    type Message;
-    /// Message Variable Type
-    type MessageVar: Clone
-        + Variable<Public, COM, Type = Self::Message>
-        + MulAssign<Self::MessageVar, COM>;
+    type Message: Clone;
+}
 
-    /// Generates constraints in `compiler` to enforce the Semaphore circuit.
-    fn circuit(
-        identity: Identity<Self, COM>,
-        signal: Signal<Self, COM>,
-        accumulator: &Self::AccumulatorModelVar,
-        hash: &Self::HashVar,
-        compiler: &mut COM,
-    ) {
-        // Allocate identity data
-        let identity_trapdoor: Self::InputVar =
-            Variable::<Secret, COM>::new_known(&identity.trapdoor, compiler);
-        let identity_nullifier: Self::InputVar =
-            Variable::<Secret, COM>::new_known(&identity.nullifier, compiler);
-        let witness: Self::WitnessVar =
-            Variable::<Secret, COM>::new_known(&identity.witness, compiler);
-        let membership_root: Self::AccumulatorOutputVar =
-            Variable::<Public, COM>::new_known(&identity.membership_root, compiler);
+/// Hasher
+pub type Hasher<S, COM = ()> = <S as Specification<COM>>::Hasher;
+
+/// Accumulator
+pub type Accumulator<S, COM = ()> = <S as Specification<COM>>::Accumulator;
+
+/// Semaphore Instance
+pub struct Semaphore<S, COM = ()>
+where
+    S: Specification<COM>,
+    COM: Assert,
+{
+    identity: Identity<S, COM>,
+    signal: Signal<S, COM>,
+}
+
+impl<S, COM> Semaphore<S, COM>
+where
+    S: Specification<COM>,
+    COM: Assert,
+    <S::Hasher as Hash<2, COM>>::Output: PartialEq<<S::Hasher as Hash<2, COM>>::Output, COM>,
+{
+    /// Constructor
+    pub fn new(identity: Identity<S, COM>, signal: Signal<S, COM>) -> Self {
+        Self { identity, signal }
+    }
+}
+
+impl<S, COM> Semaphore<S, COM>
+where
+    S: Specification<COM>,
+    COM: Assert,
+    <S::Hasher as Hash<2, COM>>::Output: PartialEq<<S::Hasher as Hash<2, COM>>::Output, COM>,
+    S::Message: MulAssign<S::Message, COM>,
+{
+    /// Allocates `self` and generates constraints in `compiler`.
+    pub fn circuit(self, parameters: Parameters<S, COM>, compiler: &mut COM) {
         // Compute identity commitment (this omits the second hash of the diagram)
-        let identity_commitment = hash.hash([&identity_trapdoor, &identity_nullifier], compiler);
+        let identity_commitment = parameters.hasher.hash(
+            [&self.identity.trapdoor, &self.identity.nullifier],
+            compiler,
+        );
         // Assert valid identity
-        let verification =
-            accumulator.verify(&identity_commitment, &witness, &membership_root, compiler);
+        let verification = parameters.accumulator.verify(
+            &identity_commitment,
+            &self.identity.witness,
+            &self.identity.membership_root,
+            compiler,
+        );
         compiler.assert(&verification);
-
-        // Allocate the signal data
-        let external_nullifier: Self::InputVar =
-            Variable::<Public, COM>::new_known(&signal.external_nullifier, compiler);
-        let claimed_nullifier: Self::HashOutputVar =
-            Variable::<Public, COM>::new_known(&signal.nullifier, compiler);
-        let mut message: Self::MessageVar =
-            Variable::<Public, COM>::new_known(&signal.message, compiler);
-        // Assert correct nullifier
-        let computed_nullifier = hash.hash([&identity_nullifier, &external_nullifier], compiler);
-        computed_nullifier.eq(&claimed_nullifier, compiler);
-
+        // Assert Correct Nullifier
+        let computed_nullifier = parameters.hasher.hash(
+            [&self.identity.nullifier, &self.signal.external_nullifier],
+            compiler,
+        );
+        computed_nullifier.assert_equal(&self.signal.nullifier, compiler);
         // Constrain message
-        // TODO: What does this clone do exactly?
+        // TODO: What's a good way to do this?
+        let mut message = self.signal.message.clone();
         message.mul_assign(message.clone(), compiler);
+    }
+
+    pub fn unknown_constraints(parameters: Parameters<S, COM>, compiler: &mut COM) -> &COM
+    where
+        Self: Variable<Derived, COM>,
+    {
+        let semaphore = Self::new_unknown(compiler);
+        semaphore.circuit(parameters, compiler);
+        compiler
+    }
+
+    pub fn known_constraints(
+        semaphore: Semaphore<S>,
+        parameters: Parameters<S, COM>,
+        compiler: &mut COM,
+    ) -> &COM
+    where
+        S: Specification,
+        Self: Variable<Derived, COM, Type = Semaphore<S>>,
+    {
+        let semaphore: Self = semaphore.as_known(compiler);
+        semaphore.circuit(parameters, compiler);
+        compiler
+    }
+}
+
+impl<S, COM> Variable<Derived, COM> for Semaphore<S, COM>
+where
+    S: Specification<COM> + Specification,
+    COM: Assert,
+    <Hasher<S> as Hash<2>>::Input: Sized,
+    Identity<S, COM>: Variable<Secret, COM, Type = Identity<S>>,
+    Signal<S, COM>: Variable<Public, COM, Type = Signal<S>>,
+    Accumulator<S, COM>: Constant<COM, Type = Accumulator<S>>,
+    Hasher<S, COM>: Constant<COM, Type = Hasher<S>>,
+    <Hasher<S, COM> as Hash<2, COM>>::Output:
+        PartialEq<<Hasher<S, COM> as Hash<2, COM>>::Output, COM>,
+{
+    type Type = Semaphore<S>;
+
+    fn new_known(this: &Self::Type, compiler: &mut COM) -> Self {
+        Self::new(
+            this.identity.as_known(compiler),
+            this.signal.as_known(compiler),
+        )
+    }
+
+    fn new_unknown(compiler: &mut COM) -> Self {
+        Self::new(compiler.allocate_unknown(), compiler.allocate_unknown())
     }
 }
 
 /// Semaphore Identity Credentials
-pub struct Identity<S, COM>
+pub struct Identity<S, COM = ()>
 where
     COM: Assert,
     S: Specification<COM> + ?Sized,
+    <S::Hasher as Hash<2, COM>>::Input: Sized,
 {
-    trapdoor: S::Input,
-    nullifier: S::Input,
-    witness: <S::AccumulatorModel as Types>::Witness,
-    membership_root: <S::AccumulatorModel as Types>::Output,
+    trapdoor: <S::Hasher as Hash<2, COM>>::Input,
+    nullifier: <S::Hasher as Hash<2, COM>>::Input,
+    witness: <S::Accumulator as Types>::Witness,
+    membership_root: <S::Accumulator as Types>::Output,
 }
 
-pub struct Signal<S, COM>
+impl<S, COM> Identity<S, COM>
 where
     COM: Assert,
     S: Specification<COM> + ?Sized,
+    <S::Hasher as Hash<2, COM>>::Input: Sized,
 {
-    external_nullifier: S::Input,
-    nullifier: S::HashOutput,
+    pub fn new(
+        trapdoor: <S::Hasher as Hash<2, COM>>::Input,
+        nullifier: <S::Hasher as Hash<2, COM>>::Input,
+        witness: <S::Accumulator as Types>::Witness,
+        membership_root: <S::Accumulator as Types>::Output,
+    ) -> Self {
+        Self {
+            trapdoor,
+            nullifier,
+            witness,
+            membership_root,
+        }
+    }
+}
+
+impl<S, COM> Variable<Secret, COM> for Identity<S, COM>
+where
+    COM: Assert,
+    S: Specification<COM> + Specification + ?Sized,
+    <Hasher<S, COM> as Hash<2, COM>>::Input:
+        Variable<Secret, COM, Type = <Hasher<S> as Hash<2>>::Input> + Sized,
+    <Hasher<S> as Hash<2>>::Input: Sized,
+    <Accumulator<S, COM> as Types>::Output:
+        Variable<Secret, COM, Type = <Accumulator<S> as Types>::Output>,
+    <Accumulator<S, COM> as Types>::Witness:
+        Variable<Secret, COM, Type = <Accumulator<S> as Types>::Witness>,
+{
+    type Type = Identity<S>;
+
+    fn new_known(this: &Self::Type, compiler: &mut COM) -> Self {
+        Self::new(
+            this.trapdoor.as_known(compiler),
+            this.nullifier.as_known(compiler),
+            this.witness.as_known(compiler),
+            this.membership_root.as_known(compiler),
+        )
+    }
+
+    fn new_unknown(compiler: &mut COM) -> Self {
+        Self::new(
+            compiler.allocate_unknown(),
+            compiler.allocate_unknown(),
+            compiler.allocate_unknown(),
+            compiler.allocate_unknown(),
+        )
+    }
+}
+
+pub struct Signal<S, COM = ()>
+where
+    COM: Assert,
+    S: Specification<COM> + ?Sized,
+    <S::Hasher as Hash<2, COM>>::Input: Sized,
+{
+    external_nullifier: <S::Hasher as Hash<2, COM>>::Input,
+    nullifier: <S::Hasher as Hash<2, COM>>::Output,
     message: S::Message,
+}
+
+impl<S, COM> Signal<S, COM>
+where
+    COM: Assert,
+    S: Specification<COM> + ?Sized,
+    <S::Hasher as Hash<2, COM>>::Input: Sized,
+{
+    pub fn new(
+        external_nullifier: <S::Hasher as Hash<2, COM>>::Input,
+        nullifier: <S::Hasher as Hash<2, COM>>::Output,
+        message: S::Message,
+    ) -> Self {
+        Self {
+            external_nullifier,
+            nullifier,
+            message,
+        }
+    }
+
+    // TODO: A method for forming the signal from everything but `nullifier`
+}
+
+impl<S, COM> Variable<Public, COM> for Signal<S, COM>
+where
+    COM: Assert,
+    S: Specification<COM> + Specification + ?Sized,
+    <Hasher<S> as Hash<2>>::Input: Sized,
+    <Hasher<S, COM> as Hash<2, COM>>::Input:
+        Variable<Public, COM, Type = <Hasher<S> as Hash<2>>::Input> + Sized,
+    <Hasher<S, COM> as Hash<2, COM>>::Output:
+        Variable<Public, COM, Type = <Hasher<S> as Hash<2>>::Output>,
+    <S as Specification<COM>>::Message: Variable<Public, COM, Type = <S as Specification>::Message>,
+{
+    type Type = Signal<S>;
+
+    fn new_known(this: &Self::Type, compiler: &mut COM) -> Self {
+        Self::new(
+            this.external_nullifier.as_known(compiler),
+            this.nullifier.as_known(compiler),
+            this.message.as_known(compiler),
+        )
+    }
+
+    fn new_unknown(compiler: &mut COM) -> Self {
+        Self::new(
+            compiler.allocate_unknown(),
+            compiler.allocate_unknown(),
+            compiler.allocate_unknown(),
+        )
+    }
+}
+
+/// Semaphore Parameters
+pub struct Parameters<S, COM = ()>
+where
+    S: Specification<COM>,
+    COM: Assert,
+{
+    accumulator: Accumulator<S, COM>,
+    hasher: Hasher<S, COM>,
+}
+
+impl<S, COM> Parameters<S, COM>
+where
+    S: Specification<COM>,
+    COM: Assert,
+{
+    pub fn new(accumulator: Accumulator<S, COM>, hasher: Hasher<S, COM>) -> Self {
+        Self {
+            accumulator,
+            hasher,
+        }
+    }
+}
+
+impl<S, COM> Constant<COM> for Parameters<S, COM>
+where
+    S: Specification<COM> + Specification,
+    COM: Assert,
+    Accumulator<S, COM>: Constant<COM, Type = Accumulator<S>>,
+    Hasher<S, COM>: Constant<COM, Type = Hasher<S>>,
+{
+    type Type = Parameters<S>;
+    fn new_constant(this: &Self::Type, compiler: &mut COM) -> Self {
+        Self::new(
+            this.accumulator.as_constant(compiler),
+            this.hasher.as_constant(compiler),
+        )
+    }
 }

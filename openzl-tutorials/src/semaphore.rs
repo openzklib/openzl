@@ -43,7 +43,9 @@ where
     S: Specification<COM>,
     COM: Assert,
 {
+    /// Identity Credentials (private)
     identity: Identity<S, COM>,
+    /// Signal (public)
     signal: Signal<S, COM>,
 }
 
@@ -66,8 +68,8 @@ where
     <S::Hasher as Hash<2, COM>>::Output: PartialEq<<S::Hasher as Hash<2, COM>>::Output, COM>,
     S::Message: MulAssign<S::Message, COM>,
 {
-    /// Allocates `self` and generates constraints in `compiler`.
-    pub fn circuit(self, parameters: Parameters<S, COM>, compiler: &mut COM) {
+    /// Generates constraints in `compiler`.
+    pub fn circuit(self, parameters: &Parameters<S, COM>, compiler: &mut COM) {
         // Compute identity commitment (this omits the second hash of the diagram)
         let identity_commitment = parameters.hasher.hash(
             [&self.identity.trapdoor, &self.identity.nullifier],
@@ -93,7 +95,8 @@ where
         message.mul_assign(message.clone(), compiler);
     }
 
-    pub fn unknown_constraints(parameters: Parameters<S, COM>, compiler: &mut COM) -> &COM
+    // Lifetime 'a correct ? 
+    pub fn unknown_constraints<'a>(parameters: &Parameters<S, COM>, compiler: &'a mut COM) -> &'a COM
     where
         Self: Variable<Derived, COM>,
     {
@@ -102,11 +105,11 @@ where
         compiler
     }
 
-    pub fn known_constraints(
+    pub fn known_constraints<'a>(
         semaphore: Semaphore<S>,
-        parameters: Parameters<S, COM>,
-        compiler: &mut COM,
-    ) -> &COM
+        parameters: & Parameters<S, COM>,
+        compiler: &'a mut COM,
+    ) -> &'a COM
     where
         S: Specification,
         Self: Variable<Derived, COM, Type = Semaphore<S>>,
@@ -121,7 +124,6 @@ impl<S, COM> Variable<Derived, COM> for Semaphore<S, COM>
 where
     S: Specification<COM> + Specification,
     COM: Assert,
-    <Hasher<S> as Hash<2>>::Input: Sized,
     Identity<S, COM>: Variable<Secret, COM, Type = Identity<S>>,
     Signal<S, COM>: Variable<Public, COM, Type = Signal<S>>,
     Accumulator<S, COM>: Constant<COM, Type = Accumulator<S>>,
@@ -148,11 +150,14 @@ pub struct Identity<S, COM = ()>
 where
     COM: Assert,
     S: Specification<COM> + ?Sized,
-    <S::Hasher as Hash<2, COM>>::Input: Sized,
 {
+    /// Identity Trapdoor
     trapdoor: <S::Hasher as Hash<2, COM>>::Input,
+    /// Identity Nullifier
     nullifier: <S::Hasher as Hash<2, COM>>::Input,
+    /// Membership Accumulator Witness
     witness: <S::Accumulator as Types>::Witness,
+    /// Membership Accumulator Root
     membership_root: <S::Accumulator as Types>::Output,
 }
 
@@ -160,7 +165,6 @@ impl<S, COM> Identity<S, COM>
 where
     COM: Assert,
     S: Specification<COM> + ?Sized,
-    <S::Hasher as Hash<2, COM>>::Input: Sized,
 {
     pub fn new(
         trapdoor: <S::Hasher as Hash<2, COM>>::Input,
@@ -182,8 +186,7 @@ where
     COM: Assert,
     S: Specification<COM> + Specification + ?Sized,
     <Hasher<S, COM> as Hash<2, COM>>::Input:
-        Variable<Secret, COM, Type = <Hasher<S> as Hash<2>>::Input> + Sized,
-    <Hasher<S> as Hash<2>>::Input: Sized,
+        Variable<Secret, COM, Type = <Hasher<S> as Hash<2>>::Input>,
     <Accumulator<S, COM> as Types>::Output:
         Variable<Secret, COM, Type = <Accumulator<S> as Types>::Output>,
     <Accumulator<S, COM> as Types>::Witness:
@@ -214,7 +217,6 @@ pub struct Signal<S, COM = ()>
 where
     COM: Assert,
     S: Specification<COM> + ?Sized,
-    <S::Hasher as Hash<2, COM>>::Input: Sized,
 {
     external_nullifier: <S::Hasher as Hash<2, COM>>::Input,
     nullifier: <S::Hasher as Hash<2, COM>>::Output,
@@ -225,7 +227,6 @@ impl<S, COM> Signal<S, COM>
 where
     COM: Assert,
     S: Specification<COM> + ?Sized,
-    <S::Hasher as Hash<2, COM>>::Input: Sized,
 {
     pub fn new(
         external_nullifier: <S::Hasher as Hash<2, COM>>::Input,
@@ -246,9 +247,8 @@ impl<S, COM> Variable<Public, COM> for Signal<S, COM>
 where
     COM: Assert,
     S: Specification<COM> + Specification + ?Sized,
-    <Hasher<S> as Hash<2>>::Input: Sized,
     <Hasher<S, COM> as Hash<2, COM>>::Input:
-        Variable<Public, COM, Type = <Hasher<S> as Hash<2>>::Input> + Sized,
+        Variable<Public, COM, Type = <Hasher<S> as Hash<2>>::Input>,
     <Hasher<S, COM> as Hash<2, COM>>::Output:
         Variable<Public, COM, Type = <Hasher<S> as Hash<2>>::Output>,
     <S as Specification<COM>>::Message: Variable<Public, COM, Type = <S as Specification>::Message>,

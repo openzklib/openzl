@@ -7,9 +7,14 @@ use crate::{
 };
 use core::marker::PhantomData;
 use eclair::alloc::Constant;
-use openzl_crypto::poseidon::{
-    self, encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
-    ParameterFieldType,
+use openzl_crypto::{
+    hash::ArrayHashFunction,
+    poseidon::{
+        self,
+        encryption::BlockElement,
+        hash::{DomainTag, Hasher},
+        Constants, FieldGeneration, NativeField, ParameterFieldType, State,
+    },
 };
 
 #[cfg(test)]
@@ -179,6 +184,18 @@ where
     type ParameterField = Fp<<Self as Specification>::Field>;
 }
 
+// impl<F, COM, const ARITY: usize> ArrayHashFunction<ARITY, COM> for Spec<F, ARITY>
+// where F: PrimeField {
+//     type Input = F;
+
+//     type Output = F;
+
+//     fn hash(&self, input: [&Self::Input; ARITY], compiler: &mut COM) -> Self::Output {
+//         let mut state = State::new()
+//         todo!()
+//     }
+// }
+
 impl<F, const ARITY: usize> poseidon::Field for Spec<F, ARITY>
 where
     Self: Specification,
@@ -320,3 +337,7 @@ impl poseidon::Constants for Spec<bn254::Fr, 5> {
     const FULL_ROUNDS: usize = 8;
     const PARTIAL_ROUNDS: usize = 56;
 }
+
+/// Hasher for Poseidon Permutation over Bn254 Scalar Field
+pub type Bn254Hasher<const ARITY: usize> =
+    Hasher<Spec<bn254::Fr, ARITY>, TwoPowerMinusOneDomainTag, ARITY>;

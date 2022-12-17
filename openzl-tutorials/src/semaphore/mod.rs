@@ -14,6 +14,9 @@ use openzl_crypto::{
     hash::ArrayHashFunction as Hash,
 };
 
+#[cfg(all(feature = "bn254", feature = "groth16"))]
+pub mod arkworks;
+
 /// Semaphore Circuit Specification
 pub trait Specification<COM = ()>
 where
@@ -95,8 +98,11 @@ where
         message.mul_assign(message.clone(), compiler);
     }
 
-    // Lifetime 'a correct ? 
-    pub fn unknown_constraints<'a>(parameters: &Parameters<S, COM>, compiler: &'a mut COM) -> &'a COM
+    // Lifetime 'a correct ?
+    pub fn unknown_constraints<'a>(
+        parameters: &Parameters<S, COM>,
+        compiler: &'a mut COM,
+    ) -> &'a COM
     where
         Self: Variable<Derived, COM>,
     {
@@ -107,7 +113,7 @@ where
 
     pub fn known_constraints<'a>(
         semaphore: Semaphore<S>,
-        parameters: & Parameters<S, COM>,
+        parameters: &Parameters<S, COM>,
         compiler: &'a mut COM,
     ) -> &'a COM
     where

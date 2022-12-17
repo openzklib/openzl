@@ -11,8 +11,14 @@ alloc = ["openzl-crypto/alloc"]
 # Arkworks implementation of Bls12-381
 bls12-381 = ["arkworks/bls12-381", "curve"]
 
+# Arkworks implementation of Bn254
+bn254 = ["arkworks/bn254", "curve"]
+
 # Arkworks elliptic curve and finite field
 curve = ["arkworks/ec", "arkworks/ff"]
+
+# Arkworks implementation of Groth16
+groth16 = ["arkworks/groth16", "curve"]
 
 [dependencies]
 arkworks = { package = "openzl-plugin-arkworks", path = "../plugins/arkworks", optional = true, default-features = false }

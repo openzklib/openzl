@@ -14,7 +14,7 @@ use openzl_crypto::{
     hash::ArrayHashFunction as Hash,
 };
 
-#[cfg(all(feature = "bn254", feature = "groth16"))]
+#[cfg(all(feature = "alloc", feature = "bn254", feature = "groth16"))]
 pub mod arkworks;
 
 /// Semaphore Circuit Specification

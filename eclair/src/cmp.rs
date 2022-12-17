@@ -16,7 +16,7 @@ use {
 };
 
 /// Partial Equivalence Relations
-pub trait PartialEq<Rhs, COM = ()>
+pub trait PartialEq<Rhs = Self, COM = ()>
 where
     Rhs: ?Sized,
     COM: Has<bool> + ?Sized,

@@ -2,6 +2,9 @@
 
 use core::{marker::PhantomData, mem, slice};
 
+#[cfg(all(feature = "alloc", feature = "bn254", feature = "groth16"))]
+pub mod arkworks;
+
 /// Poseidon Specification
 ///
 /// This trait defines basic arithmetic operations we use to define the Poseidon permutation.
@@ -227,140 +230,14 @@ where
 #[cfg(all(feature = "alloc", feature = "bls12-381"))]
 pub mod bls12_381 {
     use super::*;
-    use arkworks::{
+    use ::arkworks::{
         bls12_381::Fr,
         ff::{field_new, BigInteger, Field, PrimeField, Zero},
     };
     use openzl_crypto::poseidon::{
         mds::MdsMatrices, round_constants::generate_round_constants, FieldGeneration, NativeField,
     };
-
-    /// Poseidon Permutation for native computation
-    #[derive(Debug)]
-    pub struct NativePoseidon<C>(PhantomData<C>);
-
-    impl<C> Constants for NativePoseidon<C>
-    where
-        C: Constants,
-    {
-        const WIDTH: usize = C::WIDTH;
-        const FULL_ROUNDS: usize = C::FULL_ROUNDS;
-        const PARTIAL_ROUNDS: usize = C::PARTIAL_ROUNDS;
-    }
-
-    /// Constants for Arity 2
-    #[derive(Debug)]
-    pub struct Arity2;
-
-    impl Constants for Arity2 {
-        const WIDTH: usize = 3;
-        const FULL_ROUNDS: usize = 8;
-        const PARTIAL_ROUNDS: usize = 55;
-    }
-
-    impl<C> Specification for NativePoseidon<C>
-    where
-        C: Constants,
-    {
-        type Field = Fr;
-        type ParameterField = Fr;
-
-        fn zero(_: &mut ()) -> Self::Field {
-            Fr::zero()
-        }
-
-        fn add(lhs: &Self::Field, rhs: &Self::Field, _: &mut ()) -> Self::Field {
-            *lhs + rhs
-        }
-
-        fn add_const(lhs: &Self::Field, rhs: &Self::ParameterField, _: &mut ()) -> Self::Field {
-            *lhs + rhs
-        }
-
-        fn mul(lhs: &Self::Field, rhs: &Self::Field, _: &mut ()) -> Self::Field {
-            *lhs * rhs
-        }
-
-        fn mul_const(lhs: &Self::Field, rhs: &Self::ParameterField, _: &mut ()) -> Self::Field {
-            *lhs * rhs
-        }
-
-        fn add_assign(lhs: &mut Self::Field, rhs: &Self::Field, _: &mut ()) {
-            *lhs = *lhs + rhs
-        }
-
-        fn add_const_assign(lhs: &mut Self::Field, rhs: &Self::ParameterField, _: &mut ()) {
-            *lhs = *lhs + rhs
-        }
-
-        fn apply_sbox(point: &mut Self::Field, _: &mut ()) {
-            *point = point.pow([5u64])
-        }
-
-        fn from_parameter(point: Self::ParameterField) -> Self::Field {
-            point
-        }
-    }
-
-    type Poseidon2 = NativePoseidon<Arity2>;
-
-    /// Wrapper around Bls12-381 Scalar Field element so
-    /// we can implement [`FieldGeneration`] and
-    /// [`NativeField`] for [`Fr`].
-    struct BlsScalar(Fr);
-
-    impl FieldGeneration for BlsScalar {
-        const MODULUS_BITS: usize = 255;
-
-        fn from_u64(elem: u64) -> Self {
-            Self(Fr::from(elem))
-        }
-
-        fn try_from_bits_be(bits: &[bool]) -> Option<Self>
-        where
-            Self: Sized,
-        {
-            let big_integer = BigInteger::from_bits_be(bits);
-            Some(Self(Fr::from_repr(big_integer)?))
-        }
-    }
-
-    impl NativeField for BlsScalar {
-        fn add(&self, rhs: &Self) -> Self {
-            Self(self.0 + rhs.0)
-        }
-
-        fn add_assign(&mut self, rhs: &Self) {
-            *self = self.add(rhs);
-        }
-
-        fn inverse(&self) -> Option<Self>
-        where
-            Self: Sized,
-        {
-            Some(Self(Field::inverse(&self.0)?))
-        }
-
-        fn is_zero(&self) -> bool {
-            self.0 == Fr::zero()
-        }
-
-        fn mul(&self, rhs: &Self) -> Self {
-            Self(self.0 * rhs.0)
-        }
-
-        fn one() -> Self {
-            Self(Fr::from(1u8))
-        }
-
-        fn sub(&self, rhs: &Self) -> Self {
-            Self(self.0 - rhs.0)
-        }
-
-        fn zero() -> Self {
-            Self(Fr::zero())
-        }
-    }
+    // import what was here from poseidon::arkworks now
 
     #[test]
     fn poseidon_arity_2() {

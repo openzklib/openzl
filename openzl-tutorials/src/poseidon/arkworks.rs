@@ -96,65 +96,10 @@ pub fn concrete_permutation() -> Permutation<Poseidon2> {
     Permutation::new(additive_round_keys.into(), mds_matrix.into())
 }
 
-/// Wrapper around Bls12-381 Scalar Field element so
-/// we can implement [`FieldGeneration`] and
-/// [`NativeField`] for [`Fr`].
-struct BlsScalar(Fr);
+/// An arity-2 Poseidon hasher for Bn254 points
+pub type Poseidon2Hasher = Permutation<Poseidon2>;
 
-impl FieldGeneration for BlsScalar {
-    const MODULUS_BITS: usize = 255;
-
-    fn from_u64(elem: u64) -> Self {
-        Self(Fr::from(elem))
-    }
-
-    fn try_from_bits_be(bits: &[bool]) -> Option<Self>
-    where
-        Self: Sized,
-    {
-        let big_integer = BigInteger::from_bits_be(bits);
-        Some(Self(Fr::from_repr(big_integer)?))
-    }
-}
-
-impl NativeField for BlsScalar {
-    fn add(&self, rhs: &Self) -> Self {
-        Self(self.0 + rhs.0)
-    }
-
-    fn add_assign(&mut self, rhs: &Self) {
-        *self = self.add(rhs);
-    }
-
-    fn inverse(&self) -> Option<Self>
-    where
-        Self: Sized,
-    {
-        Some(Self(Field::inverse(&self.0)?))
-    }
-
-    fn is_zero(&self) -> bool {
-        self.0 == Fr::zero()
-    }
-
-    fn mul(&self, rhs: &Self) -> Self {
-        Self(self.0 * rhs.0)
-    }
-
-    fn one() -> Self {
-        Self(Fr::from(1u8))
-    }
-
-    fn sub(&self, rhs: &Self) -> Self {
-        Self(self.0 - rhs.0)
-    }
-
-    fn zero() -> Self {
-        Self(Fr::zero())
-    }
-}
-
-impl ArrayHashFunction<2> for Permutation<Poseidon2> {
+impl ArrayHashFunction<2> for Poseidon2Hasher {
     type Input = Fr;
     type Output = Fr;
 
@@ -168,5 +113,6 @@ impl ArrayHashFunction<2> for Permutation<Poseidon2> {
         state.0[0]
     }
 }
+
 
 // TODO: Proof-related implementations

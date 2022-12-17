@@ -239,6 +239,64 @@ pub mod bls12_381 {
     };
     // import what was here from poseidon::arkworks now
 
+    /// Wrapper around Bls12-381 Scalar Field element so
+    /// we can implement [`FieldGeneration`] and
+    /// [`NativeField`] for [`Fr`].
+    struct BlsScalar(Fr);
+
+    impl FieldGeneration for BlsScalar {
+        const MODULUS_BITS: usize = 255;
+
+        fn from_u64(elem: u64) -> Self {
+            Self(Fr::from(elem))
+        }
+
+        fn try_from_bits_be(bits: &[bool]) -> Option<Self>
+        where
+            Self: Sized,
+        {
+            let big_integer = BigInteger::from_bits_be(bits);
+            Some(Self(Fr::from_repr(big_integer)?))
+        }
+    }
+
+    impl NativeField for BlsScalar {
+        fn add(&self, rhs: &Self) -> Self {
+            Self(self.0 + rhs.0)
+        }
+
+        fn add_assign(&mut self, rhs: &Self) {
+            *self = self.add(rhs);
+        }
+
+        fn inverse(&self) -> Option<Self>
+        where
+            Self: Sized,
+        {
+            Some(Self(Field::inverse(&self.0)?))
+        }
+
+        fn is_zero(&self) -> bool {
+            self.0 == Fr::zero()
+        }
+
+        fn mul(&self, rhs: &Self) -> Self {
+            Self(self.0 * rhs.0)
+        }
+
+        fn one() -> Self {
+            Self(Fr::from(1u8))
+        }
+
+        fn sub(&self, rhs: &Self) -> Self {
+            Self(self.0 - rhs.0)
+        }
+
+        fn zero() -> Self {
+            Self(Fr::zero())
+        }
+    }
+
     #[test]
     fn poseidon_arity_2() {
         let round_keys: Vec<Fr> = generate_round_constants::<BlsScalar>(3, 8, 55)

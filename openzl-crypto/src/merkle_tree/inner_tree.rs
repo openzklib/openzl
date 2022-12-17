@@ -124,7 +124,7 @@ impl From<InnerNode> for Node {
 
 /// Inner Node Iterator
 ///
-/// An iterator over the parents of an [`InnerNode`], including the node itself.
+/// An iterator over the ancestors of an [`InnerNode`], including the node itself.
 ///
 /// This `struct` is created by the [`iter`](InnerNode::iter) method on [`InnerNode`].
 /// See its documentation for more.

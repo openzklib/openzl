@@ -84,7 +84,7 @@ where
     /// Builds a new empty merkle forest.
     fn new(parameters: &Parameters<C>) -> Self;
 
-    /// Returns the number of items in `self`.
+    /// Returns the number of leaves in `self`.
     fn len(&self) -> usize;
 
     /// Returns `true` if the length of `self` is zero.
@@ -93,7 +93,7 @@ where
         self.len() == 0
     }
 
-    /// Returns the number of items that can be stored in `self`.
+    /// Returns the number of leaves that can be stored in `self`.
     fn capacity(&self) -> usize;
 
     /// Returns a shared reference to the tree at the given `index`.
@@ -218,7 +218,7 @@ where
         &self.parameters
     }
 
-    /// Returns the number of leaves that can fit in this merkle tree.
+    /// Returns the number of leaves that can fit in this merkle forest.
     ///
     /// See [`capacity`] for more.
     #[inline]
@@ -226,7 +226,7 @@ where
         self.forest.capacity()
     }
 
-    /// Returns the number of items in this merkle forest.
+    /// Returns the number of leaves in this merkle forest.
     ///
     /// See [`Forest::len`] for more.
     #[inline]

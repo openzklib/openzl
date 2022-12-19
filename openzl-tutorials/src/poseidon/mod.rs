@@ -1,6 +1,7 @@
 //! Tutorial for Poseidon Permutation
 
 use core::{marker::PhantomData, mem, slice};
+use openzl_util::derivative;
 
 #[cfg(all(feature = "alloc", feature = "bn254", feature = "groth16"))]
 pub mod arkworks;
@@ -108,8 +109,10 @@ where
     }
 }
 
-/// The constant parameters defining a particular instance
+/// The constant parameters defining an instance
 /// of the Poseidon permutation.
+#[derive(derivative::Derivative)]
+#[derivative(Clone(bound = "S::ParameterField: Clone"))]
 pub struct Permutation<S, COM = ()>
 where
     S: Specification<COM>,
@@ -229,13 +232,20 @@ where
 /// a test value.
 #[cfg(all(feature = "alloc", feature = "bls12-381"))]
 pub mod bls12_381 {
-    use super::*;
     use ::arkworks::{
         bls12_381::Fr,
-        ff::{field_new, BigInteger, Field, PrimeField, Zero},
+        ff::{
+            // field_new,
+            BigInteger,
+            Field,
+            PrimeField,
+            Zero,
+        },
     };
     use openzl_crypto::poseidon::{
-        mds::MdsMatrices, round_constants::generate_round_constants, FieldGeneration, NativeField,
+        // mds::MdsMatrices, round_constants::generate_round_constants,
+        FieldGeneration,
+        NativeField,
     };
     // import what was here from poseidon::arkworks now
 
@@ -297,41 +307,44 @@ pub mod bls12_381 {
         }
     }
 
-    #[test]
-    fn poseidon_arity_2() {
-        let round_keys: Vec<Fr> = generate_round_constants::<BlsScalar>(3, 8, 55)
-            .iter()
-            .map(|c| c.0)
-            .collect();
-        let mds_matrix: Vec<Fr> = MdsMatrices::<BlsScalar>::generate_mds(3)
-            .0
-            .iter()
-            .flatten()
-            .map(|c| c.0)
-            .collect();
+    // TODO: These just need to be replaced by a hardcoded test for Bn254
+    // pub type Poseidon2 = NativePoseidon<Arity2>;
 
-        let poseidon2_permutation =
-            Permutation::<Poseidon2>::new(round_keys.into(), mds_matrix.into());
+    // #[test]
+    // fn poseidon_arity_2() {
+    //     let round_keys: Vec<Fr> = generate_round_constants::<BlsScalar>(3, 8, 55)
+    //         .iter()
+    //         .map(|c| c.0)
+    //         .collect();
+    //     let mds_matrix: Vec<Fr> = MdsMatrices::<BlsScalar>::generate_mds(3)
+    //         .0
+    //         .iter()
+    //         .flatten()
+    //         .map(|c| c.0)
+    //         .collect();
 
-        let mut state =
-            State::<Poseidon2>::new([Fr::from(3u8), Fr::from(1u8), Fr::from(2u8)].into());
-        // The known output value for input [3, 1, 2]
-        let expected: Vec<Fr> = vec![
-            field_new!(
-                Fr,
-                "1808609226548932412441401219270714120272118151392880709881321306315053574086"
-            ),
-            field_new!(
-                Fr,
-                "13469396364901763595452591099956641926259481376691266681656453586107981422876"
-            ),
-            field_new!(
-                Fr,
-                "28037046374767189790502007352434539884533225547205397602914398240898150312947"
-            ),
-        ];
+    //     let poseidon2_permutation =
+    //         Permutation::<Poseidon2>::new(round_keys.into(), mds_matrix.into());
 
-        poseidon2_permutation.permute(&mut state, &mut ());
-        assert_eq!(state.0.to_vec(), expected);
-    }
+    //     let mut state =
+    //         State::<Poseidon2>::new([Fr::from(3u8), Fr::from(1u8), Fr::from(2u8)].into());
+    //     // The known output value for input [3, 1, 2]
+    //     let expected: Vec<Fr> = vec![
+    //         field_new!(
+    //             Fr,
+    //             "1808609226548932412441401219270714120272118151392880709881321306315053574086"
+    //         ),
+    //         field_new!(
+    //             Fr,
+    //             "13469396364901763595452591099956641926259481376691266681656453586107981422876"
+    //         ),
+    //         field_new!(
+    //             Fr,
+    //             "28037046374767189790502007352434539884533225547205397602914398240898150312947"
+    //         ),
+    //     ];
+
+    //     poseidon2_permutation.permute(&mut state, &mut ());
+    //     assert_eq!(state.0.to_vec(), expected);
+    // }
 }

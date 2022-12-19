@@ -7,14 +7,11 @@ use crate::{
 };
 use core::marker::PhantomData;
 use eclair::alloc::Constant;
-use openzl_crypto::{
-    hash::ArrayHashFunction,
-    poseidon::{
-        self,
-        encryption::BlockElement,
-        hash::{DomainTag, Hasher},
-        Constants, FieldGeneration, NativeField, ParameterFieldType, State,
-    },
+use openzl_crypto::poseidon::{
+    self,
+    encryption::BlockElement,
+    hash::{DomainTag, Hasher},
+    Constants, FieldGeneration, NativeField, ParameterFieldType,
 };
 
 #[cfg(test)]

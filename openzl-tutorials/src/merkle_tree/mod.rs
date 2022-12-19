@@ -1,10 +1,12 @@
 //! Generic Binary Merkle Tree
 
+use core::marker::PhantomData;
 use eclair::{bool::Bool, cmp::PartialEq, Has};
 use openzl_crypto::accumulator::{
     Accumulator, MembershipProof as AccumulatorMembershipProof, Model as AccumulatorModel,
     Types as AccumulatorTypes,
 };
+use openzl_util::derivative;
 
 #[cfg(all(feature = "alloc", feature = "bn254", feature = "groth16"))]
 pub mod arkworks;
@@ -23,6 +25,9 @@ pub trait ProofIndex<COM = ()> {
     /// Computes the parent of the `self` index.
     fn parent(&self, compiler: &mut COM) -> Self;
 
+    /// Computes the sibling of the `self` index.
+    fn sibling(&self, compiler: &mut COM) -> Self;
+
     /// Combines `lhs` and `rhs` using `hasher` depending on the value of `self`.
     fn combine<H>(&self, hasher: &H, lhs: &H::Node, rhs: &H::Node, compiler: &mut COM) -> H::Node
     where
@@ -33,6 +38,15 @@ impl ProofIndex for u64 {
     #[inline]
     fn parent(&self, _: &mut ()) -> Self {
         self >> 1
+    }
+
+    #[inline]
+    fn sibling(&self, _: &mut ()) -> Self {
+        match self % 2 {
+            0 => self + 1,
+            1 => self - 1,
+            _ => unreachable!(),
+        }
     }
 
     #[inline]
@@ -49,6 +63,8 @@ impl ProofIndex for u64 {
 }
 
 /// Merkle Tree
+#[derive(derivative::Derivative)]
+#[derivative(Clone(bound = "H::Node: Clone"))]
 pub struct MerkleTree<H>
 where
     H: Hasher,
@@ -112,16 +128,17 @@ where
     where
         H::Node: Clone,
     {
-        let path_length = self.depth() - 1;
+        let path_length = self.depth();
         let tree_index = (index + self.tree_size()) as u32;
         let mut siblings = Vec::with_capacity(path_length as usize);
-        let mut shift_index = 0;
+        let mut node_index = tree_index as u64;
+
         for _ in 0..path_length {
-            siblings.push(self.nodes[((tree_index / shift_index) ^ 1) as usize].clone());
-            shift_index <<= 1;
+            siblings.push(self.nodes[node_index.sibling(&mut ()) as usize].clone());
+            node_index = node_index.parent(&mut ());
         }
         MerklePath {
-            index: index as u64,
+            index: tree_index as u64,
             siblings,
         }
     }
@@ -153,7 +170,7 @@ where
             .combine(hasher, leaf, &self.siblings[0], compiler);
         let mut index = self.index.parent(compiler);
         for sibling in self.siblings.iter().skip(1) {
-            node = index.combine(hasher, leaf, sibling, compiler);
+            node = index.combine(hasher, &node, sibling, compiler);
             index = index.parent(compiler);
         }
         node
@@ -161,12 +178,26 @@ where
 }
 
 /// Merkle Tree Parameters
+#[derive(derivative::Derivative)]
+#[derivative(Clone(bound = "H: Clone"))]
 pub struct Parameters<H, COM = ()>
 where
     H: Hasher<COM>,
 {
     hasher: H,
-    __: core::marker::PhantomData<COM>,
+    __: PhantomData<COM>,
+}
+
+impl<H, COM> Parameters<H, COM>
+where
+    H: Hasher<COM>,
+{
+    pub fn new(hasher: H) -> Self {
+        Self {
+            hasher,
+            __: PhantomData,
+        }
+    }
 }
 
 impl<H, COM> AccumulatorTypes for Parameters<H, COM>
@@ -201,6 +232,8 @@ where
 }
 
 /// Accumulator with `COM = ()`.
+#[derive(derivative::Derivative)]
+#[derivative(Clone(bound = "MerkleTree<H>: Clone, Parameters<H>: Clone"))]
 pub struct ConcreteAccumulator<H>
 where
     H: Hasher,
@@ -216,6 +249,14 @@ where
     /// Constructor
     pub fn new(tree: MerkleTree<H>, parameters: Parameters<H>) -> Self {
         Self { tree, parameters }
+    }
+
+    /// Construct a tree from `leaves`, then construct accumulator from resulting tree and `parameters`.
+    pub fn from_leaves(leaves: Vec<H::Node>, parameters: Parameters<H>) -> Self
+    where
+        H::Node: Clone,
+    {
+        Self::new(MerkleTree::new(&parameters.hasher, leaves), parameters)
     }
 }
 
@@ -245,11 +286,9 @@ where
     fn insert(&mut self, item: &Self::Item) -> bool {
         // TODO: A proper `push` method for trees
         // This pushes a leaf then builds the tree from scratch
-        if self.tree.nodes.len() >= self.tree.tree_size() {
-            return false;
-        }
-        self.tree.nodes.push(item.clone());
-        let tree = MerkleTree::new(&self.parameters.hasher, self.tree.nodes.clone());
+        let mut leaves = Vec::from(self.tree.leaves());
+        leaves.push(item.clone());
+        let tree = MerkleTree::new(&self.parameters.hasher, leaves);
         let parameters = self.parameters.clone();
         *self = Self::new(tree, parameters);
         true
@@ -258,7 +297,8 @@ where
     fn prove(&self, item: &Self::Item) -> Option<AccumulatorMembershipProof<Self::Model>> {
         // TODO: an `index` method for nodes
         let mut node_iter = self.tree.nodes.clone().into_iter();
-        let index = node_iter.position(|i| i == *item)?;
+        let mut index = node_iter.position(|i| i == *item)?;
+        index -= self.tree.tree_size();
         Some(AccumulatorMembershipProof::new(
             self.tree.path(index),
             self.tree.root().clone(),

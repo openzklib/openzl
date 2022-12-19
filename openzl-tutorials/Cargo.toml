@@ -20,7 +20,11 @@ curve = ["arkworks/ec", "arkworks/ff"]
 # Arkworks implementation of Groth16
 groth16 = ["arkworks/groth16", "curve"]
 
+# Rand
+rand = ["openzl-util/getrandom"]
+
 [dependencies]
 arkworks = { package = "openzl-plugin-arkworks", path = "../plugins/arkworks", optional = true, default-features = false }
 eclair = { path = "../eclair", default-features = false }
 openzl-crypto = { path = "../openzl-crypto", default-features = false }
+openzl-util = { path = "../openzl-util", default-features = false }

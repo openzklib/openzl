@@ -167,6 +167,17 @@ where
     }
 }
 
+impl<F> eclair::ops::Add for Fp<F>
+where
+    F: Field,
+{
+    type Output = Self;
+
+    fn add(self, rhs: Self, _: &mut ()) -> Self::Output {
+        Self(self.0 + rhs.0)
+    }
+}
+
 impl<F> Constant<R1CS<F>> for Fp<F>
 where
     F: PrimeField,

@@ -363,6 +363,11 @@ pub mod bls12_381 {
 
     #[test]
     fn poseidon_arity_2() {
+        use arkworks::ff::field_new;
+        use openzl_crypto::poseidon::{
+            mds::MdsMatrices, round_constants::generate_round_constants,
+        };
+
         let round_keys: Vec<Fr> = generate_round_constants::<BlsScalar>(3, 8, 55)
             .iter()
             .map(|c| c.0)

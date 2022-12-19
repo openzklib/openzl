@@ -51,6 +51,6 @@ pub mod test {
         let item: Fp<Fr> = rng.gen();
         assert!(accumulator.insert(&item));
         let proof = accumulator.prove(&item).unwrap();
-        assert!(proof.verify(&accumulator.parameters, &item, &mut ()))
+        assert!(proof.verify(&accumulator, &item, &mut ()))
     }
 }

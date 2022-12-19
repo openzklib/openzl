@@ -6,7 +6,7 @@ edition = "2021"
 
 [features]
 # Alloc
-alloc = ["openzl-crypto/alloc"]
+alloc = ["arkworks/alloc", "openzl-crypto/alloc"]
 
 # Arkworks implementation of Bls12-381
 bls12-381 = ["arkworks/bls12-381", "curve"]
@@ -18,7 +18,7 @@ bn254 = ["arkworks/bn254", "curve"]
 curve = ["arkworks/ec", "arkworks/ff"]
 
 # Arkworks implementation of Groth16
-groth16 = ["arkworks/groth16", "curve"]
+groth16 = ["arkworks/constraint", "arkworks/groth16", "curve"]
 
 # Rand
 rand = ["openzl-util/getrandom"]

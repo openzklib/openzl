@@ -221,10 +221,10 @@ where
     M: Types + ?Sized,
 {
     /// Secret Membership Witness
-    witness: M::Witness,
+    pub witness: M::Witness,
 
     /// Accumulator Output
-    output: M::Output,
+    pub output: M::Output,
 }
 
 impl<M> MembershipProof<M>

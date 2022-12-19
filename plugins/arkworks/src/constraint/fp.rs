@@ -10,6 +10,7 @@ use eclair::{
     self,
     alloc::Constant,
     bool::{Bool, ConditionalSelect},
+    ops::{Add, MulAssign},
 };
 use openzl_crypto::{
     algebra::{Group, Ring},
@@ -167,7 +168,7 @@ where
     }
 }
 
-impl<F> eclair::ops::Add for Fp<F>
+impl<F> Add for Fp<F>
 where
     F: Field,
 {
@@ -175,6 +176,15 @@ where
 
     fn add(self, rhs: Self, _: &mut ()) -> Self::Output {
         Self(self.0 + rhs.0)
+    }
+}
+
+impl<F> MulAssign for Fp<F>
+where
+    F: Field,
+{
+    fn mul_assign(&mut self, rhs: Self, _: &mut ()) {
+        *self = Self(self.0 * rhs.0);
     }
 }
 

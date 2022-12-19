@@ -238,8 +238,8 @@ pub struct ConcreteAccumulator<H>
 where
     H: Hasher,
 {
-    tree: MerkleTree<H>,
-    parameters: Parameters<H>,
+    pub tree: MerkleTree<H>,
+    pub parameters: Parameters<H>,
 }
 
 impl<H> ConcreteAccumulator<H>
@@ -269,18 +269,36 @@ where
     type Output = <H as Hasher>::Node;
 }
 
+impl<H> AccumulatorModel for ConcreteAccumulator<H>
+where
+    H: Hasher,
+    H::Node: PartialEq<Self::Output>,
+{
+    type Verification = bool;
+
+    fn verify(
+        &self,
+        item: &Self::Item,
+        witness: &Self::Witness,
+        output: &Self::Output,
+        _: &mut (),
+    ) -> Self::Verification {
+        self.parameters.verify(item, witness, output, &mut ())
+    }
+}
+
 impl<H> Accumulator for ConcreteAccumulator<H>
 where
     H: Hasher,
     Parameters<H>:
         AccumulatorModel<Item = Self::Item, Witness = Self::Witness, Output = Self::Output> + Clone,
     Self::Item: Clone,
-    H::Node: core::cmp::PartialEq,
+    H::Node: PartialEq<Self::Output> + core::cmp::PartialEq<Self::Output>,
 {
-    type Model = Parameters<H>;
+    type Model = Self;
 
     fn model(&self) -> &Self::Model {
-        &self.parameters
+        self
     }
 
     fn insert(&mut self, item: &Self::Item) -> bool {

@@ -10,7 +10,7 @@ use eclair::{
     ops::MulAssign,
 };
 use openzl_crypto::{
-    accumulator::{Model, Types},
+    accumulator::{MembershipProof, Model},
     hash::ArrayHashFunction as Hash,
 };
 
@@ -72,7 +72,7 @@ where
     S::Message: MulAssign<S::Message, COM>,
 {
     /// Generates constraints in `compiler`.
-    pub fn circuit(self, parameters: &Parameters<S, COM>, compiler: &mut COM) {
+    pub fn circuit(&self, parameters: &Parameters<S, COM>, compiler: &mut COM) {
         // Compute identity commitment (this omits the second hash of the diagram)
         let identity_commitment = parameters.hasher.hash(
             [&self.identity.trapdoor, &self.identity.nullifier],
@@ -81,8 +81,8 @@ where
         // Assert valid identity
         let verification = parameters.accumulator.verify(
             &identity_commitment,
-            &self.identity.witness,
-            &self.identity.membership_root,
+            &self.identity.proof.witness,
+            &self.identity.proof.output,
             compiler,
         );
         compiler.assert(&verification);
@@ -161,10 +161,8 @@ where
     trapdoor: <S::Hasher as Hash<2, COM>>::Input,
     /// Identity Nullifier
     nullifier: <S::Hasher as Hash<2, COM>>::Input,
-    /// Membership Accumulator Witness
-    witness: <S::Accumulator as Types>::Witness,
-    /// Membership Accumulator Root
-    membership_root: <S::Accumulator as Types>::Output,
+    /// Accumulator Membership Proof
+    proof: MembershipProof<S::Accumulator>,
 }
 
 impl<S, COM> Identity<S, COM>
@@ -175,28 +173,24 @@ where
     pub fn new(
         trapdoor: <S::Hasher as Hash<2, COM>>::Input,
         nullifier: <S::Hasher as Hash<2, COM>>::Input,
-        witness: <S::Accumulator as Types>::Witness,
-        membership_root: <S::Accumulator as Types>::Output,
+        proof: MembershipProof<S::Accumulator>,
     ) -> Self {
         Self {
             trapdoor,
             nullifier,
-            witness,
-            membership_root,
+            proof,
         }
     }
 }
 
-impl<S, COM> Variable<Secret, COM> for Identity<S, COM>
+impl<S, COM> Variable<Derived, COM> for Identity<S, COM>
 where
     COM: Assert,
     S: Specification<COM> + Specification + ?Sized,
     <Hasher<S, COM> as Hash<2, COM>>::Input:
         Variable<Secret, COM, Type = <Hasher<S> as Hash<2>>::Input>,
-    <Accumulator<S, COM> as Types>::Output:
-        Variable<Secret, COM, Type = <Accumulator<S> as Types>::Output>,
-    <Accumulator<S, COM> as Types>::Witness:
-        Variable<Secret, COM, Type = <Accumulator<S> as Types>::Witness>,
+    MembershipProof<<S as Specification<COM>>::Accumulator>:
+        Variable<Derived, COM, Type = MembershipProof<<S as Specification>::Accumulator>>,
 {
     type Type = Identity<S>;
 
@@ -204,14 +198,12 @@ where
         Self::new(
             this.trapdoor.as_known(compiler),
             this.nullifier.as_known(compiler),
-            this.witness.as_known(compiler),
-            this.membership_root.as_known(compiler),
+            this.proof.as_known(compiler),
         )
     }
 
     fn new_unknown(compiler: &mut COM) -> Self {
         Self::new(
-            compiler.allocate_unknown(),
             compiler.allocate_unknown(),
             compiler.allocate_unknown(),
             compiler.allocate_unknown(),

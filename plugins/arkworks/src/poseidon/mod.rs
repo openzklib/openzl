@@ -311,30 +311,40 @@ where
     }
 }
 
+#[cfg(feature = "bn254")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bn254")))]
 impl poseidon::Constants for Spec<bn254::Fr, 2> {
     const WIDTH: usize = 3;
     const FULL_ROUNDS: usize = 8;
     const PARTIAL_ROUNDS: usize = 55;
 }
 
+#[cfg(feature = "bn254")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bn254")))]
 impl poseidon::Constants for Spec<bn254::Fr, 3> {
     const WIDTH: usize = 4;
     const FULL_ROUNDS: usize = 8;
     const PARTIAL_ROUNDS: usize = 55;
 }
 
+#[cfg(feature = "bn254")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bn254")))]
 impl poseidon::Constants for Spec<bn254::Fr, 4> {
     const WIDTH: usize = 5;
     const FULL_ROUNDS: usize = 8;
     const PARTIAL_ROUNDS: usize = 56;
 }
 
+#[cfg(feature = "bn254")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bn254")))]
 impl poseidon::Constants for Spec<bn254::Fr, 5> {
     const WIDTH: usize = 6;
     const FULL_ROUNDS: usize = 8;
     const PARTIAL_ROUNDS: usize = 56;
 }
 
+#[cfg(feature = "bn254")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "bn254")))]
 /// Hasher for Poseidon Permutation over Bn254 Scalar Field
 pub type Bn254Hasher<const ARITY: usize> =
     Hasher<Spec<bn254::Fr, ARITY>, TwoPowerMinusOneDomainTag, ARITY>;

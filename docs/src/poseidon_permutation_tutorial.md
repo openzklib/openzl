@@ -6,7 +6,7 @@ The Poseidon permutation, defined in [GKRRS '19](https://eprint.iacr.org/2019/45
 2. **S-Box**: Raise each component of the resulting vector to a power (in a full round), or raise just one component of the vector to a power (in a partial round).
 3. **MDS Matrix**: Multiply the resulting vector by a constant matrix.
 
-This tutorial will walk through building the Poseidon permutation in ECLAIR. All OpenZL tutorials are accompanied by code examples, see [here](https://github.com/openzklib). (TODO: Real link) Note that this code differs somewhat from our [optimized Poseidon implementation](https://github.com/openzklib). (TODO: Real link)
+This tutorial will walk through building the Poseidon permutation in ECLAIR. All OpenZL tutorials are accompanied by code examples, see [here](https://github.com/openzklib/openzl/tree/main/openzl-tutorials). Note that this code differs somewhat from our [optimized Poseidon implementation](https://github.com/openzklib/openzl/tree/main/openzl-crypto/src/poseidon).
 
 ### trait `Specification`
 The Poseidon permutation requires a choice of finite field. We will keep this example generic by using a Rust trait `Specification` to specify our assumptions on the field and defining the Poseidon permutation relative to any type that implements `Specification`.

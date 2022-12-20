@@ -53,15 +53,19 @@ pub trait AssertWithinBitRange<T, const BITS: usize> {
     fn assert_within_range(&mut self, value: &T);
 }
 ```
-This trait is implemented by a compiler type `COM` to specify how `COM` restrains values of type `T` to lie in the range specified by `BITS`.
+This trait is implemented by a compiler type `COM` to specify how `COM` constrains values of type `T` to lie in the range specified by `BITS`. The line
+```rust
+compiler.assert_within_range::<BITS>(value);
+```
+causes the compiler to generate constraints that are satisfied only if `value` lies within the range specified by `BITS`.
 
 ## Unsigned Integers
-The `AssertWithinBitRange` allows ECLAIR to handle unsigned integers within proof systems as finite field elements with a checked size. We define unsigned integers as a thin wrapper around a type `T`:
+The `AssertWithinBitRange` trait allows ECLAIR to handle unsigned integers within proof systems as finite field elements with a checked size. We define unsigned integers as a thin wrapper around a type `T`:
 ```rust
 /// Unsigned Integer
 pub struct UnsignedInteger<T, const BITS: usize>(T);
 ```
-One should think of this construction as analogous to representing a boolean value with a `u8`. The `u8` type is acting as a container for the boolean value. But this container is "too large" in the sense that many `u8` values do not correspond to a boolean value. Before interpreting a `u8` as a boolean it is necessary to check that its value lies in the range `{0,1}`.
+One should think of this construction as analogous to representing a boolean value with a `u8`. The `u8` type is acting as a container for the boolean value. But this container is "too large" in the sense that many `u8` values do not correspond to a boolean value. Before interpreting a `u8` as a boolean it is necessary to check that its value lies in the range `[0,1]`.
 
 Similarly, when we work within a proving system over a finite field, we may need to use field elements as a container for unsigned integer types. In this case a range check is required to make sure that the value in this container really does have an interpretation as an unsigned integer of the given size.
 
@@ -69,9 +73,7 @@ The compiler type `COM` does not appear as part of the `UnsignedInteger` type, b
 ```rust
 impl<T, const BITS: usize> UnsignedInteger<T, BITS> {
     /// Builds a new [`UnsignedInteger`] over `value` asserting that it does not
-    /// exceed `BITS`-many bits. See [`new_unchecked`](Self::new_unchecked) 
-    /// for an unchecked constructor for [`UnsignedInteger`].
-    #[inline]
+    /// exceed `BITS`-many bits.
     pub fn new<COM>(value: T, compiler: &mut COM) -> Self
     where
         COM: AssertWithinBitRange<T, BITS>,
@@ -81,10 +83,7 @@ impl<T, const BITS: usize> UnsignedInteger<T, BITS> {
     }
 
     /// Mutates the underlying value of `self` with `f`, asserting that after
-    /// mutation the value is still within the `BITS` range. See 
-    /// [`mutate_unchecked`](Self::mutate_unchecked) for an unchecked mutation 
-    /// method.
-    #[inline]
+    /// mutation the value is still within the `BITS` range.
     pub fn mutate<F, U, COM>(&mut self, f: F, compiler: &mut COM) -> U
     where
         COM: AssertWithinBitRange<T, BITS>,
@@ -96,7 +95,7 @@ impl<T, const BITS: usize> UnsignedInteger<T, BITS> {
     }
 }
 ```
-Observe that both functions require the trait bound `COM: AssertWithinBitRange<T, BITS>`, meaning that the compiler must know how to constrain values of type `T` to the range specified by `BITS`. Before constructing an `UnsignedInteger` with `fn new`, `compiler` must generate constraints that guarantee that `T` lies in the range specified by `BITS`. Similarly, `fn mutate` transforms an `UnsignedInteger`'s value in some way and generates constraints to ensure that the result of the transformation still lies within range before returning a value.
+Observe that both functions require the trait bound `COM: AssertWithinBitRange<T, BITS>`, meaning that the compiler must know how to constrain values of type `T` to the range specified by `BITS`. Before constructing an `UnsignedInteger` with `fn new`, `compiler` generates constraints that guarantee that `T` lies in the range specified by `BITS`. Similarly, `fn mutate` transforms an `UnsignedInteger`'s value in some way and generates constraints to ensure that the result of the transformation still lies within range before returning a value.
 
 When `COM = ()` is the native compiler, `fn new` and `fn mutate` would panic if the inner value of type `T` exceeds the bit-range. In non-native computation, `compiler` would generate constraints that the inner value does not satisfy, resulting in an unsatisfied constraint system.
 

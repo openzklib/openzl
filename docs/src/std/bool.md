@@ -1,10 +1,10 @@
 # Bool
 
-Any reasonable computational environment has a notion of boolean type, but not all environments represent this concept in the same way. Native computation operates directly on bits and therefore has a very natural notion of boolean type: a single bit. However a non-native environment such as a ZK proving system may lack a natural boolean type. Thus in order for ECLAIR to express bit-wise operations or truth-valued comparisons in these environments we need to specify how each `COM` type encodes boolean operations.
+Any reasonable computational environment has a notion of boolean type, but not all environments represent this concept in the same way. Native computation operates directly on bits and therefore has a natural notion of boolean type: a single bit. However a non-native environment such as a ZK proving system may lack a natural boolean type. In order for ECLAIR to express bit-wise operations or truth-valued comparisons in these environments, we need to specify how each `COM` type executes boolean operations.
 
 ## `Has<bool>`
 
-First we must specify a given compiler's boolean type. We do so through the `eclair::Has` trait (TODO: How can that link to rust docs?):
+First we must specify a given compiler's boolean type. We do so through the `eclair::Has` trait:
 ```rust
 /// Compiler Type Introspection
 pub trait Has<T> {
@@ -27,9 +27,9 @@ impl Has<bool> for R1CS<F> {
     type Type = FVar;
 }
 ```
-Here `FVar` is a type that represents variables in the R1CS that can have values in `F`. With this implementation specify that the `R1CS<F>` compiler represents booleans as variables with values in `F`.
+Here `FVar` is a type that represents variables in the R1CS that can have values in `F`. With this implementation we specify that the `R1CS<F>` compiler represents booleans as variables with values in `F`.
 
-`Has<bool>` is a necessary trait for a compiler type to make sense of many natural operations such as comparison, conditional switching, assertion, *etc*. For example, an `==` comparison between two variables in `COM` produces a boolean truth value; this truth value must itself be represented somehow within `COM`, hence the requirement `COM: Has<bool>` in order for equality comparisons to be possible in `COM`. See [here](./cmp.md) for more on comparisons in ECLAIR.
+`Has<bool>` is a necessary trait for a compiler type to make sense of many natural operations such as comparison, conditional switching, assertion, *etc*. For example, an `==` comparison between two variables in `COM` produces a boolean truth value; this truth value must itself be represented somehow within `COM`, hence the requirement `COM: Has<bool>` in order for equality comparisons to be possible in `COM`. See [Cmp](./cmp.md) for more on comparisons in ECLAIR.
 
 ## Assert
 
@@ -52,17 +52,17 @@ pub trait Assert: Has<bool> {
     }
 }
 ```
-If `compiler` is of a type `COM` that implements `Assert` then `compiler.assert(bit)` should generate a constraint that is satisfied if and only if `bit` represents `true` according to `COM`'s implementation of `Has<bool>`. In the native compiler `COM = ()` the computation simply panics if `bit = false`. 
+If `compiler` is of a type `COM` that implements `Assert` then `compiler.assert(bit)` should generate a constraint that is satisfied if and only if `bit` represents `true` according to `COM`'s implementation of `Has<bool>`. In the native compiler `COM = ()` the computation produces a runtime error if `bit = false`. 
 
-The requirement `COM: Assert` is a prerequisite for the trait `PartialEq<Rhs, COM>`. More on that [here](./cmp.md).
+The requirement `COM: Assert` is a prerequisite for the trait `PartialEq<Rhs, COM>`. More on that in [Cmp](./cmp.md).
 
 ## Conditional Selection and Swap
 Another common operation involving booleans is selection, expressed in ECLAIR through the `ConditionalSelect<COM>` trait:
 ```rust
 /// Conditional Selection
-pub trait ConditionalSelect<COM = ()>: Sized
+pub trait ConditionalSelect<COM = ()>
 where
-    COM: Has<bool> + ?Sized,
+    COM: Has<bool>,
 {
     /// Selects `true_value` when `bit == true` and `false_value` when `bit == false`.
     fn select(
@@ -82,9 +82,9 @@ then this generates a constraint in `compiler` that enforces `output == true_val
 A similar operation is conditionally swapping values based on a boolean. For this we have the `ConditionalSwap<COM>` trait:
 ```rust
 /// Conditional Swap
-pub trait ConditionalSwap<COM = ()>: Sized
+pub trait ConditionalSwap<COM = ()>
 where
-    COM: Has<bool> + ?Sized,
+    COM: Has<bool>,
 {
     /// Swaps `lhs` and `rhs` whenever `bit == true` and keeps 
     /// them in the same order when `bit == false`.

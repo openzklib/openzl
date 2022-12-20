@@ -14,15 +14,18 @@ pub trait Add<Rhs = Self> {
 ```
 is replaced with the ECLAIR trait `Add<Rhs, COM>`:
 ```rust
-pub trait Add<Rhs = Self, COM = ()> 
-where 
-    COM: ?Sized,
-{
+pub trait Add<Rhs = Self, COM = ()> {
     type Output;
 
     fn add(self, rhs: Rhs, compiler: &mut COM) -> Self::Output;
 }
 ```
+Now a line like
+```rust
+output = lhs.add(rhs, &mut compiler);
+```
+causes `compiler` to [allocate](../alloc.md) a variable `output` and constrain the value of `output` to be the sum `lhs + rhs`.
+
 This straightforward transformation of traits is carried out for the following traits: `Neg`, `Not`, `Add`, `BitAnd`, `BitOr`, `BitXor`, `Div`, `Mul`, `Rem`, `Shl`, `Shr`, `Sub`, `AddAssign`, `BitAndAssign`, `BitOrAssign`, `BitXorAssign`, `DivAssign`, `MulAssign`, `RemAssign`, `ShlAssign`, `ShrAssign`, `SubAssign`. See the [Rust documentation](https://doc.rust-lang.org/core/ops/index.html) of these traits for more information.
 
 ## Compiler Reflection
@@ -41,6 +44,15 @@ pub trait HasAdd<L, R = L> {
     fn add(&mut self, lhs: L, rhs: R) -> Self::Output;
 }
 ```
+So the line
+```rust
+output = lhs.add(rhs, &mut compiler);
+```
+is equivalent to
+```rust
+output = compiler.add(lhs, rhs);
+```
+
 For each of the traits listed above we include an implementation of the corresponding reflection trait:
 ```rust 
 impl<COM, L, R> HasAdd<L, R> for COM

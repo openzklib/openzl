@@ -6,11 +6,11 @@
 
 - [Native vs Non-Native Computation](./native_nonnative.md)
 - [ECLAIR Standard Library](./std/eclair_std_lib.md)
-    - [Alloc](./std/alloc.md)
     - [Bool](./std/bool.md)
     - [Cmp](./std/cmp.md)
     - [Num](./std/num.md)
     - [Ops](./std/ops.md)
+- [Allocation](./alloc.md)
 
 
 <!-- # Writing ZK Applications

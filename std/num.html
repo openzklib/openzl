@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Num - OpenZL Docs</title>
+        <!-- Custom HTML head -->
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">ECLAIR Basics</li><li class="chapter-item expanded "><a href="../native_nonnative.html"><strong aria-hidden="true">1.</strong> Native vs Non-Native Computation</a></li><li class="chapter-item expanded "><a href="../std/eclair_std_lib.html"><strong aria-hidden="true">2.</strong> ECLAIR Standard Library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../std/bool.html"><strong aria-hidden="true">2.1.</strong> Bool</a></li><li class="chapter-item expanded "><a href="../std/cmp.html"><strong aria-hidden="true">2.2.</strong> Cmp</a></li><li class="chapter-item expanded "><a href="../std/num.html" class="active"><strong aria-hidden="true">2.3.</strong> Num</a></li><li class="chapter-item expanded "><a href="../std/ops.html"><strong aria-hidden="true">2.4.</strong> Ops</a></li></ol></li><li class="chapter-item expanded "><a href="../alloc.html"><strong aria-hidden="true">3.</strong> Allocation</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="../poseidon_permutation_tutorial.html"><strong aria-hidden="true">4.</strong> Tutorial: Poseidon Permutation</a></li><li class="chapter-item expanded affix "><li class="part-title">Plugins</li><li class="chapter-item expanded "><a href="../proof_systems.html"><strong aria-hidden="true">5.</strong> Proof System Plugins</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../ark_groth16.html"><strong aria-hidden="true">5.1.</strong> ArkGroth16</a></li><li class="chapter-item expanded "><a href="../plonky2.html"><strong aria-hidden="true">5.2.</strong> Plonky2</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">OpenZL Docs</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="num"><a class="header" href="#num">Num</a></h1>
+<p>This module provides some useful traits and types for numerical operations. Currently it provides the traits <code>Zero</code>, <code>One</code>, and <code>AssertWithinBitRange</code> as well as an <code>UnsignedInteger</code> type for ECLAIR.</p>
+<h2 id="zero-one"><a class="header" href="#zero-one"><code>Zero</code>, <code>One</code></a></h2>
+<p>These traits can be implemented for a type <code>T</code> relative to a compiler <code>COM</code> in order to indicate that <code>COM</code> understands a notion of zero/one value for <code>T</code>. Moreover, the trait specifies how <code>COM</code> determines whether a given instance of <code>T</code> is equal to that zero/one value:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Additive Identity
+pub trait Zero&lt;COM = ()&gt; {
+    /// Verification Type
+    type Verification;
+
+    /// Returns the additive identity for `Self`.
+    fn zero(compiler: &amp;mut COM) -&gt; Self;
+
+    /// Returns a truthy value if `self` is equal to the additive identity.
+    fn is_zero(&amp;self, compiler: &amp;mut COM) -&gt; Self::Verification;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note the <code>Verification</code> type, which allows <code>fn is_zero</code> to output &quot;truthy values&quot; in whatever sense is appropriate for <code>COM</code>. For the native compiler <code>COM = ()</code> we would choose <code>Verification = bool</code>. For a compiler such that <code>COM: Has&lt;bool&gt;</code>, we would likely choose <code>Verification = Bool&lt;COM&gt;</code> to be this compiler's boolean type. (Note, however, that we do not require that <code>COM: Has&lt;bool&gt;</code> for this trait.)</p>
+<p>The trait <code>One</code> is similar to <code>Zero</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Multiplicative Identity
+pub trait One&lt;COM = ()&gt; {
+    /// Verification Type
+    type Verification;
+
+    /// Returns the multiplicative identity for `Self`.
+    fn one(compiler: &amp;mut COM) -&gt; Self;
+
+    /// Returns a truthy value if `self` is equal to the multiplicative identity.
+    fn is_one(&amp;self, compiler: &amp;mut COM) -&gt; Self::Verification;
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="bit-range-assertion"><a class="header" href="#bit-range-assertion">Bit Range Assertion</a></h2>
+<p>Range checks arise frequently in ZK circuits. One reason is that the primitive data type in a ZK proving system is often a finite field element. When we use one of these finite field elements to represent a quantity such as a 20-byte ETH address we need to ensure that the field element really is within the correct range.</p>
+<p>In the native computation setting this is a straightforward comparison between the finite field element (represented as a positive integer) and the maximum size of a 20-byte integer. However a non-native compiler needs to generate constraints that are satisfied only if the finite field element lies in the correct range.</p>
+<p>ECLAIR's interface for range checks is the trait <code>AssertWithinBitRange</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Within-Bit-Range Assertion
+///
+/// # Restrictions
+///
+/// This `trait` assumes that `BITS &gt; 0` and does not currently support `BITS = 0`. 
+/// In this case we would have an assertion that `x &lt; 2^0 = 1` which is just that 
+/// `x = 0` in most systems. For this usecase, the [`Zero`] `trait` should be 
+/// considered instead.
+pub trait AssertWithinBitRange&lt;T, const BITS: usize&gt; {
+    /// Asserts that `value` is smaller than `2^BITS`.
+    fn assert_within_range(&amp;mut self, value: &amp;T);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This trait is implemented by a compiler type <code>COM</code> to specify how <code>COM</code> constrains values of type <code>T</code> to lie in the range specified by <code>BITS</code>. The line</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>compiler.assert_within_range::&lt;BITS&gt;(value);
+<span class="boring">}</span></code></pre></pre>
+<p>causes the compiler to generate constraints that are satisfied only if <code>value</code> lies within the range specified by <code>BITS</code>.</p>
+<h2 id="unsigned-integers"><a class="header" href="#unsigned-integers">Unsigned Integers</a></h2>
+<p>The <code>AssertWithinBitRange</code> trait allows ECLAIR to handle unsigned integers within proof systems as finite field elements with a checked size. We define unsigned integers as a thin wrapper around a type <code>T</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Unsigned Integer
+pub struct UnsignedInteger&lt;T, const BITS: usize&gt;(T);
+<span class="boring">}</span></code></pre></pre>
+<p>One should think of this construction as analogous to representing a boolean value with a <code>u8</code>. The <code>u8</code> type is acting as a container for the boolean value. But this container is &quot;too large&quot; in the sense that many <code>u8</code> values do not correspond to a boolean value. Before interpreting a <code>u8</code> as a boolean it is necessary to check that its value lies in the range <code>[0,1]</code>.</p>
+<p>Similarly, when we work within a proving system over a finite field, we may need to use field elements as a container for unsigned integer types. In this case a range check is required to make sure that the value in this container really does have an interpretation as an unsigned integer of the given size.</p>
+<p>The compiler type <code>COM</code> does not appear as part of the <code>UnsignedInteger</code> type, but it must be mentioned whenever we construct or mutate an <code>UnsignedInteger</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, const BITS: usize&gt; UnsignedInteger&lt;T, BITS&gt; {
+    /// Builds a new [`UnsignedInteger`] over `value` asserting that it does not
+    /// exceed `BITS`-many bits.
+    pub fn new&lt;COM&gt;(value: T, compiler: &amp;mut COM) -&gt; Self
+    where
+        COM: AssertWithinBitRange&lt;T, BITS&gt;,
+    {
+        compiler.assert_within_range(&amp;value);
+        Self::new_unchecked(value)
+    }
+
+    /// Mutates the underlying value of `self` with `f`, asserting that after
+    /// mutation the value is still within the `BITS` range.
+    pub fn mutate&lt;F, U, COM&gt;(&amp;mut self, f: F, compiler: &amp;mut COM) -&gt; U
+    where
+        COM: AssertWithinBitRange&lt;T, BITS&gt;,
+        F: FnOnce(&amp;mut T, &amp;mut COM) -&gt; U,
+    {
+        let output = f(&amp;mut self.0, compiler);
+        compiler.assert_within_range(&amp;self.0);
+        output
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Observe that both functions require the trait bound <code>COM: AssertWithinBitRange&lt;T, BITS&gt;</code>, meaning that the compiler must know how to constrain values of type <code>T</code> to the range specified by <code>BITS</code>. Before constructing an <code>UnsignedInteger</code> with <code>fn new</code>, <code>compiler</code> generates constraints that guarantee that <code>T</code> lies in the range specified by <code>BITS</code>. Similarly, <code>fn mutate</code> transforms an <code>UnsignedInteger</code>'s value in some way and generates constraints to ensure that the result of the transformation still lies within range before returning a value.</p>
+<p>When <code>COM = ()</code> is the native compiler, <code>fn new</code> and <code>fn mutate</code> would panic if the inner value of type <code>T</code> exceeds the bit-range. In non-native computation, <code>compiler</code> would generate constraints that the inner value does not satisfy, resulting in an unsatisfied constraint system.</p>
+<p>These functions can be seen at work in the implementation of <code>Add</code> and <code>AddAssign</code> for <code>UnsignedInteger</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, COM, const BITS: usize&gt; Add&lt;Self, COM&gt; for UnsignedInteger&lt;T, BITS&gt;
+where
+    T: Add&lt;T, COM&gt;,
+    COM: AssertWithinBitRange&lt;T::Output, BITS&gt;,
+{
+    type Output = UnsignedInteger&lt;T::Output, BITS&gt;;
+
+    fn add(self, rhs: Self, compiler: &amp;mut COM) -&gt; Self::Output {
+        Self::Output::new(self.0.add(rhs.0, compiler), compiler)
+    }
+}
+
+impl&lt;T, COM, const BITS: usize&gt; AddAssign&lt;Self, COM&gt; for UnsignedInteger&lt;T, BITS&gt;
+where
+    COM: AssertWithinBitRange&lt;T, BITS&gt;,
+    T: AddAssign&lt;T, COM&gt;,
+{
+    fn add_assign(&amp;mut self, rhs: Self, compiler: &amp;mut COM) {
+        self.mutate(|lhs, compiler| lhs.add_assign(rhs.0, compiler), compiler);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As a thin wrapper around <code>T</code>, <code>UnsignedInteger&lt;T, BITS&gt;</code> inherits many implementations from <code>T</code>. But not all operations that can be performed on <code>T</code> result in a valid <code>UnsignedInteger</code>. For example, <code>fn add</code> uses the <code>UnsignedInteger::new</code> function to construct its return value, telling <code>compiler</code> to constrain that return value to the bit-range. Similarly <code>fn add_assign</code> calls <code>fn mutate</code> to mutate the value, again generating constraints that enforce a range check on the mutated value.</p>
+<h3 id="checked-vs-unchecked"><a class="header" href="#checked-vs-unchecked">Checked <em>vs</em> Unchecked</a></h3>
+<p>Looking at the body of the <code>UnsignedInteger::new</code> method we see that after a range check it uses <code>fn new_unchecked</code> to construct its return value. ECLAIR exposes <code>fn new_unchecked</code> as a public function because it allows for optimizations in instances where range checks are unnecessary. </p>
+<p>For example, if <code>T</code> implements <code>Zero&lt;COM&gt;</code> or <code>One&lt;COM&gt;</code> then we know that <code>T</code>'s zero/one value will pass any range check (we require <code>BITS &gt;= 1</code> for range checks, see <code>AssertWithinBitRange</code> above). Thus the implementation is:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, const BITS: usize, COM&gt; Zero&lt;COM&gt; for UnsignedInteger&lt;T, BITS&gt;
+where
+    T: Zero&lt;COM&gt;,
+{
+    type Verification = T::Verification;
+
+    fn zero(compiler: &amp;mut COM) -&gt; Self {
+        Self::new_unchecked(T::zero(compiler))
+    }
+
+    fn is_zero(&amp;self, compiler: &amp;mut COM) -&gt; Self::Verification {
+        self.0.is_zero(compiler)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>In this instance it would be wasteful to add a range check to the value <code>T::zero(compiler)</code> because the contract of the <code>Zero</code> trait guarantees that this is within range. The same holds for <code>T::one(compiler)</code> in the implementation of <code>One&lt;COM&gt;</code>.</p>
+<p>Another example where the unchecked construction should be used is the <code>ConditionalSelect&lt;COM&gt;</code> trait (see <a href="./bool.html">Bool</a>): </p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, const BITS: usize, COM&gt; ConditionalSelect&lt;COM&gt; for UnsignedInteger&lt;T, BITS&gt;
+where
+    COM: Has&lt;bool&gt;,
+    T: ConditionalSelect&lt;COM&gt;,
+{
+    fn select(bit: &amp;Bool&lt;COM&gt;, true_value: &amp;Self, false_value: &amp;Self, compiler: &amp;mut COM) -&gt; Self {
+        Self::new_unchecked(T::select(bit, &amp;true_value.0, &amp;false_value.0, compiler))
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Again it is appropriate to use unchecked construction because both <code>true_value</code> and <code>false_value</code> are of type <code>UnsignedInteger</code> and so it would be wasteful to perform another range check on their inner values.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../std/cmp.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../std/ops.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../std/cmp.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../std/ops.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

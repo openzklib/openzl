@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"openzl_derive":[["impl <a class=\"trait\" href=\"https://docs.rs/syn/1.0.105/syn/parse/trait.Parse.html\" title=\"trait syn::parse::Parse\">Parse</a> for <a class=\"struct\" href=\"openzl_derive/component/struct.Declaration.html\" title=\"struct openzl_derive::component::Declaration\">Declaration</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

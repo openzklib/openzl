@@ -1,0 +1,5 @@
+(function() {var implementors = {
+"openzl":[],
+"openzl_crypto":[],
+"openzl_plugin_dalek":[["impl&lt;M&gt; <a class=\"trait\" href=\"openzl_crypto/signature/trait.Verify.html\" title=\"trait openzl_crypto::signature::Verify\">Verify</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.unit.html\">()</a>&gt; for <a class=\"struct\" href=\"openzl_plugin_dalek/ed25519/struct.Ed25519.html\" title=\"struct openzl_plugin_dalek::ed25519::Ed25519\">Ed25519</a>&lt;M&gt;<span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;M: <a class=\"trait\" href=\"openzl_util/bytes/trait.AsBytes.html\" title=\"trait openzl_util::bytes::AsBytes\">AsBytes</a>,</span>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

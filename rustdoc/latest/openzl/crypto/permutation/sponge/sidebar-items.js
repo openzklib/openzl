@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Sponge","Permutation Sponge"]],"trait":[["Read","Sponge Reader"],["Write","Sponge Writer"]]};

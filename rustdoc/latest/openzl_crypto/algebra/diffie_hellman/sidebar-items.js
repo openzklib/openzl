@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["DiffieHellman","Diffie-Hellman Key Agreement Scheme"],["KnownScalar","Diffie-Hellmann Known-Scalar Mode"],["Standard","Diffie-Hellmann Standard Mode"]],"type":[["KnownScalarDiffieHellman","Known-Scalar Diffie-Hellman Key Agreement Scheme"],["StandardDiffieHellman","Standard Diffie-Hellman Key Agreement Scheme"]]};

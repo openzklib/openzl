@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["factor_to_sparse_matrixes","Factorizes `base_matrix` into sparse matrices."]],"struct":[["MdsMatrices","MDS Matrix for both naive Poseidon Hash and optimized Poseidon Hash For detailed descriptions, please refer to https://hackmd.io/8MdoHwoKTPmQfZyIKEYWXQ Note: Naive and optimized Poseidon Hash does not change #constraints in Groth16."]]};

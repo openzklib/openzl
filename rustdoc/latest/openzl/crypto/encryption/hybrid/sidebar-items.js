@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Ciphertext","Full Ciphertext"],["Hybrid","Hybrid Encryption Scheme"],["Randomness","Encryption Randomness"]],"type":[["DecryptionKey","Decryption Key"],["EncryptionKey","Encryption Key"]]};

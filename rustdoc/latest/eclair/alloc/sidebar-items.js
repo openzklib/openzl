@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["mode","Allocation Modes for [`Variable`] Types"]],"trait":[["Allocate","Allocation Auto-`trait`"],["Allocator","Allocator Auto-`trait`"],["Constant","Compiler Constant"],["Variable","Compiler Variable"]],"type":[["Const","Constant Type Alias"],["Var","Variable Type Alias"]]};

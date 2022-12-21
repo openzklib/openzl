@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["bls12_381","Demonstration of native computation with comparison to a test value."]],"struct":[["Permutation","The constant parameters defining a particular instance of the Poseidon permutation."],["State","The state vector that a Poseidon permutation acts on."]],"trait":[["Constants",""],["Specification","Poseidon Specification"]]};

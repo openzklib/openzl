@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":[["push_to_vec",""],["to_bytes","Takes as input a sequence of structs, and converts them to a series of bytes. All traits that implement `Bytes` can be automatically converted to bytes in this manner."]],"trait":[["FromBytes",""],["ToBytes",""]]};

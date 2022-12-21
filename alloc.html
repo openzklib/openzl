@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Allocation - OpenZL Docs</title>
+        <!-- Custom HTML head -->
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">ECLAIR Basics</li><li class="chapter-item expanded "><a href="native_nonnative.html"><strong aria-hidden="true">1.</strong> Native vs Non-Native Computation</a></li><li class="chapter-item expanded "><a href="std/eclair_std_lib.html"><strong aria-hidden="true">2.</strong> ECLAIR Standard Library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/bool.html"><strong aria-hidden="true">2.1.</strong> Bool</a></li><li class="chapter-item expanded "><a href="std/cmp.html"><strong aria-hidden="true">2.2.</strong> Cmp</a></li><li class="chapter-item expanded "><a href="std/num.html"><strong aria-hidden="true">2.3.</strong> Num</a></li><li class="chapter-item expanded "><a href="std/ops.html"><strong aria-hidden="true">2.4.</strong> Ops</a></li></ol></li><li class="chapter-item expanded "><a href="alloc.html" class="active"><strong aria-hidden="true">3.</strong> Allocation</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="poseidon_permutation_tutorial.html"><strong aria-hidden="true">4.</strong> Tutorial: Poseidon Permutation</a></li><li class="chapter-item expanded affix "><li class="part-title">Plugins</li><li class="chapter-item expanded "><a href="proof_systems.html"><strong aria-hidden="true">5.</strong> Proof System Plugins</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ark_groth16.html"><strong aria-hidden="true">5.1.</strong> ArkGroth16</a></li><li class="chapter-item expanded "><a href="plonky2.html"><strong aria-hidden="true">5.2.</strong> Plonky2</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">OpenZL Docs</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="allocation"><a class="header" href="#allocation">Allocation</a></h1>
+<p>The <code>alloc</code> module defines ECLAIR's interface for allocating values in a compiler. We use the term &quot;allocation&quot; here to refer to the process of declaring a variable in a ZK proof system and (maybe) assigning it a value. Note that we are <em>not</em> referring to memory-related abstractions like heap allocation.</p>
+<p>Variables in a ZK proof system can be private witnesses, public inputs, constants, or some mixture of these. For example, in a merkle tree membership proof we would have variables representing the values stored:</p>
+<ul>
+<li>in some leaf of the tree </li>
+<li>along the path from that leaf to the root</li>
+<li>in the root of the tree.</li>
+</ul>
+<p>In the simplest case, all those values have the same type -- perhaps a finite field element. But in a ZKP, all those values should be private except the root, which would be public. So the description of this circuit must distinguish between public and private variables. </p>
+<p>ECLAIR calls this distinction the &quot;allocation mode.&quot; There are four allocation modes:</p>
+<ol>
+<li>
+<p><strong>Constant</strong>: values that are proper to the circuit description and never change. These are public quantities known at compilation time.</p>
+</li>
+<li>
+<p><strong>Public</strong>: values that are public but may change in each instance of the circuit. For example, the root hash of a merkle tree. These values need to be exposed to the verifier in a ZKP.</p>
+</li>
+<li>
+<p><strong>Secret</strong>: values that are private. These values are known only to the prover in a ZKP and are never revealed.</p>
+</li>
+<li>
+<p><strong>Derived</strong>: values that are a composite of some public and secret values. For example, if the above merkle tree proof were considered as a single object then its allocation mode would be derived because it consists of both private and public values.</p>
+</li>
+</ol>
+<p>The constant allocation mode is substantially different from the other three in that constants are known at compilation time, whereas a variable's value will not be known until execution time when an instance of the circuit is constructed. For this reason, ECLAIR uses different interfaces for allocation of constants and variables.</p>
+<h2 id="constants"><a class="header" href="#constants">Constants</a></h2>
+<p>The interface for allocating constants in ECLAIR is the <code>Constant</code>trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Constant&lt;COM = ()&gt; {
+    /// Underlying Type
+    type Type;
+
+    /// Allocates a new constant from `this` into the `compiler`.
+    fn new_constant(this: &amp;Self::Type, compiler: &amp;mut COM) -&gt; Self;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>So a type <code>T</code> that implements <code>Constant&lt;COM&gt;</code> has some &quot;underlying type&quot; <code>Type</code> that it represents. Given values of that underlying type, we introduce them into our circuit description using <code>fn new_constant</code>, which takes the underlying value <code>this</code>, allocates it in the <code>compiler</code>, and returns <code>COM</code>'s representation of the allocated value. We then use this output in our circuit description.</p>
+<p>Note that ECLAIR assumes almost nothing about what it means to be a &quot;constant&quot;; it is up to the compiler <code>COM</code> to define how constants should be represented and manipulated. The one assumption ECLAIR does make is that constant values are known at compilation time, <em>i.e.</em> they are a fixed part of the circuit description.</p>
+<h2 id="variables"><a class="header" href="#variables">Variables</a></h2>
+<p>All other quantities whose values are <em>not</em> known at compilation time are considered to be &quot;variables.&quot; ECLAIR allocates these using the <code>Variable</code> trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Variable&lt;M, COM = ()&gt; {
+    /// Underlying Type
+    type Type;
+
+    /// Allocates a new unknown value into the `compiler`. The terminology &quot;unknown&quot; 
+    /// refers to the fact that we need to allocate a slot for this variable during 
+    /// compilation time, but do not yet know its underlying value.
+    fn new_unknown(compiler: &amp;mut COM) -&gt; Self;
+
+    /// Allocates a new known value from `this` into the `compiler`. The terminology 
+    /// &quot;known&quot; refers to the fact that we have access to the underyling value during 
+    /// execution time where we are able to use its concrete value for execution.
+    fn new_known(this: &amp;Self::Type, compiler: &amp;mut COM) -&gt; Self;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As with constants, variables have an underlying <code>Type</code> that they represent within <code>COM</code>. This means that some type <code>T</code> implementing <code>Variable&lt;M, COM&gt;</code> is a <code>Type</code>-valued variable. The generic type <code>M</code> specifies the allocation <em>M</em>ode, which can be <code>Public</code>, <code>Private</code>, or <code>Derived</code>.</p>
+<p>As with the <code>Constant</code> allocation mode, ECLAIR makes no assumptions about what it means to be <code>Public</code>, <code>Private</code> or <code>Derived</code> in a given <code>COM</code> context. ECLAIR assumes only that a variable's value is not yet known at compilation time.</p>
+<h3 id="known-vs-unknown-allocation"><a class="header" href="#known-vs-unknown-allocation">Known <em>vs</em> Unknown Allocation</a></h3>
+<p>Unlike constants, there are two ways of allocating variables: as known and unknown. Allocation using <code>fn new_known</code> requires the variable's concrete value <code>this</code>. Allocation using <code>fn new_unknown</code> merely tells the <code>compiler</code> that <em>when execution occurs</em>, a value of this <code>Type</code> will go here. </p>
+<p>Of course execution cannot actually occur until all variables have been provided a value. Allocating variables before their values are known using <code>fn new_unknown</code> allows us to perform certain useful operations from the circuit description before execution time, akin to performing algebraic manipulations on physical formulae before substituting in concrete values for the variables.</p>
+<p>For example, some proving systems require pre-computed prover and verifier keys. When these are circuit-specific, they must be extracted from a circuit description. Since this occurs before execution time, we need a circuit description that accounts for all of the variables without assigning them a concrete value. Therefore a description of the circuit using <code>fn new_unknown</code> to allocate variables is appropriate for computing the prover and verifier keys. At execution time, when the circuit is used to generate proofs, it is appropriate to allocate the same variables using <code>fn new_known</code>.</p>
+<p>This suggests an important principle of circuit-writing in ECLAIR: it is generally useful to separate variable <em>allocation</em> from variable <em>manipulation</em>. That is, one should identify the variables whose values are provided as inputs, either public or private, by the prover. Then, taking those as inputs, one writes a function to describe how they are manipulated according to the circuit logic.</p>
+<h3 id="example-merkle-tree-membership"><a class="header" href="#example-merkle-tree-membership">Example: Merkle Tree Membership</a></h3>
+<p>To illustrate this we return to the merkle tree membership example we started with above. The relevant input values are: </p>
+<ul>
+<li>a leaf value: <code>leaf: L</code></li>
+<li>the values of all sibling nodes on a path from that leaf to the root: <code>path: P</code></li>
+<li>a root value: <code>root: R</code></li>
+</ul>
+<p>The first two kinds of values are private, so we require that <code>L: Variable&lt;Secret, COM&gt;</code> and <code>P: Variable&lt;Secret, COM&gt;</code>. The root value is public, so we require <code>R: Variable&lt;Public, COM&gt;</code>. The function that describes a merkle tree membership check would look something like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn membership_check&lt;L, P, R, COM&gt;(leaf: L, path: P, root: R, compiler: &amp;mut COM)
+where
+    L: Variable&lt;Secret, COM&gt;,
+    P: Variable&lt;Secret, COM&gt;,
+    R: Variable&lt;Public, COM&gt; {
+        // hash `leaf` with its sibling
+        // hash the result with the next sibling in `path`
+        // ...
+        // assert that final result equals `root`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The body of this function will perform computations on the input variables, allocating new intermediate variables in the process and generating constraints within <code>compiler</code>. Because we've specified that <code>leaf</code> and <code>path</code> allocate as <code>Secret</code> and <code>root</code> allocates as <code>Public</code>, the constraint generation will occur in whatever way is appropriate for dealing with public and private variables in the context of <code>COM</code>.</p>
+<p>To extract a circuit description while leaving the variable values unknown, we might do something like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Construct an instance of the compiler
+let mut compiler = CompilerType::new();
+// Allocate variables with unknown values
+let leaf = Leaf::new_unknown(&amp;mut compiler);
+let path = Path::new_unknown(&amp;mut compiler);
+let root = Root::new_unknown(&amp;mut compiler);
+// Generate membership check constraints
+membership_check(leaf, path, root, &amp;mut compiler);
+<span class="boring">}</span></code></pre></pre>
+<p>Now <code>compiler</code> has allocated all the intermediate variables for a membership check and generated the necessary constraints among them. We could then extract proving and verifying keys from it, or any other information that can be extracted from the circuit description without concrete values. Note that we can<em>not</em> compute a ZKP from <code>compiler</code>, since this would require concrete values for the variables.</p>
+<p>In order to compute a ZKP in an instance where we have concrete values, we would do something like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Construct an instance of the compiler
+let mut compiler = CompilerType::new();
+// Allocate variables with known values
+let leaf = Leaf::new_known(leaf_value, &amp;mut compiler);
+let path = Path::new_known(path_value, &amp;mut compiler);
+let root = Root::new_known(root_value, &amp;mut compiler);
+// Generate membership check constraints
+membership_check(leaf, path, root, &amp;mut compiler);
+// Compute proof
+let proof = compiler.prove();
+<span class="boring">}</span></code></pre></pre>
+<p>This time the compiler was able to compute a ZKP because the variables were allocated with known values. </p>
+<p>As mentioned above, it was useful in this example to separate allocation and manipulation. All manipulation occurs within <code>fn membership_check</code>, which takes arguments that are assumed to be already allocated in the <code>compiler</code>. This ensured that the same manipulations would be performed on the symbolic and concrete forms of these variables. </p>
+<p>(Of course many new variables are allocated as <code>fn membership_check</code> performs its computation, but their values are not provided directly by the prover. Perhaps it is more correct to say that one should separate variable <em>input</em> from variable manipulation.)</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="std/ops.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="poseidon_permutation_tutorial.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="std/ops.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="poseidon_permutation_tutorial.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

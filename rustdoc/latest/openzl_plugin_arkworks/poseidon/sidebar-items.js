@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Spec","Poseidon Specification Configuration"],["TwoPowerMinusOneDomainTag","Domain tag as 2^arity - 1"]],"trait":[["Specification","Poseidon Permutation Specification."]],"type":[["Compiler","Compiler Type."]]};

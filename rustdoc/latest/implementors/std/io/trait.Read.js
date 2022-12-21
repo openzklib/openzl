@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"openzl_plugin_arkworks":[["impl&lt;R&gt; <a class=\"trait\" href=\"openzl_plugin_arkworks/serialize/trait.Read.html\" title=\"trait openzl_plugin_arkworks::serialize::Read\">Read</a> for <a class=\"struct\" href=\"openzl_plugin_arkworks/serialize/struct.ArkReader.html\" title=\"struct openzl_plugin_arkworks::serialize::ArkReader\">ArkReader</a>&lt;R&gt;<span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;R: <a class=\"trait\" href=\"openzl_util/codec/trait.Read.html\" title=\"trait openzl_util::codec::Read\">Read</a>,</span>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

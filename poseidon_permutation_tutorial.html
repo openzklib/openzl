@@ -1,0 +1,452 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Tutorial: Poseidon Permutation - OpenZL Docs</title>
+        <!-- Custom HTML head -->
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">ECLAIR Basics</li><li class="chapter-item expanded "><a href="native_nonnative.html"><strong aria-hidden="true">1.</strong> Native vs Non-Native Computation</a></li><li class="chapter-item expanded "><a href="std/eclair_std_lib.html"><strong aria-hidden="true">2.</strong> ECLAIR Standard Library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/bool.html"><strong aria-hidden="true">2.1.</strong> Bool</a></li><li class="chapter-item expanded "><a href="std/cmp.html"><strong aria-hidden="true">2.2.</strong> Cmp</a></li><li class="chapter-item expanded "><a href="std/num.html"><strong aria-hidden="true">2.3.</strong> Num</a></li><li class="chapter-item expanded "><a href="std/ops.html"><strong aria-hidden="true">2.4.</strong> Ops</a></li></ol></li><li class="chapter-item expanded "><a href="alloc.html"><strong aria-hidden="true">3.</strong> Allocation</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="poseidon_permutation_tutorial.html" class="active"><strong aria-hidden="true">4.</strong> Tutorial: Poseidon Permutation</a></li><li class="chapter-item expanded affix "><li class="part-title">Plugins</li><li class="chapter-item expanded "><a href="proof_systems.html"><strong aria-hidden="true">5.</strong> Proof System Plugins</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ark_groth16.html"><strong aria-hidden="true">5.1.</strong> ArkGroth16</a></li><li class="chapter-item expanded "><a href="plonky2.html"><strong aria-hidden="true">5.2.</strong> Plonky2</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">OpenZL Docs</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="tutorial-poseidon-permutation"><a class="header" href="#tutorial-poseidon-permutation">Tutorial: Poseidon Permutation</a></h1>
+<p>The Poseidon permutation, defined in <a href="https://eprint.iacr.org/2019/458.pdf">GKRRS '19</a> operates on vectors of field elements. For a fixed width, the permutation transforms a vector of <code>width</code>-many field elements in repeated rounds. Each round consists of the following operations:</p>
+<ol>
+<li><strong>Add Round Keys</strong>: Add a constant to each component of the vector.</li>
+<li><strong>S-Box</strong>: Raise each component of the resulting vector to a power (in a full round), or raise just one component of the vector to a power (in a partial round).</li>
+<li><strong>MDS Matrix</strong>: Multiply the resulting vector by a constant matrix.</li>
+</ol>
+<p>This tutorial will walk through building the Poseidon permutation in ECLAIR. All OpenZL tutorials are accompanied by code examples, see <a href="https://github.com/openzklib/openzl/tree/main/openzl-tutorials">here</a>. Note that this code differs somewhat from our <a href="https://github.com/openzklib/openzl/tree/main/openzl-crypto/src/poseidon">optimized Poseidon implementation</a>.</p>
+<h3 id="trait-specification"><a class="header" href="#trait-specification">trait <code>Specification</code></a></h3>
+<p>The Poseidon permutation requires a choice of finite field. We will keep this example generic by using a Rust trait <code>Specification</code> to specify our assumptions on the field and defining the Poseidon permutation relative to any type that implements <code>Specification</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Poseidon Specification
+///
+/// This trait defines basic arithmetic operations we use to define the Poseidon permutation.
+pub trait Specification&lt;COM = ()&gt;: Constants {
+    /// Field Type used for Permutation State
+    type Field;
+
+    /// Field Type used for Permutation Parameters
+    type ParameterField;
+
+    /// Returns the zero element of the field.
+    fn zero(compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Adds two field elements together.
+    fn add(lhs: &amp;Self::Field, rhs: &amp;Self::Field, compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Adds a field element `lhs` with a constant `rhs`
+    fn add_const(lhs: &amp;Self::Field, rhs: &amp;Self::ParameterField, compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Multiplies two field elements together.
+    fn mul(lhs: &amp;Self::Field, rhs: &amp;Self::Field, compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Multiplies a field element `lhs` with a constant `rhs`
+    fn mul_const(lhs: &amp;Self::Field, rhs: &amp;Self::ParameterField, compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Adds the `rhs` field element to `lhs` field element, updating the value in `lhs`
+    fn add_assign(lhs: &amp;mut Self::Field, rhs: &amp;Self::Field, compiler: &amp;mut COM);
+
+    /// Adds the `rhs` constant to `lhs` field element, updating the value in `lhs`
+    fn add_const_assign(lhs: &amp;mut Self::Field, rhs: &amp;Self::ParameterField, compiler: &amp;mut COM);
+
+    /// Applies the S-BOX to `point`.
+    fn apply_sbox(point: &amp;mut Self::Field, compiler: &amp;mut COM);
+
+    /// Converts a constant parameter `point` for permutation state.
+    fn from_parameter(point: Self::ParameterField) -&gt; Self::Field;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The trait requires two types, <code>Field</code> and <code>ParameterField</code>. The permutation acts on vectors of elements of type <code>Field</code>. The constant parameters that define the permutation are of type <code>ParameterField</code>. At first it may seem strange to distinguish between these two types, since they coincide for native computation of the Poseidon permutation. But remember that one of the reasons to use ECLAIR is to specify computation in a language that applies to both <a href="./native_nonnative.html"><em>native and non-native</em> computation</a>.</p>
+<p>In practice we may need to compute Poseidon in-circuit as part of a ZK-proof. In this case the type <code>Field</code> would be some representation of private witnesses to the circuit, whereas <code>ParameterField</code> would be public input constants. These are quite different types indeed! Therefore it is appropriate to treat them as distinct for now and let the <code>compiler</code> deal with them in whatever way is appropriate for the mode of computation specified by the type <code>COM</code>.</p>
+<p>Keeping in mind that the <code>Field</code> type may represent in-circuit variables, it is easy to see that we need two distinct notions of <code>add</code> (and <code>mul</code>). When adding two in-circuit variables we use</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn add(lhs: &amp;Self::Field, rhs: &amp;Self::Field, compiler: &amp;mut COM) -&gt; Self::Field;
+<span class="boring">}</span></code></pre></pre>
+<p>but when adding a constant to a variable it is appropriate to use</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn add_const(lhs: &amp;Self::Field, rhs: &amp;Self::ParameterField, compiler: &amp;mut COM) -&gt; Self::Field;
+<span class="boring">}</span></code></pre></pre>
+<p>Although these two methods coincide for the native compiler type <code>COM = ()</code>, in general they are distinct. This illustrates an important principle of circuit writing in ECLAIR: We describe circuits in a general language that applies to all modes of computation; this ensures that different instances of computation (native/in-circuit) agree. Often it is useful to keep the more &quot;exotic&quot; case of in-circuit computation in mind.</p>
+<p>Note that we specify the default compiler type to be <code>COM = ()</code>, meaning that by default we use the native compiler.</p>
+<h3 id="trait-constants"><a class="header" href="#trait-constants">trait <code>Constants</code></a></h3>
+<p>You may notice that the previous trait <code>Specification</code> extends a trait <code>Constants</code>. <code>Constants</code> is a trait specifying three constant parameters that belong to the definition of a Poseidon permutation:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Constants {
+    /// Width of the Permutation
+    ///
+    /// This number is the total number `t` of field elements in the state which is `F^t`.
+    const WIDTH: usize;
+
+    /// Number of Full Rounds
+    ///
+    /// The total number of full rounds in the Poseidon permutation, including the first set of full
+    /// rounds and then the second set after the partial rounds.
+    const FULL_ROUNDS: usize;
+
+    /// Number of Partial Rounds
+    const PARTIAL_ROUNDS: usize;
+
+    /// Half Number of Full Rounds
+    ///
+    /// Poseidon Hash first has [`HALF_FULL_ROUNDS`]-many full rounds in the beginning,
+    /// followed by [`PARTIAL_ROUNDS`]-many partial rounds in the middle, and finally
+    /// [`HALF_FULL_ROUNDS`]-many full rounds at the end.
+    ///
+    /// [`HALF_FULL_ROUNDS`]: Self::HALF_FULL_ROUNDS
+    /// [`PARTIAL_ROUNDS`]: Constants::PARTIAL_ROUNDS
+    const HALF_FULL_ROUNDS: usize = Self::FULL_ROUNDS / 2;
+
+    /// Total Number of Rounds
+    const ROUNDS: usize = Self::FULL_ROUNDS + Self::PARTIAL_ROUNDS;
+
+    /// Number of Entries in the MDS Matrix
+    const MDS_MATRIX_SIZE: usize = Self::WIDTH * Self::WIDTH;
+
+    /// Total Number of Additive Rounds Keys
+    const ADDITIVE_ROUND_KEYS_COUNT: usize = Self::ROUNDS * Self::WIDTH;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here <code>WIDTH</code> is the length of the vector of field elements that the permutation acts on via addition and matrix multiplication. <code>FULL_ROUNDS</code> and <code>PARTIAL_ROUNDS</code> specify the number of full and partial rounds of iteration that are performed on the state vector to achieve the desired security level. The remaining constants are computed in terms of the first three; they specify the number of &quot;Additive Round Keys&quot; and the size of the &quot;MDS Matrix.&quot;</p>
+<h3 id="struct-state"><a class="header" href="#struct-state">struct <code>State</code></a></h3>
+<p>Given some type <code>S</code> that implements the above <code>Specification</code> trait we next define a state for the permutation to act on. This state is a vector of length <code>WIDTH</code>. We'll use a struct <code>State</code> to represent it:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// The state vector that a Poseidon permutation acts on.
+pub struct State&lt;S, COM = ()&gt;(Box&lt;[S::Field]&gt;)
+where
+    S: Specification&lt;COM&gt;;
+
+impl&lt;S, COM&gt; State&lt;S, COM&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Builds a new [`State`] from `state`.
+    pub fn new(state: Box&lt;[S::Field]&gt;) -&gt; Self {
+        assert_eq!(state.len(), S::WIDTH);
+        Self(state)
+    }
+
+    /// Returns a slice iterator over the state.
+    pub fn iter(&amp;self) -&gt; slice::Iter&lt;S::Field&gt; {
+        self.0.iter()
+    }
+
+    /// Returns a mutable slice iterator over the state.
+    pub fn iter_mut(&amp;mut self) -&gt; slice::IterMut&lt;S::Field&gt; {
+        self.0.iter_mut()
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Observe that although the compiler type <code>COM</code> plays no direct role in the definition of the <code>State</code> vector, it must be mentioned because it provides the context to understand the trait <code>Specification&lt;COM&gt;</code>. When <code>COM</code> specifies some ZK proof system to compute the permutation in, the elements of <code>State</code> will represent witness variables and the operations performed on <code>State</code> will generate constraints in whatever representation <code>COM</code> specifies. Again we have the default <code>COM = ()</code>, meaning that when no compiler type is specified <code>State</code> consists of native field elements and the operations performed on it are computed natively.</p>
+<p>For Rust-related reasons we choose not to specify the width as part of <code>State</code>'s type. Observe however that the constructor <code>fn new</code> enforces that <code>State</code> must have the size specified by <code>S</code> via the <code>Constants</code> trait.</p>
+<h3 id="struct-permutation"><a class="header" href="#struct-permutation">struct <code>Permutation</code></a></h3>
+<p>The final ingredient is the parameters, a collection of constants that define a particular instance of the Poseidon permutation. In each round the permutation adds some constants, the <code>additive_round_keys</code>, to the <code>State</code> and multiplies the <code>State</code> by a constant matrix, the <code>mds_matrix</code>. These pre-computed constants are considered to be part of the definition of a Poseidon permutation. For information on generating secure constants, please refer to <a href="https://eprint.iacr.org/2019/458.pdf">GKRRS '19</a>.</p>
+<p>Since these parameters define a specific instance of the Poseidon implementation, we call this struct <code>Permutation</code>. We define the <code>Permutation</code> to be generic over a type <code>S</code> that implements <code>Specification</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// The constant parameters defining a particular instance
+/// of the Poseidon permutation.
+pub struct Permutation&lt;S, COM = ()&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Additive Round Keys
+    additive_round_keys: Box&lt;[S::ParameterField]&gt;,
+
+    /// MDS Matrix
+    mds_matrix: Box&lt;[S::ParameterField]&gt;,
+
+    /// Type Parameter Marker
+    __: PhantomData&lt;COM&gt;,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The <code>additive_round_keys</code> can be thought of as a list of constants from <code>F::ParameterField</code>, whereas the <code>mds_matrix</code> should be thought of as a matrix; this struct carries the flattening of that matrix.  The sizes of these arrays are determined by the same <code>WIDTH</code> parameter that determines the length of <code>State</code>. Again, we enforce these size constraints with the constructor rather than the type system:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;S, COM&gt; Permutation&lt;S, COM&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Builds a new [`Permutation`] from `additive_round_keys` and `mds_matrix`.
+    ///
+    /// # Panics
+    ///
+    /// This method panics if the input vectors are not the correct size for the specified
+    /// [`Specification`].
+    pub fn new(
+        additive_round_keys: Box&lt;[S::ParameterField]&gt;,
+        mds_matrix: Box&lt;[S::ParameterField]&gt;,
+    ) -&gt; Self {
+        assert_eq!(
+            additive_round_keys.len(),
+            S::ADDITIVE_ROUND_KEYS_COUNT,
+            &quot;Additive Rounds Keys are not the correct size.&quot;
+        );
+        assert_eq!(
+            mds_matrix.len(),
+            S::MDS_MATRIX_SIZE,
+            &quot;MDS Matrix is not the correct size.&quot;
+        );
+        Self {
+            additive_round_keys,
+            mds_matrix,
+            __: PhantomData,
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="fn-full_round-fn-partial_round"><a class="header" href="#fn-full_round-fn-partial_round"><code>fn full_round</code>, <code>fn partial_round</code></a></h3>
+<p>A full round of permutation begins by adding the next <code>WIDTH</code>-many additive round keys to the <code>State</code> vector, then applying the &quot;S-box&quot; to each entry of the vector. Observe that the S-box operation is part of the <code>Specification</code> trait, <code>fn apply_sbox</code>. This operation on field elements is typically exponentiation to the power 3, 5, or -1.</p>
+<p>A partial round of permutation also adds the next <code>WIDTH</code>-many additive round keys to the <code>State</code> vector, but then applies the S-box only to <em>first</em> element of this vector. The reason for mixing full and partial rounds is explained in <a href="https://eprint.iacr.org/2019/458.pdf">GKRRS '19</a>.</p>
+<p>Both rounds finish by applying the MDS Matrix to the <code>State</code> vector. Let's add these methods to the <code>Permutation</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;S, COM&gt; Permutation&lt;S, COM&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Returns the additive keys for the given `round`.
+    #[inline]
+    pub fn additive_keys(&amp;self, round: usize) -&gt; &amp;[S::ParameterField] {
+        let start = round * S::WIDTH;
+        &amp;self.additive_round_keys[start..start + S::WIDTH]
+    }
+
+    /// Computes the MDS matrix multiplication against the `state`.
+    pub fn mds_matrix_multiply(&amp;self, state: &amp;mut State&lt;S, COM&gt;, compiler: &amp;mut COM) {
+        let mut next = Vec::with_capacity(S::WIDTH);
+        for i in 0..S::WIDTH {
+            let linear_combination = state
+                .iter()
+                .enumerate()
+                .map(|(j, elem)| S::mul_const(elem, &amp;self.mds_matrix[S::WIDTH * i + j], compiler))
+                .collect::&lt;Vec&lt;_&gt;&gt;();
+            next.push(
+                linear_combination
+                    .into_iter()
+                    .reduce(|acc, next| S::add(&amp;acc, &amp;next, compiler))
+                    .unwrap(),
+            );
+        }
+        mem::swap(&amp;mut next.into_boxed_slice(), &amp;mut state.0);
+    }
+
+    /// Computes a full round at the given `round` index on the internal permutation `state`.
+    pub fn full_round(&amp;self, round: usize, state: &amp;mut State&lt;S, COM&gt;, compiler: &amp;mut COM) {
+        let keys = self.additive_keys(round);
+        for (i, elem) in state.iter_mut().enumerate() {
+            S::add_const_assign(elem, &amp;keys[i], compiler);
+            S::apply_sbox(elem, compiler);
+        }
+        self.mds_matrix_multiply(state, compiler);
+    }
+
+    /// Computes a partial round at the given `round` index on the internal permutation `state`.
+    pub fn partial_round(&amp;self, round: usize, state: &amp;mut State&lt;S, COM&gt;, compiler: &amp;mut COM) {
+        let keys = self.additive_keys(round);
+        for (i, elem) in state.iter_mut().enumerate() {
+            S::add_const_assign(elem, &amp;keys[i], compiler);
+        }
+        S::apply_sbox(&amp;mut state.0[0], compiler);
+        self.mds_matrix_multiply(state, compiler);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note that <code>fn full_round</code> and <code>fn partial_round</code> take the round number as an input; this is so that they will take correct constants for the given round. Note that they also take the <code>compiler</code> as an input. As we explained above, this enables these functions to generate constraints within the ZK proof system specified by the type <code>COM</code>. For example, when adding round constants the <code>add_const_assign</code> method will add a constraint to <code>compiler</code> that enforces the addition of a public constant to the secret witness. Similarly, <code>fn mds_matrix_multiply</code> generates constraints within <code>compiler</code> to enforce that <code>state</code> was multiplied by the MDS Matrix.</p>
+<p>Again, when no <code>COM</code> type is specified the default <code>COM = ()</code> simply performs native computation without any constraint generation. The advantage of ECLAIR's <code>COM</code> abstraction is the certainty that <code>add_const_assign</code> or <code>mds_matrix_multiply</code> always conform to the same definition whether they are being used in native or non-native computation. </p>
+<h3 id="putting-it-all-together-fn-permute"><a class="header" href="#putting-it-all-together-fn-permute">Putting it all Together: <code>fn permute</code></a></h3>
+<p>Finally we combine the pieces to define the full permutation:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;S, COM&gt; Permutation&lt;S, COM&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Computes the full permutation without the first round.
+    fn permute(&amp;self, state: &amp;mut State&lt;S, COM&gt;, compiler: &amp;mut COM) {
+        for round in 0..S::HALF_FULL_ROUNDS {
+            self.full_round(round, state, compiler);
+        }
+        for round in S::HALF_FULL_ROUNDS..(S::HALF_FULL_ROUNDS + S::PARTIAL_ROUNDS) {
+            self.partial_round(round, state, compiler);
+        }
+        for round in (S::HALF_FULL_ROUNDS + S::PARTIAL_ROUNDS)..(S::FULL_ROUNDS + S::PARTIAL_ROUNDS)
+        {
+            self.full_round(round, state, compiler);
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This function simply performs as many partial and full rounds as specified in the <code>Constants</code> trait.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="alloc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="proof_systems.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="alloc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="proof_systems.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

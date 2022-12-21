@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Converter","Message-Converting Signature Scheme Adapter"]],"trait":[["Forward","Forward Conversion"]]};

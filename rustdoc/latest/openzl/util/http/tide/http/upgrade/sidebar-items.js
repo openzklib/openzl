@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Connection","An upgraded HTTP connection."],["Receiver","The receiving half of a channel to send an upgraded connection."],["Sender","The sending half of a channel to send an upgraded connection."]]};

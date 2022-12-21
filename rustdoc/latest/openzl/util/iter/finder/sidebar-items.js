@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Finder","Stateful Finder"]]};

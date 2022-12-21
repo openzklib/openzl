@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Forwarded","A rust representation of the forwarded header."]]};

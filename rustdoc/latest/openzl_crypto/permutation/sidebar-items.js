@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["duplex","Duplex Sponge Authenticated Encryption Scheme"],["sponge","Sponges over Pseudorandom Permutations"]],"trait":[["PseudorandomPermutation","Pseudorandom Permutation"],["PseudorandomPermutationFamily","Pseudorandom Permutation Family"]]};

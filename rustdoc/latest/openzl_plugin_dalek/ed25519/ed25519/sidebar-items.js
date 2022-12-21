@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["SIGNATURE_LENGTH","Length of an Ed25519 signature in bytes."]],"mod":[["signature","RustCrypto: Digital Signature Algorithms"]],"struct":[["Error","Signature errors."],["Signature","Ed25519 signature."]]};

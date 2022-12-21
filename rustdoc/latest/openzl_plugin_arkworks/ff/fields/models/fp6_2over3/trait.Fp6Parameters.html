@@ -1,0 +1,316 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `Fp6Parameters` trait in crate `openzl_plugin_arkworks`."><meta name="keywords" content="rust, rustlang, rust-lang, Fp6Parameters"><title>Fp6Parameters in openzl_plugin_arkworks::ff::fields::models::fp6_2over3 - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../../static.files/rustdoc-54cf78c3b80fc28d.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../../static.files/light-8fe2cf7ee64a76fb.css"><link rel="stylesheet" disabled href="../../../../../static.files/dark-7aacebe982779e9a.css"><link rel="stylesheet" disabled href="../../../../../static.files/ayu-29dcc614f7a7b461.css"><script id="default-settings" ></script><script src="../../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../../../../static.files/main-a211dbb005fb8161.js"></script><noscript><link rel="stylesheet" href="../../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../openzl_plugin_arkworks/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></div></a><h2></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../openzl_plugin_arkworks/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></div></a><h2 class="location"><a href="#">Fp6Parameters</a></h2><div class="sidebar-elems"><section><h3><a href="#required-associated-types">Required Associated Types</a></h3><ul class="block"><li><a href="#associatedtype.Fp3Params">Fp3Params</a></li></ul><h3><a href="#required-associated-consts">Required Associated Constants</a></h3><ul class="block"><li><a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1">FROBENIUS_COEFF_FP6_C1</a></li><li><a href="#associatedconstant.NONRESIDUE">NONRESIDUE</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.mul_fp3_by_nonresidue">mul_fp3_by_nonresidue</a></li></ul><h3><a href="#foreign-impls">Implementations on Foreign Types</a></h3><ul class="block"><li><a href="#impl-Fp6Parameters-for-Fq6Parameters">Fq6Parameters</a></li><li><a href="#impl-Fp6Parameters-for-Fq6Parameters">Fq6Parameters</a></li><li><a href="#impl-Fp6Parameters-for-Fq6Parameters">Fq6Parameters</a></li><li><a href="#impl-Fp6Parameters-for-Fq6Parameters">Fq6Parameters</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In openzl_plugin_arkworks::ff::fields::models::fp6_2over3</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1 class="fqn">Trait <a href="../../../../index.html">openzl_plugin_arkworks</a>::<wbr><a href="../../../index.html">ff</a>::<wbr><a href="../../index.html">fields</a>::<wbr><a href="../index.html">models</a>::<wbr><a href="index.html">fp6_2over3</a>::<wbr><a class="trait" href="#">Fp6Parameters</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../../../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><div class="item-decl"><pre class="rust trait"><code>pub trait Fp6Parameters: 'static + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> {
+    type <a href="#associatedtype.Fp3Params" class="associatedtype">Fp3Params</a>: <a class="trait" href="../../../trait.Fp3Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp3Parameters">Fp3Parameters</a>;
+
+    const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="trait.Fp6Parameters.html#associatedtype.Fp3Params" title="type openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters::Fp3Params">Fp3Params</a>&gt;&gt;;
+    const <a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1" class="constant">FROBENIUS_COEFF_FP6_C1</a>: &amp;'static [&lt;Self::<a class="associatedtype" href="trait.Fp6Parameters.html#associatedtype.Fp3Params" title="type openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters::Fp3Params">Fp3Params</a> as <a class="trait" href="../../../trait.Fp3Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp3Parameters">Fp3Parameters</a>&gt;::<a class="associatedtype" href="../../../trait.Fp3Parameters.html#associatedtype.Fp" title="type openzl_plugin_arkworks::ff::Fp3Parameters::Fp">Fp</a>];
+
+    fn <a href="#method.mul_fp3_by_nonresidue" class="fn">mul_fp3_by_nonresidue</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fe: &amp;<a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="trait.Fp6Parameters.html#associatedtype.Fp3Params" title="type openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters::Fp3Params">Fp3Params</a>&gt;&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="trait.Fp6Parameters.html#associatedtype.Fp3Params" title="type openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters::Fp3Params">Fp3Params</a>&gt;&gt; { ... }
+}</code></pre></div><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>ff</code></strong> only.</div></span><h2 id="required-associated-types" class="small-section-header">Required Associated Types<a href="#required-associated-types" class="anchor">§</a></h2><div class="methods"><section id="associatedtype.Fp3Params" class="method has-srclink"><h4 class="code-header">type <a href="#associatedtype.Fp3Params" class="associatedtype">Fp3Params</a>: <a class="trait" href="../../../trait.Fp3Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp3Parameters">Fp3Parameters</a></h4></section></div><h2 id="required-associated-consts" class="small-section-header">Required Associated Constants<a href="#required-associated-consts" class="anchor">§</a></h2><div class="methods"><section id="associatedconstant.NONRESIDUE" class="method has-srclink"><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="trait.Fp6Parameters.html#associatedtype.Fp3Params" title="type openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters::Fp3Params">Fp3Params</a>&gt;&gt;</h4></section><details class="rustdoc-toggle" open><summary><section id="associatedconstant.FROBENIUS_COEFF_FP6_C1" class="method has-srclink"><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1" class="constant">FROBENIUS_COEFF_FP6_C1</a>: &amp;'static [&lt;Self::<a class="associatedtype" href="trait.Fp6Parameters.html#associatedtype.Fp3Params" title="type openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters::Fp3Params">Fp3Params</a> as <a class="trait" href="../../../trait.Fp3Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp3Parameters">Fp3Parameters</a>&gt;::<a class="associatedtype" href="../../../trait.Fp3Parameters.html#associatedtype.Fp" title="type openzl_plugin_arkworks::ff::Fp3Parameters::Fp">Fp</a>]</h4></section></summary><div class="docblock"><p>Coefficients for the Frobenius automorphism.</p>
+</div></details></div><h2 id="provided-methods" class="small-section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><section id="method.mul_fp3_by_nonresidue" class="method has-srclink"><h4 class="code-header">fn <a href="#method.mul_fp3_by_nonresidue" class="fn">mul_fp3_by_nonresidue</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;fe: &amp;<a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="trait.Fp6Parameters.html#associatedtype.Fp3Params" title="type openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters::Fp3Params">Fp3Params</a>&gt;&gt;<br>) -&gt; <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="trait.Fp6Parameters.html#associatedtype.Fp3Params" title="type openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters::Fp3Params">Fp3Params</a>&gt;&gt;</h4></section></div><h2 id="foreign-impls" class="small-section-header">Implementations on Foreign Types<a href="#foreign-impls" class="anchor">§</a></h2><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-Fp6Parameters-for-Fq6Parameters" class="impl has-srclink"><a href="#impl-Fp6Parameters-for-Fq6Parameters" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.Fp6Parameters.html" title="trait openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters">Fp6Parameters</a> for Fq6Parameters</h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedconstant.NONRESIDUE-1" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.NONRESIDUE-1" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Fq3Parameters&gt;&gt; = Fq3{
+    c0: FQ_ZERO,
+
+    c1: FQ_ONE,
+
+    c2: FQ_ZERO,
+
+    _parameters: core::marker::PhantomData,}</h4></section></summary><div class="docblock"><p>NONRESIDUE = (0, 1, 0)</p>
+</div></details><section id="associatedtype.Fp3Params-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Fp3Params-1" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Fp3Params" class="associatedtype">Fp3Params</a> = Fq3Parameters</h4></section><section id="associatedconstant.FROBENIUS_COEFF_FP6_C1-1" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1-1" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1" class="constant">FROBENIUS_COEFF_FP6_C1</a>: &amp;'static [<a class="struct" href="../../../struct.Fp768.html" title="struct openzl_plugin_arkworks::ff::Fp768">Fp768</a>&lt;FqParameters&gt;] = &amp;[{
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) = (true, [1u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [6808246367933169761u64, 2398593266862784595u64,
+                                    6909639602508733470u64, 11939205260317410683u64,
+                                    12359418756153462236u64, 17906212694373989007u64,
+                                    6372702791291183487u64, 9381335270849114054u64,
+                                    2696169285225118234u64, 5550377050859628108u64,
+                                    2811192705301656180u64, 58487849130197219u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [6808246367933169760u64, 2398593266862784595u64,
+                                    6909639602508733470u64, 11939205260317410683u64,
+                                    12359418756153462236u64, 17906212694373989007u64,
+                                    6372702791291183487u64, 9381335270849114054u64,
+                                    2696169285225118234u64, 5550377050859628108u64,
+                                    2811192705301656180u64, 58487849130197219u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) = (false, [1u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [10817998148664819754u64, 14215535851760255023u64,
+                                    13126022669905397785u64, 17505635602336703356u64,
+                                    14291990882509402449u64, 10235031972778443520u64,
+                                    12348403514746536324u64, 17170663520542849362u64,
+                                    3249274844371371046u64, 7791000740995620924u64,
+                                    12287064847279869130u64, 23395139652078887u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [10817998148664819755u64, 14215535851760255023u64,
+                                    13126022669905397785u64, 17505635602336703356u64,
+                                    14291990882509402449u64, 10235031972778443520u64,
+                                    12348403514746536324u64, 17170663520542849362u64,
+                                    3249274844371371046u64, 7791000740995620924u64,
+                                    12287064847279869130u64, 23395139652078887u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                }]</h4></section></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-Fp6Parameters-for-Fq6Parameters-1" class="impl has-srclink"><a href="#impl-Fp6Parameters-for-Fq6Parameters-1" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.Fp6Parameters.html" title="trait openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters">Fp6Parameters</a> for Fq6Parameters</h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedconstant.NONRESIDUE-2" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.NONRESIDUE-2" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Fq3Parameters&gt;&gt; = Fq3{
+    c0: FQ_ZERO,
+
+    c1: FQ_ONE,
+
+    c2: FQ_ZERO,
+
+    _parameters: core::marker::PhantomData,}</h4></section></summary><div class="docblock"><p>NONRESIDUE = (0, 1, 0).</p>
+</div></details><section id="associatedtype.Fp3Params-2" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Fp3Params-2" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Fp3Params" class="associatedtype">Fp3Params</a> = Fq3Parameters</h4></section><section id="associatedconstant.FROBENIUS_COEFF_FP6_C1-2" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1-2" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1" class="constant">FROBENIUS_COEFF_FP6_C1</a>: &amp;'static [<a class="struct" href="../../../struct.Fp832.html" title="struct openzl_plugin_arkworks::ff::Fp832">Fp832</a>&lt;FqParameters&gt;] = &amp;[{
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) = (true, [1u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [14661845801861215550u64, 9414009964154571914u64,
+                                    1037896788183972780u64, 3537815923630464961u64,
+                                    9246180964982682861u64, 3225396591787799292u64,
+                                    150269300187951290u64, 1334845575436975585u64,
+                                    9253754813815951255u64, 14087086555090900960u64,
+                                    18293517720107352575u64, 5358784836415482618u64, 1556u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [14661845801861215549u64, 9414009964154571914u64,
+                                    1037896788183972780u64, 3537815923630464961u64,
+                                    9246180964982682861u64, 3225396591787799292u64,
+                                    150269300187951290u64, 1334845575436975585u64,
+                                    9253754813815951255u64, 14087086555090900960u64,
+                                    18293517720107352575u64, 5358784836415482618u64, 1556u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [15766673165840034536u64, 6079162137840534090u64,
+                                    17155156588022802103u64, 11254344054336651851u64,
+                                    1933507709932300857u64, 5954879624182502176u64,
+                                    12336932541624506258u64, 9443048470768899979u64,
+                                    7670232622387313927u64, 13573030602246647846u64,
+                                    16814514928627115619u64, 14182440214273233951u64,
+                                    14408u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [1104827363978818987u64, 15111896247395513792u64,
+                                    16117259799838829322u64, 7716528130706186890u64,
+                                    11134070818659169612u64, 2729483032394702883u64,
+                                    12186663241436554968u64, 8108202895331924394u64,
+                                    16863221882280914288u64, 17932688120865298501u64,
+                                    16967741282229314659u64, 8823655377857751332u64, 12852u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [1104827363978818988u64, 15111896247395513792u64,
+                                    16117259799838829322u64, 7716528130706186890u64,
+                                    11134070818659169612u64, 2729483032394702883u64,
+                                    12186663241436554968u64, 8108202895331924394u64,
+                                    16863221882280914288u64, 17932688120865298501u64,
+                                    16967741282229314659u64, 8823655377857751332u64, 12852u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                }]</h4></section></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-Fp6Parameters-for-Fq6Parameters-2" class="impl has-srclink"><a href="#impl-Fp6Parameters-for-Fq6Parameters-2" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.Fp6Parameters.html" title="trait openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters">Fp6Parameters</a> for Fq6Parameters</h3></section></summary><div class="impl-items"><section id="associatedtype.Fp3Params-3" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Fp3Params-3" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Fp3Params" class="associatedtype">Fp3Params</a> = Fq3Parameters</h4></section><section id="associatedconstant.NONRESIDUE-3" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.NONRESIDUE-3" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Fq3Parameters&gt;&gt; = Fq3{
+    c0: FQ_ZERO,
+
+    c1: FQ_ONE,
+
+    c2: FQ_ZERO,
+
+    _parameters: core::marker::PhantomData,}</h4></section><section id="associatedconstant.FROBENIUS_COEFF_FP6_C1-3" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1-3" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1" class="constant">FROBENIUS_COEFF_FP6_C1</a>: &amp;'static [<a class="struct" href="../../../struct.Fp320.html" title="struct openzl_plugin_arkworks::ff::Fp320">Fp320</a>&lt;FrParameters&gt;] = &amp;[{
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) = (true, [1u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [15273536019680742381u64, 12859930674797545098u64,
+                                    7503078997059002182u64, 3325610254969954223u64,
+                                    4074016645478u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [15273536019680742380u64, 12859930674797545098u64,
+                                    7503078997059002182u64, 3325610254969954223u64,
+                                    4074016645478u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [13493686787511418880u64, 18107087372223867603u64,
+                                    14622846468717035924u64, 11702080941310629006u64,
+                                    4110145082483u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [16666894841540228116u64, 5247156697426322504u64,
+                                    7119767471658033742u64, 8376470686340674783u64,
+                                    36128437005u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [16666894841540228117u64, 5247156697426322504u64,
+                                    7119767471658033742u64, 8376470686340674783u64,
+                                    36128437005u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                }]</h4></section></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-Fp6Parameters-for-Fq6Parameters-3" class="impl has-srclink"><a href="#impl-Fp6Parameters-for-Fq6Parameters-3" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.Fp6Parameters.html" title="trait openzl_plugin_arkworks::ff::fields::models::fp6_2over3::Fp6Parameters">Fp6Parameters</a> for Fq6Parameters</h3></section></summary><div class="impl-items"><section id="associatedtype.Fp3Params-4" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Fp3Params-4" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Fp3Params" class="associatedtype">Fp3Params</a> = Fq3Parameters</h4></section><section id="associatedconstant.NONRESIDUE-4" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.NONRESIDUE-4" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp3ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp3ParamsWrapper">Fp3ParamsWrapper</a>&lt;Fq3Parameters&gt;&gt; = Fq3{
+    c0: FQ_ZERO,
+
+    c1: FQ_ONE,
+
+    c2: FQ_ZERO,
+
+    _parameters: core::marker::PhantomData,}</h4></section><section id="associatedconstant.FROBENIUS_COEFF_FP6_C1-4" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1-4" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP6_C1" class="constant">FROBENIUS_COEFF_FP6_C1</a>: &amp;'static [<a class="struct" href="../../../struct.Fp768.html" title="struct openzl_plugin_arkworks::ff::Fp768">Fp768</a>&lt;FrParameters&gt;] = &amp;[FQ_ONE,
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [8654637534667217253u64, 12414565699193959792u64,
+                                    2782836156481934466u64, 14005922762974729958u64,
+                                    18113133041764134778u64, 16728231643632914839u64,
+                                    10845165217933242231u64, 17171183174616619498u64,
+                                    14081353640472962449u64, 1530767917970081740u64,
+                                    14769382355040211478u64, 286696756265301u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [8654637534667217252u64, 12414565699193959792u64,
+                                    2782836156481934466u64, 14005922762974729958u64,
+                                    18113133041764134778u64, 16728231643632914839u64,
+                                    10845165217933242231u64, 17171183174616619498u64,
+                                    14081353640472962449u64, 1530767917970081740u64,
+                                    14769382355040211478u64, 286696756265301u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [15638598945175764992u64, 5665696655557605967u64,
+                                    15475355390085978007u64, 13393698102907058852u64,
+                                    4533940187572545078u64, 12856752366465690011u64,
+                                    11083680675069097885u64, 575819899841080717u64,
+                                    6825179918269667443u64, 13256793349531086829u64,
+                                    1162650133526138285u64, 497830423872529u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [6983961410508547740u64, 11697875030073197791u64,
+                                    12692519233604043540u64, 17834519413641880510u64,
+                                    4867551219517961915u64, 14575264796542326787u64,
+                                    238515457135855653u64, 1851380798934012835u64,
+                                    11190570351506256609u64, 11726025431561005088u64,
+                                    4840011852195478423u64, 211133667607227u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                },
+            {
+                    use ::ark_ff::FpParameters;
+                    type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                    let (is_positive, limbs) =
+                        (true,
+                            [6983961410508547741u64, 11697875030073197791u64,
+                                    12692519233604043540u64, 17834519413641880510u64,
+                                    4867551219517961915u64, 14575264796542326787u64,
+                                    238515457135855653u64, 1851380798934012835u64,
+                                    11190570351506256609u64, 11726025431561005088u64,
+                                    4840011852195478423u64, 211133667607227u64]);
+                    Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                        Params::MODULUS, Params::INV)
+                }]</h4></section></div></details><h2 id="implementors" class="small-section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../../../../../implementors/ark_ff/fields/models/fp6_2over3/trait.Fp6Parameters.js" data-ignore-extern-crates="ark_cp6_782,ark_mnt6_753,ark_bw6_761,ark_mnt6_298" async></script></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-static-root-path="../../../../../static.files/" data-current-crate="openzl_plugin_arkworks" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (935dc0721 2022-12-19)" data-search-js="search-444266647c4dba98.js" data-settings-js="settings-bebeae96e00e4617.js" data-settings-css="settings-58836c674e2f7bd2.css" ></div></body></html>

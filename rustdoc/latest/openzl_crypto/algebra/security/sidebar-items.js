@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"trait":[["ComputationalDiffieHellmanHardness","Computational Diffie-Hellman Hardness Assumption"],["DecisionalDiffieHellmanHardness","Decisional Diffie-Hellman Hardness Assumption"],["DiscreteLogarithmHardness","Discrete Logarithm Hardness Assumption"]]};

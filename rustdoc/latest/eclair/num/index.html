@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Numeric Types and Traits"><meta name="keywords" content="rust, rustlang, rust-lang, num"><title>eclair::num - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-54cf78c3b80fc28d.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-8fe2cf7ee64a76fb.css"><link rel="stylesheet" disabled href="../../static.files/dark-7aacebe982779e9a.css"><link rel="stylesheet" disabled href="../../static.files/ayu-29dcc614f7a7b461.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/main-a211dbb005fb8161.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../eclair/index.html"><div class="logo-container"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></div></a><h2></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../eclair/index.html"><div class="logo-container"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></div></a><h2 class="location"><a href="#">Module num</a></h2><div class="sidebar-elems"><section><ul class="block"><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li><li><a href="#types">Type Definitions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1 class="fqn">Module <a href="../index.html">eclair</a>::<wbr><a class="mod" href="#">num</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../../src/eclair/num.rs.html#1-384">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Numeric Types and Traits</p>
+</div></details><h2 id="macros" class="small-section-header"><a href="#macros">Macros</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.define_uint.html" title="eclair::num::define_uint macro">define_uint</a><span title="Restricted Visibility">&nbsp;🔒</span> </div><div class="item-right docblock-short">Defines <a href="struct.UnsignedInteger.html" title="UnsignedInteger"><code>UnsignedInteger</code></a> types for the given number of <code>$bits</code>.</div></div><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.define_uint_allocation.html" title="eclair::num::define_uint_allocation macro">define_uint_allocation</a><span title="Restricted Visibility">&nbsp;🔒</span> </div><div class="item-right docblock-short">Defines <a href="../alloc/trait.Variable.html" title="Variable"><code>Variable</code></a> allocation implementation for <a href="struct.UnsignedInteger.html" title="UnsignedInteger"><code>UnsignedInteger</code></a> whenever it has a native
+Rust counterpart.</div></div><div class="item-row"><div class="item-left module-item"><a class="macro" href="macro.define_zero_one.html" title="eclair::num::define_zero_one macro">define_zero_one</a><span title="Restricted Visibility">&nbsp;🔒</span> </div><div class="item-right docblock-short">Defines an implementation for <a href="trait.Zero.html" title="Zero"><code>Zero</code></a> and <a href="trait.One.html" title="One"><code>One</code></a> for integers.</div></div></div><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.UnsignedInteger.html" title="eclair::num::UnsignedInteger struct">UnsignedInteger</a></div><div class="item-right docblock-short">Unsigned Integer</div></div></div><h2 id="traits" class="small-section-header"><a href="#traits">Traits</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.AssertWithinBitRange.html" title="eclair::num::AssertWithinBitRange trait">AssertWithinBitRange</a></div><div class="item-right docblock-short">Within-Bit-Range Assertion</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.One.html" title="eclair::num::One trait">One</a></div><div class="item-right docblock-short">Multiplicative Identity</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Zero.html" title="eclair::num::Zero trait">Zero</a></div><div class="item-right docblock-short">Additive Identity</div></div></div><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2><div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U8.html" title="eclair::num::U8 type">U8</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+8
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U9.html" title="eclair::num::U9 type">U9</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+9
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U10.html" title="eclair::num::U10 type">U10</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+10
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U11.html" title="eclair::num::U11 type">U11</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+11
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U12.html" title="eclair::num::U12 type">U12</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+12
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U13.html" title="eclair::num::U13 type">U13</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+13
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U14.html" title="eclair::num::U14 type">U14</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+14
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U15.html" title="eclair::num::U15 type">U15</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+15
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U16.html" title="eclair::num::U16 type">U16</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+16
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U32.html" title="eclair::num::U32 type">U32</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+32
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U64.html" title="eclair::num::U64 type">U64</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+64
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U65.html" title="eclair::num::U65 type">U65</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+65
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U66.html" title="eclair::num::U66 type">U66</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+66
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U67.html" title="eclair::num::U67 type">U67</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+67
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U68.html" title="eclair::num::U68 type">U68</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+68
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U69.html" title="eclair::num::U69 type">U69</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+69
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U70.html" title="eclair::num::U70 type">U70</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+70
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U80.html" title="eclair::num::U80 type">U80</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+80
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U90.html" title="eclair::num::U90 type">U90</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+90
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U100.html" title="eclair::num::U100 type">U100</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+100
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U110.html" title="eclair::num::U110 type">U110</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+110
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U111.html" title="eclair::num::U111 type">U111</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+111
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U112.html" title="eclair::num::U112 type">U112</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+112
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U113.html" title="eclair::num::U113 type">U113</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+113
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U114.html" title="eclair::num::U114 type">U114</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+114
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U115.html" title="eclair::num::U115 type">U115</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+115
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U116.html" title="eclair::num::U116 type">U116</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+116
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U117.html" title="eclair::num::U117 type">U117</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+117
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U118.html" title="eclair::num::U118 type">U118</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+118
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U119.html" title="eclair::num::U119 type">U119</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+119
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U120.html" title="eclair::num::U120 type">U120</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+120
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U121.html" title="eclair::num::U121 type">U121</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+121
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U122.html" title="eclair::num::U122 type">U122</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+122
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U123.html" title="eclair::num::U123 type">U123</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+123
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U124.html" title="eclair::num::U124 type">U124</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+124
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U125.html" title="eclair::num::U125 type">U125</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+125
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U126.html" title="eclair::num::U126 type">U126</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+126
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U127.html" title="eclair::num::U127 type">U127</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+127
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U128.html" title="eclair::num::U128 type">U128</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+128
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U129.html" title="eclair::num::U129 type">U129</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+129
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U130.html" title="eclair::num::U130 type">U130</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+130
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U131.html" title="eclair::num::U131 type">U131</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+131
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U132.html" title="eclair::num::U132 type">U132</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+132
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U133.html" title="eclair::num::U133 type">U133</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+133
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U134.html" title="eclair::num::U134 type">U134</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+134
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U135.html" title="eclair::num::U135 type">U135</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+135
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U136.html" title="eclair::num::U136 type">U136</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+136
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U137.html" title="eclair::num::U137 type">U137</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+137
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U138.html" title="eclair::num::U138 type">U138</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+138
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U139.html" title="eclair::num::U139 type">U139</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+139
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U140.html" title="eclair::num::U140 type">U140</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+140
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U150.html" title="eclair::num::U150 type">U150</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+150
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U160.html" title="eclair::num::U160 type">U160</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+160
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U170.html" title="eclair::num::U170 type">U170</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+170
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U180.html" title="eclair::num::U180 type">U180</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+180
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U190.html" title="eclair::num::U190 type">U190</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+190
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U200.html" title="eclair::num::U200 type">U200</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+200
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U210.html" title="eclair::num::U210 type">U210</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+210
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U220.html" title="eclair::num::U220 type">U220</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+220
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U230.html" title="eclair::num::U230 type">U230</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+230
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U240.html" title="eclair::num::U240 type">U240</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+240
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U250.html" title="eclair::num::U250 type">U250</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+250
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U251.html" title="eclair::num::U251 type">U251</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+251
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U252.html" title="eclair::num::U252 type">U252</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+252
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U253.html" title="eclair::num::U253 type">U253</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+253
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U254.html" title="eclair::num::U254 type">U254</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+254
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U255.html" title="eclair::num::U255 type">U255</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+255
+Bits</div></div><div class="item-row"><div class="item-left module-item"><a class="type" href="type.U256.html" title="eclair::num::U256 type">U256</a></div><div class="item-right docblock-short">Unsigned Integer Type with
+256
+Bits</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="eclair" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (935dc0721 2022-12-19)" data-search-js="search-444266647c4dba98.js" data-settings-js="settings-bebeae96e00e4617.js" data-settings-css="settings-58836c674e2f7bd2.css" ></div></body></html>

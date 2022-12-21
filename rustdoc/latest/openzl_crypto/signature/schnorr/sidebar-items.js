@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Schnorr","Schnorr Signature Scheme"],["Signature","Schnorr Signature"]],"trait":[["HashFunction","Schnorr Signature Hash Function"]],"type":[["Group","Group Type"],["Message","Message Type"],["Scalar","Scalar Type"]]};

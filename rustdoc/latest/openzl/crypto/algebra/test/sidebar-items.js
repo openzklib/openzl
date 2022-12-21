@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["window_correctness","Tests if windowed scalar multiplication of the bit decomposition of `scalar` with `point` returns the product `scalar` * `point`"]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Arity2","Constants for Arity 2"],["BlsScalar","Wrapper around Bls12-381 Scalar Field element so we can implement [`FieldGeneration`] and [`NativeField`] for [`Fr`]."],["NativePoseidon","Poseidon Permutation for native computation"]],"type":[["Poseidon2","Poseidon with Arity 2"]]};

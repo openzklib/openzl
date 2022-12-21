@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Full","Full Merkle Tree Backing Structure"]],"type":[["FullMerkleTree","Full Merkle Tree Type"]]};

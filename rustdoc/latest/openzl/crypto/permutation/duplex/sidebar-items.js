@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["DuplexerDecodeError","Duplexer Decode Error"]],"struct":[["Ciphertext","Ciphertext Payload"],["Duplexer","Duplex Sponge Authenticated Encryption Scheme"]],"trait":[["Setup","Duplex Sponge Initialization and Setup"],["Types","Duplex Sponge Encryption Types"],["Verify","Duplex Sponge Tag Verification"]]};

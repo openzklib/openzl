@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"attr":[["component","Defines a component type."]],"mod":[["component","`#[component]` Attribute Macro"]]};

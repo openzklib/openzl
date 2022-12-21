@@ -1,0 +1,806 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `Fp12Parameters` trait in crate `openzl_plugin_arkworks`."><meta name="keywords" content="rust, rustlang, rust-lang, Fp12Parameters"><title>Fp12Parameters in openzl_plugin_arkworks::ff::fields::models::fp12_2over3over2 - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../../static.files/rustdoc-54cf78c3b80fc28d.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../../static.files/light-8fe2cf7ee64a76fb.css"><link rel="stylesheet" disabled href="../../../../../static.files/dark-7aacebe982779e9a.css"><link rel="stylesheet" disabled href="../../../../../static.files/ayu-29dcc614f7a7b461.css"><script id="default-settings" ></script><script src="../../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../../../../static.files/main-a211dbb005fb8161.js"></script><noscript><link rel="stylesheet" href="../../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../../openzl_plugin_arkworks/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></div></a><h2></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../../../openzl_plugin_arkworks/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></div></a><h2 class="location"><a href="#">Fp12Parameters</a></h2><div class="sidebar-elems"><section><h3><a href="#required-associated-types">Required Associated Types</a></h3><ul class="block"><li><a href="#associatedtype.Fp6Params">Fp6Params</a></li></ul><h3><a href="#required-associated-consts">Required Associated Constants</a></h3><ul class="block"><li><a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1">FROBENIUS_COEFF_FP12_C1</a></li><li><a href="#associatedconstant.NONRESIDUE">NONRESIDUE</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.mul_fp6_by_nonresidue">mul_fp6_by_nonresidue</a></li></ul><h3><a href="#foreign-impls">Implementations on Foreign Types</a></h3><ul class="block"><li><a href="#impl-Fp12Parameters-for-Fq12Parameters">Fq12Parameters</a></li><li><a href="#impl-Fp12Parameters-for-Fq12Parameters">Fq12Parameters</a></li><li><a href="#impl-Fp12Parameters-for-Fq12Parameters">Fq12Parameters</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In openzl_plugin_arkworks::ff::fields::models::fp12_2over3over2</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1 class="fqn">Trait <a href="../../../../index.html">openzl_plugin_arkworks</a>::<wbr><a href="../../../index.html">ff</a>::<wbr><a href="../../index.html">fields</a>::<wbr><a href="../index.html">models</a>::<wbr><a href="index.html">fp12_2over3over2</a>::<wbr><a class="trait" href="#">Fp12Parameters</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../../../../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><div class="item-decl"><pre class="rust trait"><code>pub trait Fp12Parameters: 'static + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> {
+    type <a href="#associatedtype.Fp6Params" class="associatedtype">Fp6Params</a>: <a class="trait" href="../../../trait.Fp6Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp6Parameters">Fp6Parameters</a>;
+
+    const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="../../../trait.Fp12Parameters.html#associatedtype.Fp6Params" title="type openzl_plugin_arkworks::ff::Fp12Parameters::Fp6Params">Fp6Params</a>&gt;&gt;;
+    const <a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1" class="constant">FROBENIUS_COEFF_FP12_C1</a>: &amp;'static [<a class="struct" href="../../../struct.QuadExtField.html" title="struct openzl_plugin_arkworks::ff::QuadExtField">QuadExtField</a>&lt;<a class="struct" href="../../../struct.Fp2ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp2ParamsWrapper">Fp2ParamsWrapper</a>&lt;&lt;Self::<a class="associatedtype" href="../../../trait.Fp12Parameters.html#associatedtype.Fp6Params" title="type openzl_plugin_arkworks::ff::Fp12Parameters::Fp6Params">Fp6Params</a> as <a class="trait" href="../../../trait.Fp6Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp6Parameters">Fp6Parameters</a>&gt;::<a class="associatedtype" href="../../../trait.Fp6Parameters.html#associatedtype.Fp2Params" title="type openzl_plugin_arkworks::ff::Fp6Parameters::Fp2Params">Fp2Params</a>&gt;&gt;];
+
+    fn <a href="#method.mul_fp6_by_nonresidue" class="fn">mul_fp6_by_nonresidue</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fe: &amp;<a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="../../../trait.Fp12Parameters.html#associatedtype.Fp6Params" title="type openzl_plugin_arkworks::ff::Fp12Parameters::Fp6Params">Fp6Params</a>&gt;&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;) -&gt; <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="../../../trait.Fp12Parameters.html#associatedtype.Fp6Params" title="type openzl_plugin_arkworks::ff::Fp12Parameters::Fp6Params">Fp6Params</a>&gt;&gt; { ... }
+}</code></pre></div><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>ff</code></strong> only.</div></span><h2 id="required-associated-types" class="small-section-header">Required Associated Types<a href="#required-associated-types" class="anchor">§</a></h2><div class="methods"><section id="associatedtype.Fp6Params" class="method has-srclink"><h4 class="code-header">type <a href="#associatedtype.Fp6Params" class="associatedtype">Fp6Params</a>: <a class="trait" href="../../../trait.Fp6Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp6Parameters">Fp6Parameters</a></h4></section></div><h2 id="required-associated-consts" class="small-section-header">Required Associated Constants<a href="#required-associated-consts" class="anchor">§</a></h2><div class="methods"><details class="rustdoc-toggle" open><summary><section id="associatedconstant.NONRESIDUE" class="method has-srclink"><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="../../../trait.Fp12Parameters.html#associatedtype.Fp6Params" title="type openzl_plugin_arkworks::ff::Fp12Parameters::Fp6Params">Fp6Params</a>&gt;&gt;</h4></section></summary><div class="docblock"><p>This <em>must</em> equal (0, 1, 0);
+see <a href="https://eprint.iacr.org/2006/471.pdf">[DESD06, Section 6.1]</a>.</p>
+</div></details><details class="rustdoc-toggle" open><summary><section id="associatedconstant.FROBENIUS_COEFF_FP12_C1" class="method has-srclink"><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1" class="constant">FROBENIUS_COEFF_FP12_C1</a>: &amp;'static [<a class="struct" href="../../../struct.QuadExtField.html" title="struct openzl_plugin_arkworks::ff::QuadExtField">QuadExtField</a>&lt;<a class="struct" href="../../../struct.Fp2ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp2ParamsWrapper">Fp2ParamsWrapper</a>&lt;&lt;Self::<a class="associatedtype" href="../../../trait.Fp12Parameters.html#associatedtype.Fp6Params" title="type openzl_plugin_arkworks::ff::Fp12Parameters::Fp6Params">Fp6Params</a> as <a class="trait" href="../../../trait.Fp6Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp6Parameters">Fp6Parameters</a>&gt;::<a class="associatedtype" href="../../../trait.Fp6Parameters.html#associatedtype.Fp2Params" title="type openzl_plugin_arkworks::ff::Fp6Parameters::Fp2Params">Fp2Params</a>&gt;&gt;]</h4></section></summary><div class="docblock"><p>Coefficients for the Frobenius automorphism.</p>
+</div></details></div><h2 id="provided-methods" class="small-section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="rustdoc-toggle method-toggle" open><summary><section id="method.mul_fp6_by_nonresidue" class="method has-srclink"><h4 class="code-header">fn <a href="#method.mul_fp6_by_nonresidue" class="fn">mul_fp6_by_nonresidue</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;fe: &amp;<a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="../../../trait.Fp12Parameters.html#associatedtype.Fp6Params" title="type openzl_plugin_arkworks::ff::Fp12Parameters::Fp6Params">Fp6Params</a>&gt;&gt;<br>) -&gt; <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Self::<a class="associatedtype" href="../../../trait.Fp12Parameters.html#associatedtype.Fp6Params" title="type openzl_plugin_arkworks::ff::Fp12Parameters::Fp6Params">Fp6Params</a>&gt;&gt;</h4></section></summary><div class="docblock"><p>Multiply by quadratic nonresidue v.</p>
+</div></details></div><h2 id="foreign-impls" class="small-section-header">Implementations on Foreign Types<a href="#foreign-impls" class="anchor">§</a></h2><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-Fp12Parameters-for-Fq12Parameters" class="impl has-srclink"><a href="#impl-Fp12Parameters-for-Fq12Parameters" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="../../../trait.Fp12Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp12Parameters">Fp12Parameters</a> for Fq12Parameters</h3></section></summary><div class="impl-items"><section id="associatedtype.Fp6Params-1" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Fp6Params-1" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Fp6Params" class="associatedtype">Fp6Params</a> = Fq6Parameters</h4></section><section id="associatedconstant.NONRESIDUE-1" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.NONRESIDUE-1" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Fq6Parameters&gt;&gt; = Fq6{
+    c0: FQ2_ZERO,
+
+    c1: FQ2_ONE,
+
+    c2: FQ2_ZERO,
+
+    _parameters: core::marker::PhantomData,}</h4></section><section id="associatedconstant.FROBENIUS_COEFF_FP12_C1-1" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1-1" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1" class="constant">FROBENIUS_COEFF_FP12_C1</a>: &amp;'static [<a class="struct" href="../../../struct.QuadExtField.html" title="struct openzl_plugin_arkworks::ff::QuadExtField">QuadExtField</a>&lt;<a class="struct" href="../../../struct.Fp2ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp2ParamsWrapper">Fp2ParamsWrapper</a>&lt;Fq2Parameters&gt;&gt;] = &amp;[Fq2{ c0: FQ_ONE,  c1: FQ_ZERO,  _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [16805368724919885873u64, 13075753902365409672u64,
+                                            14303924124310459805u64, 6668219030833118350u64,
+                                            3729511583535497105u64, 43515875170189718u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [9586122913090633730u64, 4981570305181876224u64,
+                                            14262076793150106624u64, 7033126720376490667u64,
+                                            699094806891394796u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [7959784605059980387u64, 11049727206760807822u64,
+                                            13611648078312050530u64, 4612698621573455553u64,
+                                            13890566741340831409u64, 101342263646697418u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [9586122913090633729u64, 4981570305181876224u64,
+                                            14262076793150106624u64, 7033126720376490667u64,
+                                            699094806891394796u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [9601159953849646130u64, 16420717378104949765u64,
+                                            17754468027711142340u64, 16391223664449888818u64,
+                                            10161055157805334303u64, 57826388476507700u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (false, [1u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [11227498261880299472u64, 7031513606404767351u64,
+                                            6373054147001774690u64, 13661832274787063552u64,
+                                            10554505383614532009u64, 77582437536304980u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [18446744073709551615u64, 15125697203588300799u64,
+                                            6414901478162127871u64, 13296924585243691235u64,
+                                            13584922160258634318u64, 121098312706494698u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [1626338308030653342u64, 9057540302009369202u64,
+                                            7065330193000183965u64, 15717352684046726349u64,
+                                            393450225809197705u64, 19756049059797280u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [0u64, 15125697203588300800u64, 6414901478162127871u64,
+                                            13296924585243691235u64, 13584922160258634318u64,
+                                            121098312706494698u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [18431707032950539215u64, 3686550130665227258u64,
+                                            2922510243601092155u64, 3938827641170293084u64,
+                                            4122961809344694811u64, 63271924229986998u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1: FQ_ZERO,
+
+                _parameters: core::marker::PhantomData,}]</h4></section></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-Fp12Parameters-for-Fq12Parameters-1" class="impl has-srclink"><a href="#impl-Fp12Parameters-for-Fq12Parameters-1" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="../../../trait.Fp12Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp12Parameters">Fp12Parameters</a> for Fq12Parameters</h3></section></summary><div class="impl-items"><section id="associatedtype.Fp6Params-2" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Fp6Params-2" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Fp6Params" class="associatedtype">Fp6Params</a> = Fq6Parameters</h4></section><section id="associatedconstant.NONRESIDUE-2" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.NONRESIDUE-2" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Fq6Parameters&gt;&gt; = Fq6{
+    c0: FQ2_ZERO,
+
+    c1: FQ2_ONE,
+
+    c2: FQ2_ZERO,
+
+    _parameters: core::marker::PhantomData,}</h4></section><section id="associatedconstant.FROBENIUS_COEFF_FP12_C1-2" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1-2" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1" class="constant">FROBENIUS_COEFF_FP12_C1</a>: &amp;'static [<a class="struct" href="../../../struct.QuadExtField.html" title="struct openzl_plugin_arkworks::ff::QuadExtField">QuadExtField</a>&lt;<a class="struct" href="../../../struct.Fp2ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp2ParamsWrapper">Fp2ParamsWrapper</a>&lt;Fq2Parameters&gt;&gt;] = &amp;[Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [1u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [10162220747404304312u64, 17761815663483519293u64,
+                                            8873291758750579140u64, 1141103941765652303u64,
+                                            13993175198059990303u64, 1802798568193066599u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [3240210268673559283u64, 2895069921743240898u64,
+                                            17009126888523054175u64, 6098234018649060207u64,
+                                            9865672654120263608u64, 71000049454473266u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [3315212275698040831u64, 16003497378645147650u64,
+                                            15975298377956497032u64, 13432485098755684330u64,
+                                            6852621763331149393u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [17433006465011670690u64, 3478017852528130570u64,
+                                            17237919592439788638u64, 2035044123721977696u64,
+                                            16350815739277094105u64, 1392179521213474446u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [14416168624775744521u64, 17178867732698629620u64,
+                                            8644499054833844677u64, 5204293836692734814u64,
+                                            7508032112903159806u64, 481619096434065419u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [3315212275698040830u64, 16003497378645147650u64,
+                                            15975298377956497032u64, 13432485098755684330u64,
+                                            6852621763331149393u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [2226472659975678357u64, 6373087774271371469u64,
+                                            15800302407253291197u64, 8133278142371037904u64,
+                                            7769744319687806097u64, 1463179570667947713u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [11175958356102185238u64, 14283797810955388722u64,
+                                            10082116240020342118u64, 17552803891753226222u64,
+                                            16089103532492447813u64, 410619046979592152u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (false, [1u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [3240210268673559283u64, 2895069921743240898u64,
+                                            17009126888523054175u64, 6098234018649060207u64,
+                                            9865672654120263608u64, 71000049454473266u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [10162220747404304312u64, 17761815663483519293u64,
+                                            8873291758750579140u64, 1141103941765652303u64,
+                                            13993175198059990303u64, 1802798568193066599u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [10087218740379822764u64, 4653388206581612541u64,
+                                            9907120269317136283u64, 12253596935368579796u64,
+                                            17006226088849104517u64, 1873798617647539865u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [14416168624775744521u64, 17178867732698629620u64,
+                                            8644499054833844677u64, 5204293836692734814u64,
+                                            7508032112903159806u64, 481619096434065419u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [17433006465011670690u64, 3478017852528130570u64,
+                                            17237919592439788638u64, 2035044123721977696u64,
+                                            16350815739277094105u64, 1392179521213474446u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [10087218740379822765u64, 4653388206581612541u64,
+                                            9907120269317136283u64, 12253596935368579796u64,
+                                            17006226088849104517u64, 1873798617647539865u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [11175958356102185238u64, 14283797810955388722u64,
+                                            10082116240020342118u64, 17552803891753226222u64,
+                                            16089103532492447813u64, 410619046979592152u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [2226472659975678357u64, 6373087774271371469u64,
+                                            15800302407253291197u64, 8133278142371037904u64,
+                                            7769744319687806097u64, 1463179570667947713u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,}]</h4></section></div></details><details class="rustdoc-toggle implementors-toggle"><summary><section id="impl-Fp12Parameters-for-Fq12Parameters-2" class="impl has-srclink"><a href="#impl-Fp12Parameters-for-Fq12Parameters-2" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="../../../trait.Fp12Parameters.html" title="trait openzl_plugin_arkworks::ff::Fp12Parameters">Fp12Parameters</a> for Fq12Parameters</h3></section></summary><div class="impl-items"><section id="associatedtype.Fp6Params-3" class="associatedtype trait-impl has-srclink"><a href="#associatedtype.Fp6Params-3" class="anchor">§</a><h4 class="code-header">type <a href="#associatedtype.Fp6Params" class="associatedtype">Fp6Params</a> = Fq6Parameters</h4></section><section id="associatedconstant.NONRESIDUE-3" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.NONRESIDUE-3" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.NONRESIDUE" class="constant">NONRESIDUE</a>: <a class="struct" href="../../../struct.CubicExtField.html" title="struct openzl_plugin_arkworks::ff::CubicExtField">CubicExtField</a>&lt;<a class="struct" href="../../../struct.Fp6ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp6ParamsWrapper">Fp6ParamsWrapper</a>&lt;Fq6Parameters&gt;&gt; = Fq6{
+    c0: FQ2_ZERO,
+
+    c1: FQ2_ONE,
+
+    c2: FQ2_ZERO,
+
+    _parameters: core::marker::PhantomData,}</h4></section><section id="associatedconstant.FROBENIUS_COEFF_FP12_C1-3" class="associatedconstant trait-impl has-srclink"><a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1-3" class="anchor">§</a><h4 class="code-header">const <a href="#associatedconstant.FROBENIUS_COEFF_FP12_C1" class="constant">FROBENIUS_COEFF_FP12_C1</a>: &amp;'static [<a class="struct" href="../../../struct.QuadExtField.html" title="struct openzl_plugin_arkworks::ff::QuadExtField">QuadExtField</a>&lt;<a class="struct" href="../../../struct.Fp2ParamsWrapper.html" title="struct openzl_plugin_arkworks::ff::Fp2ParamsWrapper">Fp2ParamsWrapper</a>&lt;Fq2Parameters&gt;&gt;] = &amp;[Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [1u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [15423480562983756912u64, 6652412619979170166u64,
+                                            16769610461022161760u64, 1334392721173227487u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [14581793986494816940u64, 8392900422778406885u64,
+                                            11975771789798476686u64, 2623794231377586150u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [16482405963202886985u64, 14019431448144408125u64,
+                                            6804334201956781232u64, 3486998266802970665u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [16748743223498024575u64, 9893479902791193162u64,
+                                            17287454802551024272u64, 1863507075313886395u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [8544641498795262209u64, 9152341264670407148u64,
+                                            489747644121748381u64, 48405681784978803u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [16482405963202886984u64, 14019431448144408125u64,
+                                            6804334201956781232u64, 3486998266802970665u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [1325262660514267663u64, 3241067282812022996u64,
+                                            517844341528862512u64, 529114354140658908u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [16742208457289653148u64, 11676564986369883283u64,
+                                            1795167805597966444u64, 911609717210363318u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (false, [1u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [7355880382005450967u64, 4264711524498712854u64,
+                                            14958325563962084605u64, 2152605545629743177u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [8197566958494390939u64, 2524223721699476135u64,
+                                            1305420161476218063u64, 863204035425384515u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [6296954981786320894u64, 15344436770043026511u64,
+                                            6476857749317913516u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [6030617721491183304u64, 1023644241686689858u64,
+                                            14440481222433222093u64, 1623491191489084269u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [14234719446193945670u64, 1764782879807475872u64,
+                                            12791444307152946368u64, 3438592585017991862u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [6296954981786320895u64, 15344436770043026511u64,
+                                            6476857749317913516u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) = (true, [0u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,},
+            Fq2{
+                c0:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [3007354210765388600u64, 7676056861665860025u64,
+                                            12763347609745832237u64, 2957883912662311757u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                c1:
+                    {
+                            use ::ark_ff::FpParameters;
+                            type Params = &lt;Fq as ::ark_ff::PrimeField&gt;::Params;
+                            let (is_positive, limbs) =
+                                (true,
+                                    [6037152487699554731u64, 17687303231817551353u64,
+                                            11486024145676728304u64, 2575388549592607347u64]);
+                            Fq::const_from_str(&amp;limbs, is_positive, Params::R2,
+                                Params::MODULUS, Params::INV)
+                        },
+
+                _parameters: core::marker::PhantomData,}]</h4></section></div></details><h2 id="implementors" class="small-section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../../../../../implementors/ark_ff/fields/models/fp12_2over3over2/trait.Fp12Parameters.js" data-ignore-extern-crates="ark_bls12_377,ark_bn254,ark_bls12_381" async></script></section></div></main><div id="rustdoc-vars" data-root-path="../../../../../" data-static-root-path="../../../../../static.files/" data-current-crate="openzl_plugin_arkworks" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (935dc0721 2022-12-19)" data-search-js="search-444266647c4dba98.js" data-settings-js="settings-bebeae96e00e4617.js" data-settings-css="settings-58836c674e2f7bd2.css" ></div></body></html>

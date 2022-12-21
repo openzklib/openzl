@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["BigIntegerMarker","BigInteger Marker Type"],["PrimeFieldMarker","Prime Field Marker Type"]],"trait":[["Fuzz","Fuzz Trait"]]};

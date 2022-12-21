@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["RatioProof","Pairing Ratio Proof of Knowledge"]],"trait":[["HashToGroup","Hash to Group Trait for Ratio Proof"]],"type":[["PreparedRatio","Prepared Ratio Type"]]};

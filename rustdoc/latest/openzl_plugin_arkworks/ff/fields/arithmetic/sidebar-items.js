@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":[["impl_additive_ops_from_ref",""],["impl_multiplicative_ops_from_ref",""]]};

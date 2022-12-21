@@ -1,0 +1,5 @@
+(function() {var implementors = {
+"openzl":[],
+"openzl_crypto":[],
+"openzl_plugin_arkworks":[["impl&lt;F, const ARITY:&nbsp;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.usize.html\">usize</a>&gt; <a class=\"trait\" href=\"openzl_crypto/poseidon/trait.ParameterFieldType.html\" title=\"trait openzl_crypto::poseidon::ParameterFieldType\">ParameterFieldType</a> for <a class=\"struct\" href=\"openzl_plugin_arkworks/poseidon/struct.Spec.html\" title=\"struct openzl_plugin_arkworks::poseidon::Spec\">Spec</a>&lt;F, ARITY&gt;<span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Self: <a class=\"trait\" href=\"openzl_plugin_arkworks/poseidon/trait.Specification.html\" title=\"trait openzl_plugin_arkworks::poseidon::Specification\">Specification</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class=\"trait\" href=\"openzl_plugin_arkworks/ff/trait.PrimeField.html\" title=\"trait openzl_plugin_arkworks::ff::PrimeField\">PrimeField</a>,</span>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

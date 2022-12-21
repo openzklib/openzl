@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":[["impl_partial_eq","Implements [`PartialEq`] for the given `$type`."]],"trait":[["Eq","Equality"],["HasEq","Equality Compiler Reflection"],["HasPartialEq","Partial Equivalence Relation Compiler Reflection"],["PartialEq","Partial Equivalence Relations"]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["endpoint","Create an endpoint that can handle SSE connections."],["upgrade","Upgrade an existing HTTP connection to an SSE connection."]],"struct":[["Sender","An SSE message sender."],["SseEndpoint","An endpoint that can handle SSE connections."]]};

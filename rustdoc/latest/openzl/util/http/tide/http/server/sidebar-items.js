@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["allow","List the set of methods supported by a resource."]],"struct":[["Allow","List the set of methods supported by a resource."]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["GrainLFSR","An 80-bit linear feedback shift register, described in GKRRS19 Appendix A."]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["InnerPathVar","Inner Path Variable"],["PathVar","Path Variable"]]};

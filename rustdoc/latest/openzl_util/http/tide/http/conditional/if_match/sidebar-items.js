@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["IfMatch","Apply the HTTP method if the ETag matches."],["IntoIter","A borrowing iterator over entries in `IfMatch`."],["Iter","A lending iterator over entries in `IfMatch`."],["IterMut","A mutable iterator over entries in `IfMatch`."]]};

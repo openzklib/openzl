@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["print_measurement","Prints the measurement of the call to `f` with the given `label`."]],"struct":[["Instrument","Measurement Instrument"],["Size","Constraint System Size Measurement"]],"trait":[["Count","Variable Counting"],["Measure","Constraint System Measurement"]]};

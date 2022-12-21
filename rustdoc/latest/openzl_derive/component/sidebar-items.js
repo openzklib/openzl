@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["transform","Transforms `args` and `input` according to the macro definition."]],"struct":[["Declaration","Component Declaration"]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["Hasher","Poseidon Hasher"]],"trait":[["DomainTag","Domain Tag"]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"type":[["BoxFuture","Box Future"],["BoxFutureResult","Box Future Result"],["LocalBoxFuture","Local Box Future"],["LocalBoxFutureResult","Local Box Future Result"]]};

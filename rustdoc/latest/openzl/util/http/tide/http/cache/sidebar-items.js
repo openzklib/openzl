@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["CacheDirective","An HTTP `Cache-Control` directive."],["ClearDirective","An HTTP `Clear-Site-Data` directive."]],"struct":[["Age","HTTP `Age` header"],["CacheControl","A Cache-Control header."],["ClearSiteData","Clear browsing data (cookies, storage, cache) associated with the requesting website."],["Expires","HTTP `Expires` header"]]};

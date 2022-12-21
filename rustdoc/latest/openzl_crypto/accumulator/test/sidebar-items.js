@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["assert_provable_membership","Asserts that `accumulator` can prove the membership of `item` after it is inserted."],["assert_unique_outputs","Asserts that the `accumulator` yields unique accumulated values after every insertion of items from `iter`."]]};

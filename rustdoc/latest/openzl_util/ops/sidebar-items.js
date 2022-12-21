@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["ControlFlow","Used to tell an operation whether it should exit early or go on as usual."]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Parity","Parity of a Subtree"]],"struct":[["Node","Node Index"],["NodeParents","Node Parent Iterator"]]};

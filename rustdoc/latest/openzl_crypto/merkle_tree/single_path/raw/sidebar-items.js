@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["insert","Inserts the `next` leaf digest into the tree updating the `leaf_digest` and the `current_path`."],["length_state","Returns the state of the length of this tree."]]};

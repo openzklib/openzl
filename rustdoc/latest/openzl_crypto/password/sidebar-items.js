@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["PasswordHash","Password Hash"]],"trait":[["Hasher","Password Hasher"]]};

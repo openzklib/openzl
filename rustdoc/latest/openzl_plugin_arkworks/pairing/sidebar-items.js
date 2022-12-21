@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"trait":[["Pairing","Pairing Configuration"],["PairingEngine",""],["PairingEngineExt","Pairing Engine Extension"]],"type":[["Pair","Pair from a [`PairingEngine`]"]]};

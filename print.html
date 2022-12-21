@@ -1,0 +1,1002 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>OpenZL Docs</title>
+        <meta name="robots" content="noindex" />
+        <!-- Custom HTML head -->
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">ECLAIR Basics</li><li class="chapter-item expanded "><a href="native_nonnative.html"><strong aria-hidden="true">1.</strong> Native vs Non-Native Computation</a></li><li class="chapter-item expanded "><a href="std/eclair_std_lib.html"><strong aria-hidden="true">2.</strong> ECLAIR Standard Library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="std/bool.html"><strong aria-hidden="true">2.1.</strong> Bool</a></li><li class="chapter-item expanded "><a href="std/cmp.html"><strong aria-hidden="true">2.2.</strong> Cmp</a></li><li class="chapter-item expanded "><a href="std/num.html"><strong aria-hidden="true">2.3.</strong> Num</a></li><li class="chapter-item expanded "><a href="std/ops.html"><strong aria-hidden="true">2.4.</strong> Ops</a></li></ol></li><li class="chapter-item expanded "><a href="alloc.html"><strong aria-hidden="true">3.</strong> Allocation</a></li><li class="chapter-item expanded affix "><li class="part-title">Tutorials</li><li class="chapter-item expanded "><a href="poseidon_permutation_tutorial.html"><strong aria-hidden="true">4.</strong> Tutorial: Poseidon Permutation</a></li><li class="chapter-item expanded affix "><li class="part-title">Plugins</li><li class="chapter-item expanded "><a href="proof_systems.html"><strong aria-hidden="true">5.</strong> Proof System Plugins</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="ark_groth16.html"><strong aria-hidden="true">5.1.</strong> ArkGroth16</a></li><li class="chapter-item expanded "><a href="plonky2.html"><strong aria-hidden="true">5.2.</strong> Plonky2</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">OpenZL Docs</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Welcome to OpenZL, the &quot;missing ZKP library.&quot;</p>
+<p>OpenZL is an open-source library for development of secure, high-performance, zero-knowledge applications. OpenZL aims to bridge the gap between high-level languages that miss valuable opportunities for optimization and low-level libraries that require extensive cryptographic expertise. We believe that bridging this gap can improve both the speed and security of ZK app development.</p>
+<p>OpenZL takes a three-tiered approach to the problem: </p>
+<p><img src="./resources/openzl_scheme.png" alt="OpenZL" /></p>
+<h3 id="gadget-layer"><a class="header" href="#gadget-layer">Gadget Layer</a></h3>
+<p>The high-level layer provides cryptographic &quot;gadgets&quot; such as accumulators, hash functions, commitment schemes, <em>etc</em>. These ready-to-go gadgets are intended for drop-in use in ZK applications. They are composable, allowing complex logic to be built from cryptographic primitives. The gadget library serves developers who want to access ZK without getting in the weeds.</p>
+<h3 id="plugin-layer"><a class="header" href="#plugin-layer">Plugin Layer</a></h3>
+<p>Importantly, OpenZL gadgets make no assumptions about the ZK <em>proving system</em> they target. Instead, developers choose an appropriate proof system <em>plugin</em> to use whatever proving system works best for their application. These plugins form the low-level layer of OpenZL; this is where nitty-gritty, proof-system-specific optimization occurs.</p>
+<h3 id="middle-layer-eclair"><a class="header" href="#middle-layer-eclair">Middle Layer: ECLAIR</a></h3>
+<p>Between the gadget layer and the proof system layer sits ECLAIR: the <em>Embedded Circuit Language And Intermediate Representation</em>. ECLAIR is a proof-system-agnostic language for circuit descriptions. Gadgets written in ECLAIR can target any of the ZK proving systems provided by low-level plugins. OpenZL thus achieves modularity at both the high and low level.</p>
+<p>We will have much more to say on ECLAIR in the following chapters. For now, let us just emphasize our goals. We believe that ZK app development should be:</p>
+<ul>
+<li>
+<p>Fast: both in the sense that developers should be able to quickly start using and composing gadgets and in the sense that those gadgets should be optimized for speed.</p>
+</li>
+<li>
+<p>Flexible: as new ZK proving systems appear, developers should be able to quickly adopt the latest technology. We should also de-duplicate the effort required for projects to switch over.</p>
+</li>
+<li>
+<p>Secure: you shouldn't have to be an expert cryptographer to build secure applications. We should instead pool our expertise and package it in the form of safe cryptographic libraries.</p>
+</li>
+<li>
+<p>Open-source: &quot;NO&quot; to walled gardens! &quot;YES&quot; to collaboration! <em><strong>Open</strong></em>ZL is and will remain open-source.</p>
+</li>
+</ul>
+<p>Please read on to learn more. For now these docs focus on ECLAIR, but we will soon update them with more explanation of the gadget and plugin layers.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="native-vs-non-native-computation"><a class="header" href="#native-vs-non-native-computation">Native <em>vs</em> Non-Native Computation</a></h1>
+<p>ECLAIR aims to unify and simplify the development of ZK applications by providing a circuit language that can target a myriad of zero knowledge proof systems. In doing so ECLAIR treats each ZK proof system as its own <em>computational environment.</em> Much as Rust source code can be compiled to executables for Linux, MacOS, or Windows, a circuit written in ECLAIR can target implementations of Groth16, Plonk-like proving systems, or any other proving backend for which an appropriate plugin exists.</p>
+<p>In this framework it is useful to distinguish between &quot;native&quot; and &quot;non-native&quot; computational environments. &quot;Native computation&quot; is the everyday sort of computation that simply concerns itself with executing instructions on computer hardware; it produces no ZKP to attest to the computation's correctness. This is what computers do natively.</p>
+<p>In ECLAIR, native computation is treated on an equal footing with other computational environments that <em>do</em> produce ZKPs of a computation's correctness. These are collectively referred to as &quot;non-native computation.&quot; A proving system such as <a href="https://eprint.iacr.org/2016/260.pdf">Groth16</a> is a non-native computational environment which provides a proof of correctness for any computation that can be represented as an arithmetic circuit. Likewise there are a variety of &quot;Plonk-like&quot; proving systems that achieve the same goal of performing a computation and providing a succinct argument of its correctness.</p>
+<p>Given the variety of non-native computational environments and the current rate of innovation in ZK proving systems, it is desirable to describe circuits in a <em>proving system agnostic</em> representation like ECLAIR. The main advantages of doing so are:</p>
+<ul>
+<li><strong>Agility</strong>: A circuit described in ECLAIR can target any proving system via plugins. Thus a developer can quickly switch the proving system used in their ZK app according to their needs. When the next hot new ZK proving system is discovered, a new plugin allows existing ECLAIR circuits to target that proving system.</li>
+<li><strong>Correctness</strong>: Computation described in ECLAIR is performed the same way in all computational environments, native or non-native. This gives developers confidence that computations performed within a ZK proving system match their native version.</li>
+</ul>
+<h2 id="the-com-abstraction"><a class="header" href="#the-com-abstraction">The <code>COM</code> Abstraction</a></h2>
+<p>As explained above, a computation described in ECLAIR can be carried out in various native or non-native computational environments. The computational environment is specified by choosing a type <code>COM</code>, short for &quot;compiler.&quot;</p>
+<p>We think of <code>COM</code> as a compiler that takes instructions written in ECLAIR and translates them to instructions for the target computational environment. In the case of native computation, <code>COM</code> would compile ECLAIR circuits to machine code for manipulating computer hardware. In the case of non-native computation, <code>COM</code> would compile ECLAIR circuits to a constraint representation such as R1CS for ZK proof generation.</p>
+<p>For example, consider a trait <code>Add</code> that consists of a single function <code>fn add</code> for adding like types. Ordinarily, the signature of this function would be</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn add(lhs: Self, rhs: Self) -&gt; Self
+<span class="boring">}</span></code></pre></pre>
+<p>But in ECLAIR, we include a generic type <code>COM</code> to define a trait <code>Add&lt;COM&gt;</code> for addition in an arbitrary computational environment. The signature of <code>fn add</code> becomes</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn add(lhs: Self, rhs: Self, compiler: &amp;mut COM) -&gt; Self
+<span class="boring">}</span></code></pre></pre>
+<p>In an ECLAIR circuit we may see a line like</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>output = add(lhs, rhs, &amp;mut compiler);
+<span class="boring">}</span></code></pre></pre>
+<p>In the case of non-native computation, this results in a constraint being added to enforce <code>output = lhs + rhs</code> in whatever constraint system is appropriate to that computational environment. A circuit described using the <code>Add&lt;COM&gt;</code> trait can be compiled to any proving system that has a type implementing <code>Add&lt;COM&gt;</code>.</p>
+<h3 id="the-native-compiler-default-com--"><a class="header" href="#the-native-compiler-default-com--">The Native Compiler Default <code>COM = ()</code></a></h3>
+<p>In native computation there is no correctness proof and therefore no constraints for the compiler to generate. In this case ECLAIR hands off compilation to the Rust compiler to produce machine code. The native equivalent of an unsatisfied circuit is a computation that produces a runtime error. ECLAIR uses the unit type <code>COM = ()</code> to represent the native compiler. </p>
+<p>ECLAIR traits generally use the native compiler by default, such as <code>Add&lt;COM = ()&gt;</code>. This means that unless a ZK proving system is chosen by specifying some other type for <code>COM</code>, the computation will be carried out natively. When implementing ECLAIR traits for the native compiler, we still need to include the <code>compiler</code> argument in function signatures. For native-only computation this looks like</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>output = add(lhs, rhs, &amp;mut ());
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="eclair-standard-library"><a class="header" href="#eclair-standard-library">ECLAIR Standard Library</a></h1>
+<p>We explained in the previous section that ECLAIR achieves compatibility with various proof systems through its <code>COM</code> abstraction, which regards each ZK proving system as its own computational environment. ECLAIR makes minimal assumptions on the inner workings of each computational environment in an attempt to stay general enough to target a wide variety of ZK proving systems.</p>
+<p>ECLAIR does, however, include a standard library of traits and types that will be relevant to nearly all <code>COM</code> types. We model this ECLAIR Standard Library on the Rust Standard Library. Whenever possible, ECLAIR uses the same API as Rust, with minimal changes to accommodate the <code>COM</code> abstraction.</p>
+<p>Like the Rust standard library, ECLAIR's standard library is not strictly required; ECLAIR can handle compiler types that for whatever reason do not include implementations of the standard library traits. However, common compiler types will have implementations of most standard library traits, if not all of them.</p>
+<p>We recommend reading through this chapter as a way to familiarize oneself with common patterns in ECLAIR. Most readers will be familiar with the Rust standard library and can ease their way into the <code>COM</code> abstraction by comparing ECLAIR's standard library traits to their counterparts in the Rust standard library. (The <a href="std/bool.html">Bool</a> and <a href="std/num.html">Num</a> sections are not so Rust-like, but the <a href="std/cmp.html">Cmp</a> and <a href="std/ops.html">Ops</a> sections are.)</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bool"><a class="header" href="#bool">Bool</a></h1>
+<p>Any reasonable computational environment has a notion of boolean type, but not all environments represent this concept in the same way. Native computation operates directly on bits and therefore has a natural notion of boolean type: a single bit. However a non-native environment such as a ZK proving system may lack a natural boolean type. In order for ECLAIR to express bit-wise operations or truth-valued comparisons in these environments, we need to specify how each <code>COM</code> type executes boolean operations.</p>
+<h2 id="hasbool"><a class="header" href="#hasbool"><code>Has&lt;bool&gt;</code></a></h2>
+<p>First we must specify a given compiler's boolean type. We do so through the <code>eclair::Has</code> trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Compiler Type Introspection
+pub trait Has&lt;T&gt; {
+    /// Compiler Type
+    ///
+    /// This type represents the allocation of `T` into `Self` as a compiler. 
+    /// Whenever we need to define abstractions that require the compiler to 
+    /// have access to some type internally, we can use this `trait` as a 
+    /// requirement of that abstraction.
+    type Type;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The <code>Has&lt;T&gt;</code> trait is implemented for a compiler type <code>COM</code> to specify how the type <code>T</code> is represented within <code>COM</code>'s computational environment. The native compiler <code>COM = ()</code> always represents <code>T</code> as <code>T</code>, so it implements <code>Has&lt;T&gt;</code> for any type <code>T</code>.</p>
+<p>To see the usefulness of <code>Has&lt;T&gt;</code>, suppose <code>COM</code> corresponds to a ZK proving system such as Groth16 that represents computation as a R1CS over some finite field <code>F</code>. We can call this compiler type <code>R1CS&lt;F&gt;</code>. </p>
+<p>In this setting there are no &quot;bits,&quot; only finite field elements. Thus we need to choose how to represent bits. A reasonable choice would be to use the field <code>F</code> itself, perhaps with the convention that the zero element represents the boolean <code>0</code> and any non-zero element represents the boolean <code>1</code>. We would specify this choice by an implementation:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Has&lt;bool&gt; for R1CS&lt;F&gt; {
+    type Type = FVar;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here <code>FVar</code> is a type that represents variables in the R1CS that can have values in <code>F</code>. With this implementation we specify that the <code>R1CS&lt;F&gt;</code> compiler represents booleans as variables with values in <code>F</code>.</p>
+<p><code>Has&lt;bool&gt;</code> is a necessary trait for a compiler type to make sense of many natural operations such as comparison, conditional switching, assertion, <em>etc</em>. For example, an <code>==</code> comparison between two variables in <code>COM</code> produces a boolean truth value; this truth value must itself be represented somehow within <code>COM</code>, hence the requirement <code>COM: Has&lt;bool&gt;</code> in order for equality comparisons to be possible in <code>COM</code>. See <a href="std/./cmp.html">Cmp</a> for more on comparisons in ECLAIR.</p>
+<h2 id="assert"><a class="header" href="#assert">Assert</a></h2>
+<p>An example of an <code>ECLAIR</code> trait that requires <code>Has&lt;bool&gt;</code> is <code>Assert</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Assertion
+pub trait Assert: Has&lt;bool&gt; {
+    /// Asserts that `bit` reduces to `true`.
+    fn assert(&amp;mut self, bit: &amp;Bool&lt;Self&gt;);
+
+    /// Asserts that all the items in the `iter` reduce to `true`.
+    #[inline]
+    fn assert_all&lt;'b, I&gt;(&amp;mut self, iter: I)
+    where
+        Self: Assert,
+        Bool&lt;Self&gt;: 'b,
+        I: IntoIterator&lt;Item = &amp;'b Bool&lt;Self&gt;&gt;,
+    {
+        iter.into_iter().for_each(move |b| self.assert(b));
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>If <code>compiler</code> is of a type <code>COM</code> that implements <code>Assert</code> then <code>compiler.assert(bit)</code> should generate a constraint that is satisfied if and only if <code>bit</code> represents <code>true</code> according to <code>COM</code>'s implementation of <code>Has&lt;bool&gt;</code>. In the native compiler <code>COM = ()</code> the computation produces a runtime error if <code>bit = false</code>. </p>
+<p>The requirement <code>COM: Assert</code> is a prerequisite for the trait <code>PartialEq&lt;Rhs, COM&gt;</code>. More on that in <a href="std/./cmp.html">Cmp</a>.</p>
+<h2 id="conditional-selection-and-swap"><a class="header" href="#conditional-selection-and-swap">Conditional Selection and Swap</a></h2>
+<p>Another common operation involving booleans is selection, expressed in ECLAIR through the <code>ConditionalSelect&lt;COM&gt;</code> trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Conditional Selection
+pub trait ConditionalSelect&lt;COM = ()&gt;
+where
+    COM: Has&lt;bool&gt;,
+{
+    /// Selects `true_value` when `bit == true` and `false_value` when `bit == false`.
+    fn select(
+        bit: &amp;Bool&lt;COM&gt;, 
+        true_value: &amp;Self, 
+        false_value: &amp;Self, 
+        compiler: &amp;mut COM
+    ) -&gt; Self;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>If an ECLAIR circuit contains the line</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>output = select(bit, true_value, false_value, &amp;mut compiler);
+<span class="boring">}</span></code></pre></pre>
+<p>then this generates a constraint in <code>compiler</code> that enforces <code>output == true_value</code> if <code>bit</code> represents <code>true</code> and <code>output == false_value</code> otherwise. Of course this only makes sense if <code>compiler</code> knows how to interpret <code>bit</code> as a boolean value, hence the requirement <code>COM: Has&lt;bool&gt;</code>.</p>
+<p>A similar operation is conditionally swapping values based on a boolean. For this we have the <code>ConditionalSwap&lt;COM&gt;</code> trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Conditional Swap
+pub trait ConditionalSwap&lt;COM = ()&gt;
+where
+    COM: Has&lt;bool&gt;,
+{
+    /// Swaps `lhs` and `rhs` whenever `bit == true` and keeps 
+    /// them in the same order when `bit == false`.
+    fn swap(
+        bit: &amp;Bool&lt;COM&gt;, 
+        lhs: &amp;Self, 
+        rhs: &amp;Self, 
+        compiler: &amp;mut COM
+    ) -&gt; (Self, Self);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This trait is self-explanatory.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cmp"><a class="header" href="#cmp">Cmp</a></h1>
+<p>Comparison is expressed in Rust through the traits <code>PartialEq</code> and <code>Eq</code>. ECLAIR has analogues of these that explicitly mention the compiler <code>COM</code> to specify the computational environment where comparison occurs. As in Rust, <code>Eq</code> is simply a sub-trait of <code>PartialEq</code> used to indicate that a partial equivalence relation is actually a true equivalence relation.</p>
+<p>The ECLAIR equivalent of <code>PartialEq</code> is</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Partial Equivalence Relations
+pub trait PartialEq&lt;Rhs, COM = ()&gt;
+where
+    COM: Has&lt;bool&gt;,
+{
+    /// Returns `true` if `self` and `rhs` are equal.
+    fn eq(&amp;self, rhs: &amp;Rhs, compiler: &amp;mut COM) -&gt; Bool&lt;COM&gt;;
+
+    /// Returns `true` if `self` and `rhs` are not equal.
+    fn ne(&amp;self, other: &amp;Rhs, compiler: &amp;mut COM) -&gt; Bool&lt;COM&gt;
+    where
+        Bool&lt;COM&gt;: Not&lt;COM, Output = Bool&lt;COM&gt;&gt;,
+    {
+        self.eq(other, compiler).not(compiler)
+    }
+
+    /// Asserts that `self` and `rhs` are equal.
+    ///
+    /// # Implementation Note
+    ///
+    /// This method is an optimization path for the case when 
+    /// comparing for equality and then asserting is more expensive 
+    /// than a custom assertion.
+    fn assert_equal(&amp;self, rhs: &amp;Rhs, compiler: &amp;mut COM)
+    where
+        COM: Assert,
+    {
+        let are_equal = self.eq(rhs, compiler);
+        compiler.assert(&amp;are_equal);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As with most traits in the ECLAIR Standard Library, <code>PartialEq</code> differs from its pure Rust equivalent mainly by the addition of the <code>COM</code> type and an argument <code>compiler: &amp;mut COM</code> in the function signatures. This allows ECLAIR to generate appropriate constraints whenever <code>COM</code> specifies a ZK proving system. </p>
+<p>For example, when an ECLAIR circuit contains the line</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>output = lhs.eq(rhs, &amp;mut compiler);
+<span class="boring">}</span></code></pre></pre>
+<p>this means that <code>compiler</code> will <a href="std/../alloc.html">allocate</a> a variable <code>output</code> of <code>COM</code>'s boolean type and constraint <code>output</code> to carry the truth value of <code>lhs == rhs</code>.</p>
+<p>Besides the <code>compiler</code> argument, the main difference from Rust's <code>PartialEq</code> trait is the added method <code>fn assert_equal</code>. The reason for including this method is that in some ZK proving systems it may be possible to assert equality using fewer constraints than separate calls to <code>PartialEq::eq</code> and <code>Assert::assert</code>. In such situations, the implementation of <code>PartialEq&lt;COM&gt;</code> should replace the blanket implementation here with the more optimized version. This is an example of the sort low-level, <code>COM</code>-specific optimizations that ECLAIR allows.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="num"><a class="header" href="#num">Num</a></h1>
+<p>This module provides some useful traits and types for numerical operations. Currently it provides the traits <code>Zero</code>, <code>One</code>, and <code>AssertWithinBitRange</code> as well as an <code>UnsignedInteger</code> type for ECLAIR.</p>
+<h2 id="zero-one"><a class="header" href="#zero-one"><code>Zero</code>, <code>One</code></a></h2>
+<p>These traits can be implemented for a type <code>T</code> relative to a compiler <code>COM</code> in order to indicate that <code>COM</code> understands a notion of zero/one value for <code>T</code>. Moreover, the trait specifies how <code>COM</code> determines whether a given instance of <code>T</code> is equal to that zero/one value:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Additive Identity
+pub trait Zero&lt;COM = ()&gt; {
+    /// Verification Type
+    type Verification;
+
+    /// Returns the additive identity for `Self`.
+    fn zero(compiler: &amp;mut COM) -&gt; Self;
+
+    /// Returns a truthy value if `self` is equal to the additive identity.
+    fn is_zero(&amp;self, compiler: &amp;mut COM) -&gt; Self::Verification;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note the <code>Verification</code> type, which allows <code>fn is_zero</code> to output &quot;truthy values&quot; in whatever sense is appropriate for <code>COM</code>. For the native compiler <code>COM = ()</code> we would choose <code>Verification = bool</code>. For a compiler such that <code>COM: Has&lt;bool&gt;</code>, we would likely choose <code>Verification = Bool&lt;COM&gt;</code> to be this compiler's boolean type. (Note, however, that we do not require that <code>COM: Has&lt;bool&gt;</code> for this trait.)</p>
+<p>The trait <code>One</code> is similar to <code>Zero</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Multiplicative Identity
+pub trait One&lt;COM = ()&gt; {
+    /// Verification Type
+    type Verification;
+
+    /// Returns the multiplicative identity for `Self`.
+    fn one(compiler: &amp;mut COM) -&gt; Self;
+
+    /// Returns a truthy value if `self` is equal to the multiplicative identity.
+    fn is_one(&amp;self, compiler: &amp;mut COM) -&gt; Self::Verification;
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="bit-range-assertion"><a class="header" href="#bit-range-assertion">Bit Range Assertion</a></h2>
+<p>Range checks arise frequently in ZK circuits. One reason is that the primitive data type in a ZK proving system is often a finite field element. When we use one of these finite field elements to represent a quantity such as a 20-byte ETH address we need to ensure that the field element really is within the correct range.</p>
+<p>In the native computation setting this is a straightforward comparison between the finite field element (represented as a positive integer) and the maximum size of a 20-byte integer. However a non-native compiler needs to generate constraints that are satisfied only if the finite field element lies in the correct range.</p>
+<p>ECLAIR's interface for range checks is the trait <code>AssertWithinBitRange</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Within-Bit-Range Assertion
+///
+/// # Restrictions
+///
+/// This `trait` assumes that `BITS &gt; 0` and does not currently support `BITS = 0`. 
+/// In this case we would have an assertion that `x &lt; 2^0 = 1` which is just that 
+/// `x = 0` in most systems. For this usecase, the [`Zero`] `trait` should be 
+/// considered instead.
+pub trait AssertWithinBitRange&lt;T, const BITS: usize&gt; {
+    /// Asserts that `value` is smaller than `2^BITS`.
+    fn assert_within_range(&amp;mut self, value: &amp;T);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This trait is implemented by a compiler type <code>COM</code> to specify how <code>COM</code> constrains values of type <code>T</code> to lie in the range specified by <code>BITS</code>. The line</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>compiler.assert_within_range::&lt;BITS&gt;(value);
+<span class="boring">}</span></code></pre></pre>
+<p>causes the compiler to generate constraints that are satisfied only if <code>value</code> lies within the range specified by <code>BITS</code>.</p>
+<h2 id="unsigned-integers"><a class="header" href="#unsigned-integers">Unsigned Integers</a></h2>
+<p>The <code>AssertWithinBitRange</code> trait allows ECLAIR to handle unsigned integers within proof systems as finite field elements with a checked size. We define unsigned integers as a thin wrapper around a type <code>T</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Unsigned Integer
+pub struct UnsignedInteger&lt;T, const BITS: usize&gt;(T);
+<span class="boring">}</span></code></pre></pre>
+<p>One should think of this construction as analogous to representing a boolean value with a <code>u8</code>. The <code>u8</code> type is acting as a container for the boolean value. But this container is &quot;too large&quot; in the sense that many <code>u8</code> values do not correspond to a boolean value. Before interpreting a <code>u8</code> as a boolean it is necessary to check that its value lies in the range <code>[0,1]</code>.</p>
+<p>Similarly, when we work within a proving system over a finite field, we may need to use field elements as a container for unsigned integer types. In this case a range check is required to make sure that the value in this container really does have an interpretation as an unsigned integer of the given size.</p>
+<p>The compiler type <code>COM</code> does not appear as part of the <code>UnsignedInteger</code> type, but it must be mentioned whenever we construct or mutate an <code>UnsignedInteger</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, const BITS: usize&gt; UnsignedInteger&lt;T, BITS&gt; {
+    /// Builds a new [`UnsignedInteger`] over `value` asserting that it does not
+    /// exceed `BITS`-many bits.
+    pub fn new&lt;COM&gt;(value: T, compiler: &amp;mut COM) -&gt; Self
+    where
+        COM: AssertWithinBitRange&lt;T, BITS&gt;,
+    {
+        compiler.assert_within_range(&amp;value);
+        Self::new_unchecked(value)
+    }
+
+    /// Mutates the underlying value of `self` with `f`, asserting that after
+    /// mutation the value is still within the `BITS` range.
+    pub fn mutate&lt;F, U, COM&gt;(&amp;mut self, f: F, compiler: &amp;mut COM) -&gt; U
+    where
+        COM: AssertWithinBitRange&lt;T, BITS&gt;,
+        F: FnOnce(&amp;mut T, &amp;mut COM) -&gt; U,
+    {
+        let output = f(&amp;mut self.0, compiler);
+        compiler.assert_within_range(&amp;self.0);
+        output
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Observe that both functions require the trait bound <code>COM: AssertWithinBitRange&lt;T, BITS&gt;</code>, meaning that the compiler must know how to constrain values of type <code>T</code> to the range specified by <code>BITS</code>. Before constructing an <code>UnsignedInteger</code> with <code>fn new</code>, <code>compiler</code> generates constraints that guarantee that <code>T</code> lies in the range specified by <code>BITS</code>. Similarly, <code>fn mutate</code> transforms an <code>UnsignedInteger</code>'s value in some way and generates constraints to ensure that the result of the transformation still lies within range before returning a value.</p>
+<p>When <code>COM = ()</code> is the native compiler, <code>fn new</code> and <code>fn mutate</code> would panic if the inner value of type <code>T</code> exceeds the bit-range. In non-native computation, <code>compiler</code> would generate constraints that the inner value does not satisfy, resulting in an unsatisfied constraint system.</p>
+<p>These functions can be seen at work in the implementation of <code>Add</code> and <code>AddAssign</code> for <code>UnsignedInteger</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, COM, const BITS: usize&gt; Add&lt;Self, COM&gt; for UnsignedInteger&lt;T, BITS&gt;
+where
+    T: Add&lt;T, COM&gt;,
+    COM: AssertWithinBitRange&lt;T::Output, BITS&gt;,
+{
+    type Output = UnsignedInteger&lt;T::Output, BITS&gt;;
+
+    fn add(self, rhs: Self, compiler: &amp;mut COM) -&gt; Self::Output {
+        Self::Output::new(self.0.add(rhs.0, compiler), compiler)
+    }
+}
+
+impl&lt;T, COM, const BITS: usize&gt; AddAssign&lt;Self, COM&gt; for UnsignedInteger&lt;T, BITS&gt;
+where
+    COM: AssertWithinBitRange&lt;T, BITS&gt;,
+    T: AddAssign&lt;T, COM&gt;,
+{
+    fn add_assign(&amp;mut self, rhs: Self, compiler: &amp;mut COM) {
+        self.mutate(|lhs, compiler| lhs.add_assign(rhs.0, compiler), compiler);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As a thin wrapper around <code>T</code>, <code>UnsignedInteger&lt;T, BITS&gt;</code> inherits many implementations from <code>T</code>. But not all operations that can be performed on <code>T</code> result in a valid <code>UnsignedInteger</code>. For example, <code>fn add</code> uses the <code>UnsignedInteger::new</code> function to construct its return value, telling <code>compiler</code> to constrain that return value to the bit-range. Similarly <code>fn add_assign</code> calls <code>fn mutate</code> to mutate the value, again generating constraints that enforce a range check on the mutated value.</p>
+<h3 id="checked-vs-unchecked"><a class="header" href="#checked-vs-unchecked">Checked <em>vs</em> Unchecked</a></h3>
+<p>Looking at the body of the <code>UnsignedInteger::new</code> method we see that after a range check it uses <code>fn new_unchecked</code> to construct its return value. ECLAIR exposes <code>fn new_unchecked</code> as a public function because it allows for optimizations in instances where range checks are unnecessary. </p>
+<p>For example, if <code>T</code> implements <code>Zero&lt;COM&gt;</code> or <code>One&lt;COM&gt;</code> then we know that <code>T</code>'s zero/one value will pass any range check (we require <code>BITS &gt;= 1</code> for range checks, see <code>AssertWithinBitRange</code> above). Thus the implementation is:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, const BITS: usize, COM&gt; Zero&lt;COM&gt; for UnsignedInteger&lt;T, BITS&gt;
+where
+    T: Zero&lt;COM&gt;,
+{
+    type Verification = T::Verification;
+
+    fn zero(compiler: &amp;mut COM) -&gt; Self {
+        Self::new_unchecked(T::zero(compiler))
+    }
+
+    fn is_zero(&amp;self, compiler: &amp;mut COM) -&gt; Self::Verification {
+        self.0.is_zero(compiler)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>In this instance it would be wasteful to add a range check to the value <code>T::zero(compiler)</code> because the contract of the <code>Zero</code> trait guarantees that this is within range. The same holds for <code>T::one(compiler)</code> in the implementation of <code>One&lt;COM&gt;</code>.</p>
+<p>Another example where the unchecked construction should be used is the <code>ConditionalSelect&lt;COM&gt;</code> trait (see <a href="std/./bool.html">Bool</a>): </p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;T, const BITS: usize, COM&gt; ConditionalSelect&lt;COM&gt; for UnsignedInteger&lt;T, BITS&gt;
+where
+    COM: Has&lt;bool&gt;,
+    T: ConditionalSelect&lt;COM&gt;,
+{
+    fn select(bit: &amp;Bool&lt;COM&gt;, true_value: &amp;Self, false_value: &amp;Self, compiler: &amp;mut COM) -&gt; Self {
+        Self::new_unchecked(T::select(bit, &amp;true_value.0, &amp;false_value.0, compiler))
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Again it is appropriate to use unchecked construction because both <code>true_value</code> and <code>false_value</code> are of type <code>UnsignedInteger</code> and so it would be wasteful to perform another range check on their inner values.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ops"><a class="header" href="#ops">Ops</a></h1>
+<p>ECLAIR has analogues of many of Rust's <a href="https://doc.rust-lang.org/rust-by-example/trait/ops.html">overloadable operators</a>. These are the traits like <code>Neg</code>, <code>Add</code>, <code>Mul</code>, <em>etc</em> that overload the behavior of the <code>-</code>, <code>+</code>, <code>*</code> operators. </p>
+<p>By now you can probably guess how ECLAIR defines analogues of these traits: function signatures pick up a mutable reference <code>compiler: &amp;mut COM</code> to a compiler type and use this to generate constraints, when appropriate. For the native compiler <code>COM = ()</code>, each trait is identical to its pure Rust analogue. </p>
+<p>For example, the pure Rust trait <code>Add&lt;Rhs&gt;</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Add&lt;Rhs = Self&gt; {
+    type Output;
+
+    fn add(self, rhs: Rhs) -&gt; Self::Output;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>is replaced with the ECLAIR trait <code>Add&lt;Rhs, COM&gt;</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Add&lt;Rhs = Self, COM = ()&gt; {
+    type Output;
+
+    fn add(self, rhs: Rhs, compiler: &amp;mut COM) -&gt; Self::Output;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Now a line like</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>output = lhs.add(rhs, &amp;mut compiler);
+<span class="boring">}</span></code></pre></pre>
+<p>causes <code>compiler</code> to <a href="std/../alloc.html">allocate</a> a variable <code>output</code> and constrain the value of <code>output</code> to be the sum <code>lhs + rhs</code>.</p>
+<p>This straightforward transformation of traits is carried out for the following traits: <code>Neg</code>, <code>Not</code>, <code>Add</code>, <code>BitAnd</code>, <code>BitOr</code>, <code>BitXor</code>, <code>Div</code>, <code>Mul</code>, <code>Rem</code>, <code>Shl</code>, <code>Shr</code>, <code>Sub</code>, <code>AddAssign</code>, <code>BitAndAssign</code>, <code>BitOrAssign</code>, <code>BitXorAssign</code>, <code>DivAssign</code>, <code>MulAssign</code>, <code>RemAssign</code>, <code>ShlAssign</code>, <code>ShrAssign</code>, <code>SubAssign</code>. See the <a href="https://doc.rust-lang.org/core/ops/index.html">Rust documentation</a> of these traits for more information.</p>
+<h2 id="compiler-reflection"><a class="header" href="#compiler-reflection">Compiler Reflection</a></h2>
+<p>When some type <code>T</code> implements <code>Add&lt;COM&gt;</code>, this means that the compiler type <code>COM</code> knows how to generate constraints that enforce correct addition of values of type <code>T</code>. It can be useful to express this as a property of <code>COM</code> rather than a property of <code>T</code>, which ECLAIR does through &quot;compiler reflection.&quot; </p>
+<p>When <code>T: Add&lt;COM&gt;</code>, compiler reflection means that <code>COM: HasAdd&lt;T&gt;</code>. Explicitly, the <code>HasAdd&lt;T&gt;</code> trait is</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait HasAdd&lt;L, R = L&gt; {
+    /// Output Type
+    /// The resulting type after applying the `+` operator.
+    type Output;
+
+    /// Performs the `lhs + rhs` operation over the
+    /// `self` compiler.
+    fn add(&amp;mut self, lhs: L, rhs: R) -&gt; Self::Output;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>So the line</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>output = lhs.add(rhs, &amp;mut compiler);
+<span class="boring">}</span></code></pre></pre>
+<p>is equivalent to</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>output = compiler.add(lhs, rhs);
+<span class="boring">}</span></code></pre></pre>
+<p>For each of the traits listed above we include an implementation of the corresponding reflection trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;COM, L, R&gt; HasAdd&lt;L, R&gt; for COM
+where
+    L: Add&lt;R, COM&gt;
+{
+    fn add(&amp;mut self, lhs: L, rhs: R) -&gt; Self::Output {
+        lhs.add(rhs, self)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>With this <code>HasAdd</code> trait we can now use a trait bound <code>COM: HasAdd&lt;T&gt;</code> to express the requirement that certain other ECLAIR traits or circuits make sense only for compilers that can add values of type <code>T</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="allocation"><a class="header" href="#allocation">Allocation</a></h1>
+<p>The <code>alloc</code> module defines ECLAIR's interface for allocating values in a compiler. We use the term &quot;allocation&quot; here to refer to the process of declaring a variable in a ZK proof system and (maybe) assigning it a value. Note that we are <em>not</em> referring to memory-related abstractions like heap allocation.</p>
+<p>Variables in a ZK proof system can be private witnesses, public inputs, constants, or some mixture of these. For example, in a merkle tree membership proof we would have variables representing the values stored:</p>
+<ul>
+<li>in some leaf of the tree </li>
+<li>along the path from that leaf to the root</li>
+<li>in the root of the tree.</li>
+</ul>
+<p>In the simplest case, all those values have the same type -- perhaps a finite field element. But in a ZKP, all those values should be private except the root, which would be public. So the description of this circuit must distinguish between public and private variables. </p>
+<p>ECLAIR calls this distinction the &quot;allocation mode.&quot; There are four allocation modes:</p>
+<ol>
+<li>
+<p><strong>Constant</strong>: values that are proper to the circuit description and never change. These are public quantities known at compilation time.</p>
+</li>
+<li>
+<p><strong>Public</strong>: values that are public but may change in each instance of the circuit. For example, the root hash of a merkle tree. These values need to be exposed to the verifier in a ZKP.</p>
+</li>
+<li>
+<p><strong>Secret</strong>: values that are private. These values are known only to the prover in a ZKP and are never revealed.</p>
+</li>
+<li>
+<p><strong>Derived</strong>: values that are a composite of some public and secret values. For example, if the above merkle tree proof were considered as a single object then its allocation mode would be derived because it consists of both private and public values.</p>
+</li>
+</ol>
+<p>The constant allocation mode is substantially different from the other three in that constants are known at compilation time, whereas a variable's value will not be known until execution time when an instance of the circuit is constructed. For this reason, ECLAIR uses different interfaces for allocation of constants and variables.</p>
+<h2 id="constants"><a class="header" href="#constants">Constants</a></h2>
+<p>The interface for allocating constants in ECLAIR is the <code>Constant</code>trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Constant&lt;COM = ()&gt; {
+    /// Underlying Type
+    type Type;
+
+    /// Allocates a new constant from `this` into the `compiler`.
+    fn new_constant(this: &amp;Self::Type, compiler: &amp;mut COM) -&gt; Self;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>So a type <code>T</code> that implements <code>Constant&lt;COM&gt;</code> has some &quot;underlying type&quot; <code>Type</code> that it represents. Given values of that underlying type, we introduce them into our circuit description using <code>fn new_constant</code>, which takes the underlying value <code>this</code>, allocates it in the <code>compiler</code>, and returns <code>COM</code>'s representation of the allocated value. We then use this output in our circuit description.</p>
+<p>Note that ECLAIR assumes almost nothing about what it means to be a &quot;constant&quot;; it is up to the compiler <code>COM</code> to define how constants should be represented and manipulated. The one assumption ECLAIR does make is that constant values are known at compilation time, <em>i.e.</em> they are a fixed part of the circuit description.</p>
+<h2 id="variables"><a class="header" href="#variables">Variables</a></h2>
+<p>All other quantities whose values are <em>not</em> known at compilation time are considered to be &quot;variables.&quot; ECLAIR allocates these using the <code>Variable</code> trait:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Variable&lt;M, COM = ()&gt; {
+    /// Underlying Type
+    type Type;
+
+    /// Allocates a new unknown value into the `compiler`. The terminology &quot;unknown&quot; 
+    /// refers to the fact that we need to allocate a slot for this variable during 
+    /// compilation time, but do not yet know its underlying value.
+    fn new_unknown(compiler: &amp;mut COM) -&gt; Self;
+
+    /// Allocates a new known value from `this` into the `compiler`. The terminology 
+    /// &quot;known&quot; refers to the fact that we have access to the underyling value during 
+    /// execution time where we are able to use its concrete value for execution.
+    fn new_known(this: &amp;Self::Type, compiler: &amp;mut COM) -&gt; Self;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>As with constants, variables have an underlying <code>Type</code> that they represent within <code>COM</code>. This means that some type <code>T</code> implementing <code>Variable&lt;M, COM&gt;</code> is a <code>Type</code>-valued variable. The generic type <code>M</code> specifies the allocation <em>M</em>ode, which can be <code>Public</code>, <code>Private</code>, or <code>Derived</code>.</p>
+<p>As with the <code>Constant</code> allocation mode, ECLAIR makes no assumptions about what it means to be <code>Public</code>, <code>Private</code> or <code>Derived</code> in a given <code>COM</code> context. ECLAIR assumes only that a variable's value is not yet known at compilation time.</p>
+<h3 id="known-vs-unknown-allocation"><a class="header" href="#known-vs-unknown-allocation">Known <em>vs</em> Unknown Allocation</a></h3>
+<p>Unlike constants, there are two ways of allocating variables: as known and unknown. Allocation using <code>fn new_known</code> requires the variable's concrete value <code>this</code>. Allocation using <code>fn new_unknown</code> merely tells the <code>compiler</code> that <em>when execution occurs</em>, a value of this <code>Type</code> will go here. </p>
+<p>Of course execution cannot actually occur until all variables have been provided a value. Allocating variables before their values are known using <code>fn new_unknown</code> allows us to perform certain useful operations from the circuit description before execution time, akin to performing algebraic manipulations on physical formulae before substituting in concrete values for the variables.</p>
+<p>For example, some proving systems require pre-computed prover and verifier keys. When these are circuit-specific, they must be extracted from a circuit description. Since this occurs before execution time, we need a circuit description that accounts for all of the variables without assigning them a concrete value. Therefore a description of the circuit using <code>fn new_unknown</code> to allocate variables is appropriate for computing the prover and verifier keys. At execution time, when the circuit is used to generate proofs, it is appropriate to allocate the same variables using <code>fn new_known</code>.</p>
+<p>This suggests an important principle of circuit-writing in ECLAIR: it is generally useful to separate variable <em>allocation</em> from variable <em>manipulation</em>. That is, one should identify the variables whose values are provided as inputs, either public or private, by the prover. Then, taking those as inputs, one writes a function to describe how they are manipulated according to the circuit logic.</p>
+<h3 id="example-merkle-tree-membership"><a class="header" href="#example-merkle-tree-membership">Example: Merkle Tree Membership</a></h3>
+<p>To illustrate this we return to the merkle tree membership example we started with above. The relevant input values are: </p>
+<ul>
+<li>a leaf value: <code>leaf: L</code></li>
+<li>the values of all sibling nodes on a path from that leaf to the root: <code>path: P</code></li>
+<li>a root value: <code>root: R</code></li>
+</ul>
+<p>The first two kinds of values are private, so we require that <code>L: Variable&lt;Secret, COM&gt;</code> and <code>P: Variable&lt;Secret, COM&gt;</code>. The root value is public, so we require <code>R: Variable&lt;Public, COM&gt;</code>. The function that describes a merkle tree membership check would look something like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn membership_check&lt;L, P, R, COM&gt;(leaf: L, path: P, root: R, compiler: &amp;mut COM)
+where
+    L: Variable&lt;Secret, COM&gt;,
+    P: Variable&lt;Secret, COM&gt;,
+    R: Variable&lt;Public, COM&gt; {
+        // hash `leaf` with its sibling
+        // hash the result with the next sibling in `path`
+        // ...
+        // assert that final result equals `root`
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The body of this function will perform computations on the input variables, allocating new intermediate variables in the process and generating constraints within <code>compiler</code>. Because we've specified that <code>leaf</code> and <code>path</code> allocate as <code>Secret</code> and <code>root</code> allocates as <code>Public</code>, the constraint generation will occur in whatever way is appropriate for dealing with public and private variables in the context of <code>COM</code>.</p>
+<p>To extract a circuit description while leaving the variable values unknown, we might do something like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Construct an instance of the compiler
+let mut compiler = CompilerType::new();
+// Allocate variables with unknown values
+let leaf = Leaf::new_unknown(&amp;mut compiler);
+let path = Path::new_unknown(&amp;mut compiler);
+let root = Root::new_unknown(&amp;mut compiler);
+// Generate membership check constraints
+membership_check(leaf, path, root, &amp;mut compiler);
+<span class="boring">}</span></code></pre></pre>
+<p>Now <code>compiler</code> has allocated all the intermediate variables for a membership check and generated the necessary constraints among them. We could then extract proving and verifying keys from it, or any other information that can be extracted from the circuit description without concrete values. Note that we can<em>not</em> compute a ZKP from <code>compiler</code>, since this would require concrete values for the variables.</p>
+<p>In order to compute a ZKP in an instance where we have concrete values, we would do something like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Construct an instance of the compiler
+let mut compiler = CompilerType::new();
+// Allocate variables with known values
+let leaf = Leaf::new_known(leaf_value, &amp;mut compiler);
+let path = Path::new_known(path_value, &amp;mut compiler);
+let root = Root::new_known(root_value, &amp;mut compiler);
+// Generate membership check constraints
+membership_check(leaf, path, root, &amp;mut compiler);
+// Compute proof
+let proof = compiler.prove();
+<span class="boring">}</span></code></pre></pre>
+<p>This time the compiler was able to compute a ZKP because the variables were allocated with known values. </p>
+<p>As mentioned above, it was useful in this example to separate allocation and manipulation. All manipulation occurs within <code>fn membership_check</code>, which takes arguments that are assumed to be already allocated in the <code>compiler</code>. This ensured that the same manipulations would be performed on the symbolic and concrete forms of these variables. </p>
+<p>(Of course many new variables are allocated as <code>fn membership_check</code> performs its computation, but their values are not provided directly by the prover. Perhaps it is more correct to say that one should separate variable <em>input</em> from variable manipulation.)</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tutorial-poseidon-permutation"><a class="header" href="#tutorial-poseidon-permutation">Tutorial: Poseidon Permutation</a></h1>
+<p>The Poseidon permutation, defined in <a href="https://eprint.iacr.org/2019/458.pdf">GKRRS '19</a> operates on vectors of field elements. For a fixed width, the permutation transforms a vector of <code>width</code>-many field elements in repeated rounds. Each round consists of the following operations:</p>
+<ol>
+<li><strong>Add Round Keys</strong>: Add a constant to each component of the vector.</li>
+<li><strong>S-Box</strong>: Raise each component of the resulting vector to a power (in a full round), or raise just one component of the vector to a power (in a partial round).</li>
+<li><strong>MDS Matrix</strong>: Multiply the resulting vector by a constant matrix.</li>
+</ol>
+<p>This tutorial will walk through building the Poseidon permutation in ECLAIR. All OpenZL tutorials are accompanied by code examples, see <a href="https://github.com/openzklib/openzl/tree/main/openzl-tutorials">here</a>. Note that this code differs somewhat from our <a href="https://github.com/openzklib/openzl/tree/main/openzl-crypto/src/poseidon">optimized Poseidon implementation</a>.</p>
+<h3 id="trait-specification"><a class="header" href="#trait-specification">trait <code>Specification</code></a></h3>
+<p>The Poseidon permutation requires a choice of finite field. We will keep this example generic by using a Rust trait <code>Specification</code> to specify our assumptions on the field and defining the Poseidon permutation relative to any type that implements <code>Specification</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Poseidon Specification
+///
+/// This trait defines basic arithmetic operations we use to define the Poseidon permutation.
+pub trait Specification&lt;COM = ()&gt;: Constants {
+    /// Field Type used for Permutation State
+    type Field;
+
+    /// Field Type used for Permutation Parameters
+    type ParameterField;
+
+    /// Returns the zero element of the field.
+    fn zero(compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Adds two field elements together.
+    fn add(lhs: &amp;Self::Field, rhs: &amp;Self::Field, compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Adds a field element `lhs` with a constant `rhs`
+    fn add_const(lhs: &amp;Self::Field, rhs: &amp;Self::ParameterField, compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Multiplies two field elements together.
+    fn mul(lhs: &amp;Self::Field, rhs: &amp;Self::Field, compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Multiplies a field element `lhs` with a constant `rhs`
+    fn mul_const(lhs: &amp;Self::Field, rhs: &amp;Self::ParameterField, compiler: &amp;mut COM) -&gt; Self::Field;
+
+    /// Adds the `rhs` field element to `lhs` field element, updating the value in `lhs`
+    fn add_assign(lhs: &amp;mut Self::Field, rhs: &amp;Self::Field, compiler: &amp;mut COM);
+
+    /// Adds the `rhs` constant to `lhs` field element, updating the value in `lhs`
+    fn add_const_assign(lhs: &amp;mut Self::Field, rhs: &amp;Self::ParameterField, compiler: &amp;mut COM);
+
+    /// Applies the S-BOX to `point`.
+    fn apply_sbox(point: &amp;mut Self::Field, compiler: &amp;mut COM);
+
+    /// Converts a constant parameter `point` for permutation state.
+    fn from_parameter(point: Self::ParameterField) -&gt; Self::Field;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The trait requires two types, <code>Field</code> and <code>ParameterField</code>. The permutation acts on vectors of elements of type <code>Field</code>. The constant parameters that define the permutation are of type <code>ParameterField</code>. At first it may seem strange to distinguish between these two types, since they coincide for native computation of the Poseidon permutation. But remember that one of the reasons to use ECLAIR is to specify computation in a language that applies to both <a href="./native_nonnative.html"><em>native and non-native</em> computation</a>.</p>
+<p>In practice we may need to compute Poseidon in-circuit as part of a ZK-proof. In this case the type <code>Field</code> would be some representation of private witnesses to the circuit, whereas <code>ParameterField</code> would be public input constants. These are quite different types indeed! Therefore it is appropriate to treat them as distinct for now and let the <code>compiler</code> deal with them in whatever way is appropriate for the mode of computation specified by the type <code>COM</code>.</p>
+<p>Keeping in mind that the <code>Field</code> type may represent in-circuit variables, it is easy to see that we need two distinct notions of <code>add</code> (and <code>mul</code>). When adding two in-circuit variables we use</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn add(lhs: &amp;Self::Field, rhs: &amp;Self::Field, compiler: &amp;mut COM) -&gt; Self::Field;
+<span class="boring">}</span></code></pre></pre>
+<p>but when adding a constant to a variable it is appropriate to use</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn add_const(lhs: &amp;Self::Field, rhs: &amp;Self::ParameterField, compiler: &amp;mut COM) -&gt; Self::Field;
+<span class="boring">}</span></code></pre></pre>
+<p>Although these two methods coincide for the native compiler type <code>COM = ()</code>, in general they are distinct. This illustrates an important principle of circuit writing in ECLAIR: We describe circuits in a general language that applies to all modes of computation; this ensures that different instances of computation (native/in-circuit) agree. Often it is useful to keep the more &quot;exotic&quot; case of in-circuit computation in mind.</p>
+<p>Note that we specify the default compiler type to be <code>COM = ()</code>, meaning that by default we use the native compiler.</p>
+<h3 id="trait-constants"><a class="header" href="#trait-constants">trait <code>Constants</code></a></h3>
+<p>You may notice that the previous trait <code>Specification</code> extends a trait <code>Constants</code>. <code>Constants</code> is a trait specifying three constant parameters that belong to the definition of a Poseidon permutation:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Constants {
+    /// Width of the Permutation
+    ///
+    /// This number is the total number `t` of field elements in the state which is `F^t`.
+    const WIDTH: usize;
+
+    /// Number of Full Rounds
+    ///
+    /// The total number of full rounds in the Poseidon permutation, including the first set of full
+    /// rounds and then the second set after the partial rounds.
+    const FULL_ROUNDS: usize;
+
+    /// Number of Partial Rounds
+    const PARTIAL_ROUNDS: usize;
+
+    /// Half Number of Full Rounds
+    ///
+    /// Poseidon Hash first has [`HALF_FULL_ROUNDS`]-many full rounds in the beginning,
+    /// followed by [`PARTIAL_ROUNDS`]-many partial rounds in the middle, and finally
+    /// [`HALF_FULL_ROUNDS`]-many full rounds at the end.
+    ///
+    /// [`HALF_FULL_ROUNDS`]: Self::HALF_FULL_ROUNDS
+    /// [`PARTIAL_ROUNDS`]: Constants::PARTIAL_ROUNDS
+    const HALF_FULL_ROUNDS: usize = Self::FULL_ROUNDS / 2;
+
+    /// Total Number of Rounds
+    const ROUNDS: usize = Self::FULL_ROUNDS + Self::PARTIAL_ROUNDS;
+
+    /// Number of Entries in the MDS Matrix
+    const MDS_MATRIX_SIZE: usize = Self::WIDTH * Self::WIDTH;
+
+    /// Total Number of Additive Rounds Keys
+    const ADDITIVE_ROUND_KEYS_COUNT: usize = Self::ROUNDS * Self::WIDTH;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here <code>WIDTH</code> is the length of the vector of field elements that the permutation acts on via addition and matrix multiplication. <code>FULL_ROUNDS</code> and <code>PARTIAL_ROUNDS</code> specify the number of full and partial rounds of iteration that are performed on the state vector to achieve the desired security level. The remaining constants are computed in terms of the first three; they specify the number of &quot;Additive Round Keys&quot; and the size of the &quot;MDS Matrix.&quot;</p>
+<h3 id="struct-state"><a class="header" href="#struct-state">struct <code>State</code></a></h3>
+<p>Given some type <code>S</code> that implements the above <code>Specification</code> trait we next define a state for the permutation to act on. This state is a vector of length <code>WIDTH</code>. We'll use a struct <code>State</code> to represent it:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// The state vector that a Poseidon permutation acts on.
+pub struct State&lt;S, COM = ()&gt;(Box&lt;[S::Field]&gt;)
+where
+    S: Specification&lt;COM&gt;;
+
+impl&lt;S, COM&gt; State&lt;S, COM&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Builds a new [`State`] from `state`.
+    pub fn new(state: Box&lt;[S::Field]&gt;) -&gt; Self {
+        assert_eq!(state.len(), S::WIDTH);
+        Self(state)
+    }
+
+    /// Returns a slice iterator over the state.
+    pub fn iter(&amp;self) -&gt; slice::Iter&lt;S::Field&gt; {
+        self.0.iter()
+    }
+
+    /// Returns a mutable slice iterator over the state.
+    pub fn iter_mut(&amp;mut self) -&gt; slice::IterMut&lt;S::Field&gt; {
+        self.0.iter_mut()
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Observe that although the compiler type <code>COM</code> plays no direct role in the definition of the <code>State</code> vector, it must be mentioned because it provides the context to understand the trait <code>Specification&lt;COM&gt;</code>. When <code>COM</code> specifies some ZK proof system to compute the permutation in, the elements of <code>State</code> will represent witness variables and the operations performed on <code>State</code> will generate constraints in whatever representation <code>COM</code> specifies. Again we have the default <code>COM = ()</code>, meaning that when no compiler type is specified <code>State</code> consists of native field elements and the operations performed on it are computed natively.</p>
+<p>For Rust-related reasons we choose not to specify the width as part of <code>State</code>'s type. Observe however that the constructor <code>fn new</code> enforces that <code>State</code> must have the size specified by <code>S</code> via the <code>Constants</code> trait.</p>
+<h3 id="struct-permutation"><a class="header" href="#struct-permutation">struct <code>Permutation</code></a></h3>
+<p>The final ingredient is the parameters, a collection of constants that define a particular instance of the Poseidon permutation. In each round the permutation adds some constants, the <code>additive_round_keys</code>, to the <code>State</code> and multiplies the <code>State</code> by a constant matrix, the <code>mds_matrix</code>. These pre-computed constants are considered to be part of the definition of a Poseidon permutation. For information on generating secure constants, please refer to <a href="https://eprint.iacr.org/2019/458.pdf">GKRRS '19</a>.</p>
+<p>Since these parameters define a specific instance of the Poseidon implementation, we call this struct <code>Permutation</code>. We define the <code>Permutation</code> to be generic over a type <code>S</code> that implements <code>Specification</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// The constant parameters defining a particular instance
+/// of the Poseidon permutation.
+pub struct Permutation&lt;S, COM = ()&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Additive Round Keys
+    additive_round_keys: Box&lt;[S::ParameterField]&gt;,
+
+    /// MDS Matrix
+    mds_matrix: Box&lt;[S::ParameterField]&gt;,
+
+    /// Type Parameter Marker
+    __: PhantomData&lt;COM&gt;,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The <code>additive_round_keys</code> can be thought of as a list of constants from <code>F::ParameterField</code>, whereas the <code>mds_matrix</code> should be thought of as a matrix; this struct carries the flattening of that matrix.  The sizes of these arrays are determined by the same <code>WIDTH</code> parameter that determines the length of <code>State</code>. Again, we enforce these size constraints with the constructor rather than the type system:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;S, COM&gt; Permutation&lt;S, COM&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Builds a new [`Permutation`] from `additive_round_keys` and `mds_matrix`.
+    ///
+    /// # Panics
+    ///
+    /// This method panics if the input vectors are not the correct size for the specified
+    /// [`Specification`].
+    pub fn new(
+        additive_round_keys: Box&lt;[S::ParameterField]&gt;,
+        mds_matrix: Box&lt;[S::ParameterField]&gt;,
+    ) -&gt; Self {
+        assert_eq!(
+            additive_round_keys.len(),
+            S::ADDITIVE_ROUND_KEYS_COUNT,
+            &quot;Additive Rounds Keys are not the correct size.&quot;
+        );
+        assert_eq!(
+            mds_matrix.len(),
+            S::MDS_MATRIX_SIZE,
+            &quot;MDS Matrix is not the correct size.&quot;
+        );
+        Self {
+            additive_round_keys,
+            mds_matrix,
+            __: PhantomData,
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="fn-full_round-fn-partial_round"><a class="header" href="#fn-full_round-fn-partial_round"><code>fn full_round</code>, <code>fn partial_round</code></a></h3>
+<p>A full round of permutation begins by adding the next <code>WIDTH</code>-many additive round keys to the <code>State</code> vector, then applying the &quot;S-box&quot; to each entry of the vector. Observe that the S-box operation is part of the <code>Specification</code> trait, <code>fn apply_sbox</code>. This operation on field elements is typically exponentiation to the power 3, 5, or -1.</p>
+<p>A partial round of permutation also adds the next <code>WIDTH</code>-many additive round keys to the <code>State</code> vector, but then applies the S-box only to <em>first</em> element of this vector. The reason for mixing full and partial rounds is explained in <a href="https://eprint.iacr.org/2019/458.pdf">GKRRS '19</a>.</p>
+<p>Both rounds finish by applying the MDS Matrix to the <code>State</code> vector. Let's add these methods to the <code>Permutation</code>:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;S, COM&gt; Permutation&lt;S, COM&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Returns the additive keys for the given `round`.
+    #[inline]
+    pub fn additive_keys(&amp;self, round: usize) -&gt; &amp;[S::ParameterField] {
+        let start = round * S::WIDTH;
+        &amp;self.additive_round_keys[start..start + S::WIDTH]
+    }
+
+    /// Computes the MDS matrix multiplication against the `state`.
+    pub fn mds_matrix_multiply(&amp;self, state: &amp;mut State&lt;S, COM&gt;, compiler: &amp;mut COM) {
+        let mut next = Vec::with_capacity(S::WIDTH);
+        for i in 0..S::WIDTH {
+            let linear_combination = state
+                .iter()
+                .enumerate()
+                .map(|(j, elem)| S::mul_const(elem, &amp;self.mds_matrix[S::WIDTH * i + j], compiler))
+                .collect::&lt;Vec&lt;_&gt;&gt;();
+            next.push(
+                linear_combination
+                    .into_iter()
+                    .reduce(|acc, next| S::add(&amp;acc, &amp;next, compiler))
+                    .unwrap(),
+            );
+        }
+        mem::swap(&amp;mut next.into_boxed_slice(), &amp;mut state.0);
+    }
+
+    /// Computes a full round at the given `round` index on the internal permutation `state`.
+    pub fn full_round(&amp;self, round: usize, state: &amp;mut State&lt;S, COM&gt;, compiler: &amp;mut COM) {
+        let keys = self.additive_keys(round);
+        for (i, elem) in state.iter_mut().enumerate() {
+            S::add_const_assign(elem, &amp;keys[i], compiler);
+            S::apply_sbox(elem, compiler);
+        }
+        self.mds_matrix_multiply(state, compiler);
+    }
+
+    /// Computes a partial round at the given `round` index on the internal permutation `state`.
+    pub fn partial_round(&amp;self, round: usize, state: &amp;mut State&lt;S, COM&gt;, compiler: &amp;mut COM) {
+        let keys = self.additive_keys(round);
+        for (i, elem) in state.iter_mut().enumerate() {
+            S::add_const_assign(elem, &amp;keys[i], compiler);
+        }
+        S::apply_sbox(&amp;mut state.0[0], compiler);
+        self.mds_matrix_multiply(state, compiler);
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note that <code>fn full_round</code> and <code>fn partial_round</code> take the round number as an input; this is so that they will take correct constants for the given round. Note that they also take the <code>compiler</code> as an input. As we explained above, this enables these functions to generate constraints within the ZK proof system specified by the type <code>COM</code>. For example, when adding round constants the <code>add_const_assign</code> method will add a constraint to <code>compiler</code> that enforces the addition of a public constant to the secret witness. Similarly, <code>fn mds_matrix_multiply</code> generates constraints within <code>compiler</code> to enforce that <code>state</code> was multiplied by the MDS Matrix.</p>
+<p>Again, when no <code>COM</code> type is specified the default <code>COM = ()</code> simply performs native computation without any constraint generation. The advantage of ECLAIR's <code>COM</code> abstraction is the certainty that <code>add_const_assign</code> or <code>mds_matrix_multiply</code> always conform to the same definition whether they are being used in native or non-native computation. </p>
+<h3 id="putting-it-all-together-fn-permute"><a class="header" href="#putting-it-all-together-fn-permute">Putting it all Together: <code>fn permute</code></a></h3>
+<p>Finally we combine the pieces to define the full permutation:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl&lt;S, COM&gt; Permutation&lt;S, COM&gt;
+where
+    S: Specification&lt;COM&gt;,
+{
+    /// Computes the full permutation without the first round.
+    fn permute(&amp;self, state: &amp;mut State&lt;S, COM&gt;, compiler: &amp;mut COM) {
+        for round in 0..S::HALF_FULL_ROUNDS {
+            self.full_round(round, state, compiler);
+        }
+        for round in S::HALF_FULL_ROUNDS..(S::HALF_FULL_ROUNDS + S::PARTIAL_ROUNDS) {
+            self.partial_round(round, state, compiler);
+        }
+        for round in (S::HALF_FULL_ROUNDS + S::PARTIAL_ROUNDS)..(S::FULL_ROUNDS + S::PARTIAL_ROUNDS)
+        {
+            self.full_round(round, state, compiler);
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This function simply performs as many partial and full rounds as specified in the <code>Constants</code> trait.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="proof-system-plugins"><a class="header" href="#proof-system-plugins">Proof System Plugins</a></h1>
+<p>One of the goals of OpenZL is to provide great flexibility with respect to ZK proof systems. Developers should focus on the business logic of their application without committing to a particular ZK proof system. ECLAIR makes this possible. </p>
+<p>ECLAIR code describes computation in general terms that make minimal assumptions about the environment where that code will be executed. This is ideal in the early stage of production when we need a circuit description that conforms to our spec. But at some point we do have to turn words into actions and use ECLAIR code to create ZKPs. This is where plugins come in.</p>
+<p>A proof system plugin provides the low-level instructions for variable allocation and constraint generation in a specific ZK proof system. The plugin defines how ECLAIR code is compiled to constraints and, ultimately, used to generate ZKPs.</p>
+<p>As a technical note, it is not quite correct to say that a plugin targets a specific ZK proof system, but rather a specific <em>implementation</em> of a ZK proof system. For example, there is no such thing as a &quot;Groth16 plugin&quot;; rather, there is a plugin for the Arkworks <em>implementation</em> Ark-Groth16.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="arkgroth16"><a class="header" href="#arkgroth16">ArkGroth16</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="plonky2"><a class="header" href="#plonky2">Plonky2</a></h1>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            </nav>
+
+        </div>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+    </body>
+</html>

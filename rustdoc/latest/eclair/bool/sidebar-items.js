@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":[["impl_conditional_select","Implements [`ConditionalSelect`] for the given `$type`."]],"trait":[["Assert","Assertion"],["AssertEq","Equality Assertion"],["ConditionalSelect","Conditional Selection"],["ConditionalSwap","Conditional Swap"]],"type":[["Bool","Boolean Type Inside of the Compiler"]]};

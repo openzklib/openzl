@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"openzl_plugin_arkworks":[["impl&lt;F&gt; <a class=\"trait\" href=\"openzl_util/bytes/trait.SizeLimit.html\" title=\"trait openzl_util::bytes::SizeLimit\">SizeLimit</a> for <a class=\"struct\" href=\"openzl_plugin_arkworks/constraint/fp/struct.Fp.html\" title=\"struct openzl_plugin_arkworks::constraint::fp::Fp\">Fp</a>&lt;F&gt;<span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class=\"trait\" href=\"openzl_plugin_arkworks/ff/trait.PrimeField.html\" title=\"trait openzl_plugin_arkworks::ff::PrimeField\">PrimeField</a>,</span>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["measure","Constraint System Measurement"],["test","Testing Framework"]],"trait":[["HasInput","Proof System Input Introspection"],["Input","Proof System Input"],["ProofSystem","Proof System"],["Satisfied","Constraint System Satisfaction"]]};

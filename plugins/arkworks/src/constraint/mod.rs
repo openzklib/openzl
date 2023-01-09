@@ -20,7 +20,7 @@ use eclair::{
         mode::{self, Public, Secret},
         Constant, Variable,
     },
-    bool::{Assert, ConditionalSelect, ConditionalSwap},
+    bool::{Assert, BitDecomposition, ConditionalSelect, ConditionalSwap},
     num::{AssertWithinBitRange, Zero},
     ops::Add,
     Has,
@@ -135,9 +135,8 @@ where
             BITS < F::Params::MODULUS_BITS as usize,
             "BITS must be strictly less than modulus bits of `F`."
         );
-        let value_bits = value
-            .to_bits_le()
-            .expect("Bit decomposition is not allowed to fail.");
+        let value_bits =
+            ToBitsGadget::to_bits_le(value).expect("Bit decomposition is not allowed to fail.");
         for bit in &value_bits[BITS..] {
             bit.enforce_equal(&Boolean::FALSE)
                 .expect("Enforcing equality is not allowed to fail.");
@@ -194,6 +193,17 @@ where
             .expect("This is given to us to mutate so it can't be borrowed by anyone else.");
         *target_cs = precomputed_cs;
         Ok(())
+    }
+}
+
+impl<F> BitDecomposition<1, R1CS<F>> for Boolean<F>
+where
+    F: PrimeField,
+{
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut R1CS<F>) -> [Boolean<F>; 1] {
+        let _ = compiler;
+        [self.clone()]
     }
 }
 
@@ -257,6 +267,22 @@ where
         let _ = compiler;
         self.is_eq(rhs)
             .expect("Equality checking is not allowed to fail.")
+    }
+}
+
+impl<F, const BITS: usize> BitDecomposition<BITS, R1CS<F>> for FpVar<F>
+where
+    F: PrimeField,
+{
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut R1CS<F>) -> [Boolean<F>; BITS] {
+        let _ = compiler;
+        assert_eq!(
+            BITS,
+            F::Params::MODULUS_BITS as usize,
+            "BITS must be equal to MODULUS BITS"
+        );
+        ToBitsGadget::to_bits_le(self).expect("Bit decomposition is not allowed to fail.").try_into().expect("Obtaining an array of size BITS from a vector of length BITS is not allowed to fail.")
     }
 }
 

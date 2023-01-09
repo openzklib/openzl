@@ -1,7 +1,6 @@
 //! Arkworks Algebra
 
 use crate::{
-    constraint::R1CS,
     ec::ProjectiveCurve,
     ff::{BigInteger, Field, FpParameters, PrimeField},
     r1cs_std::{fields::fp::FpVar, groups::CurveVar},
@@ -9,6 +8,11 @@ use crate::{
 };
 use alloc::vec::Vec;
 use core::marker::PhantomData;
+
+#[cfg(feature = "constraint")]
+use crate::constraint::R1CS;
+
+#[cfg(feature = "constraint")]
 use eclair::bool::{BitDecomposition, Bool};
 
 #[cfg(feature = "serde")]
@@ -18,6 +22,7 @@ use openzl_util::serde::Serializer;
 type ConstraintField<C> = <<C as ProjectiveCurve>::BaseField as Field>::BasePrimeField;
 
 /// Compiler Type
+#[cfg(feature = "constraint")]
 type Compiler<C> = R1CS<ConstraintField<C>>;
 
 /// Converts `scalar` to the bit representation of `O`.
@@ -102,6 +107,7 @@ where
     <<C as ProjectiveCurve>::ScalarField as PrimeField>::Params::MODULUS_BITS as usize
 }
 
+#[cfg(feature = "constraint")]
 impl<C, CV, const BITS: usize> BitDecomposition<BITS, Compiler<C>> for ScalarVar<C, CV>
 where
     C: ProjectiveCurve,

@@ -41,9 +41,9 @@ derivative = { version = "2.2.0", default-features = false, features = ["use_cor
 rand = { version = "0.8.4", optional = true, default-features = false, features = ["alloc"] }
 rand_chacha = { version = "0.3.1", optional = true, default-features = false }
 rand_core = { version = "0.6.3", default-features = false }
-rayon = { version = "1.5.3", optional = true, default-features = false }
-reqwest = { version = "0.11.12", optional = true, default-features = false, features = ["default-tls", "json"] }
-serde = { version = "1.0.144", optional = true, default-features = false, features = ["derive"] }
-serde_with = { version = "2.0.1", optional = true, default-features = false, features = ["macros"] }
+rayon = { version = "1.6.0", optional = true, default-features = false }
+reqwest = { version = "0.11.13", optional = true, default-features = false, features = ["default-tls", "json"] }
+serde = { version = "1.0.147", optional = true, default-features = false, features = ["derive"] }
+serde_with = { version = "2.1.0", optional = true, default-features = false, features = ["macros"] }
 tide = { version = "0.16.0", optional = true, default-features = false, features = ["h1-server"] }
 

@@ -440,13 +440,6 @@ where
         compiler: &mut COM,
     ) -> Self::Ciphertext {
         let _ = randomness;
-        /* FIXME:
-        let (tag, ciphertext) = crate::constraint::measure::print_measurement(
-            "DUPLEX ENCRYPT",
-            |compiler| self.duplex_encryption(encryption_key, header, plaintext, compiler),
-            compiler,
-        );
-        */
         let (tag, ciphertext) = self.duplex_encryption(encryption_key, header, plaintext, compiler);
         Ciphertext {
             tag,

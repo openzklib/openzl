@@ -27,15 +27,10 @@ maintenance = { status = "actively-developed" }
 alloc = ["eclair/alloc", "openzl-util/alloc"]
 
 # Serde Serialization
-serde = [
-    "openzl-util/serde",
-]
+serde = ["openzl-util/serde"]
 
 # Standard Library
-std = [
-    "alloc",
-    "openzl-util/std",
-]
+std = ["alloc", "openzl-util/std"]
 
 # Test Frameworks
 test = ["alloc"]

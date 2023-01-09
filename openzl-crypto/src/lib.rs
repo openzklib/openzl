@@ -14,20 +14,22 @@ pub mod constraint;
 pub mod encryption;
 pub mod hash;
 pub mod key;
-// pub mod merkle_tree;
 pub mod password;
 pub mod permutation;
 pub mod signature;
 
-/* TODO:
-#[cfg(feature = "arkworks")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "arkworks")))]
-pub mod arkworks;
+#[cfg(feature = "alloc")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "alloc")))]
+pub mod merkle_tree;
 
-#[cfg(feature = "dalek")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "dalek")))]
-pub mod dalek;
-*/
+#[cfg(feature = "alloc")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "alloc")))]
+pub mod poseidon;
 
 #[doc(inline)]
 pub use openzl_derive::*;
+
+/// Non-Native Compiler Marker Trait
+///
+/// See [`eclair::NonNative`] for why we need this construction.
+pub trait NonNative {}

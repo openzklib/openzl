@@ -520,7 +520,7 @@ mod tests {
         rand::{OsRng, Rand, RngCore},
     };
     use alloc::vec::Vec;
-    use core::{iter::repeat_with};
+    use core::iter::repeat_with;
     use eclair::alloc::{mode::Secret, Allocate};
 
     /// Checks if `assert_within_range` passes when `should_pass` is `true` and fails when

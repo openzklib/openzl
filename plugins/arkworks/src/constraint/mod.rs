@@ -626,8 +626,7 @@ mod tests {
             .map(|x| x.value().unwrap().into())
             .collect::<Vec<u8>>();
         assert_eq!(
-            bit_decomposition_le,
-            bit_decomposition_be.into_iter().rev().collect::<Vec<_>>(),
+            bit_decomposition_le, bit_decomposition_be,
             "Little-endian and big-endian representations of number are not each other's reverse."
         );
         bit_decomposition_le

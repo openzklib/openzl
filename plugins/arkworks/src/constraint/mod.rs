@@ -621,12 +621,14 @@ mod tests {
             .into_iter()
             .map(|x| x.value().unwrap().into())
             .collect::<Vec<u8>>();
-        let bit_decomposition_be = BitDecomposition::<254, _>::to_bits_be(&numbervar, &mut cs)
-            .into_iter()
-            .map(|x| x.value().unwrap().into())
-            .collect::<Vec<u8>>();
+        let bit_decomposition_be_reversed =
+            BitDecomposition::<254, _>::to_bits_be(&numbervar, &mut cs)
+                .into_iter()
+                .map(|x| x.value().unwrap().into())
+                .rev()
+                .collect::<Vec<u8>>();
         assert_eq!(
-            bit_decomposition_le, bit_decomposition_be,
+            bit_decomposition_le, bit_decomposition_be_reversed,
             "Little-endian and big-endian representations of number are not each other's reverse."
         );
         bit_decomposition_le

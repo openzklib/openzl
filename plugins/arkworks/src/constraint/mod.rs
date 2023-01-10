@@ -520,7 +520,7 @@ mod tests {
         rand::{OsRng, Rand, RngCore},
     };
     use alloc::vec::Vec;
-    use core::iter::repeat_with;
+    use core::{iter::repeat_with};
     use eclair::alloc::{mode::Secret, Allocate};
 
     /// Checks if `assert_within_range` passes when `should_pass` is `true` and fails when
@@ -594,5 +594,33 @@ mod tests {
         test_assert_within_range::<_, Fr, 32, 32>(&mut rng);
         test_assert_within_range::<_, Fr, 64, 32>(&mut rng);
         test_assert_within_range::<_, Fr, 128, 32>(&mut rng);
+    }
+
+    /// Checks that the bit decomposition of an [`FpVar`] is executed properly. Checks that
+    /// the little endian representation has trailing zeroes and big endian leading zeroes.
+    #[test]
+    fn check_bit_decomposition() {
+        let mut cs = R1CS::<Fr>::for_proofs();
+        let number = Fp(2u8.into());
+        let numbervar = number.as_known::<Public, FpVar<Fr>>(&mut cs);
+        let bit_decomposition_le = BitDecomposition::<254, _>::to_bits_le(&numbervar, &mut cs)
+            .into_iter()
+            .map(|x| x.value().unwrap())
+            .collect::<Vec<_>>();
+        let bit_decomposition_be = BitDecomposition::<254, _>::to_bits_be(&numbervar, &mut cs)
+            .into_iter()
+            .map(|x| x.value().unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(
+            bit_decomposition_le,
+            bit_decomposition_be
+                .clone()
+                .into_iter()
+                .rev()
+                .collect::<Vec<_>>(),
+            "Little-endian and big-endian representations of number are not each other's reverse."
+        );
+        println!("Little endian: {bit_decomposition_le:?}");
+        println!("Big endian: {bit_decomposition_be:?}");
     }
 }

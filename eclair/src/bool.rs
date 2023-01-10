@@ -85,7 +85,20 @@ where
     COM: Has<bool> + ?Sized,
 {
     /// Returns the little-endian bit representation of `self`, with trailing zeroes.
-    fn to_bits_le(&self, compiler: &mut COM) -> [Bool<COM>; BITS];
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut COM) -> [Bool<COM>; BITS] {
+        let mut res = self.to_bits_be(compiler);
+        res.reverse();
+        res
+    }
+
+    /// Returns the big-endian bit representation of `self`, with leading zeroes.
+    #[inline]
+    fn to_bits_be(&self, compiler: &mut COM) -> [Bool<COM>; BITS] {
+        let mut res = self.to_bits_le(compiler);
+        res.reverse();
+        res
+    }
 }
 
 impl BitDecomposition<1> for bool {

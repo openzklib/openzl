@@ -517,6 +517,7 @@ mod tests {
         bn254::Fr,
         constraint::fp::Fp,
         ff::BigInteger,
+        r1cs_std::R1CSVar,
         rand::{OsRng, Rand, RngCore},
     };
     use alloc::vec::Vec;

@@ -597,31 +597,39 @@ mod tests {
         test_assert_within_range::<_, Fr, 128, 32>(&mut rng);
     }
 
-    /// Checks that the bit decomposition of an [`FpVar`] is executed properly. Checks that
-    /// the little endian representation has trailing zeroes and big endian leading zeroes.
+    /// Checks the bit decompositions of small [`FpVar`]s.
     #[test]
     fn check_bit_decomposition() {
+        for number in 1..6 {
+            let bit_decomposition_le = compare_bit_decomposition(number);
+            println!("Number: {number}\nDecomposition: {bit_decomposition_le:?}");
+        }
+        let mut rng = OsRng;
+        let random_number = rng.gen();
+        let bit_decomposition_le = compare_bit_decomposition(random_number);
+        println!("Number: {random_number}\nDecomposition: {bit_decomposition_le:?}");
+    }
+
+    /// Computes the little endian and big endian bit decompositions of the [`FpVar`] representation
+    /// of `n` and checks they are each other's reverse. Returns the little endian decomposition.
+    #[inline]
+    fn compare_bit_decomposition(n: u64) -> Vec<u8> {
         let mut cs = R1CS::<Fr>::for_proofs();
-        let number = Fp(2u8.into());
+        let number = Fp(n.into());
         let numbervar = number.as_known::<Public, FpVar<Fr>>(&mut cs);
         let bit_decomposition_le = BitDecomposition::<254, _>::to_bits_le(&numbervar, &mut cs)
             .into_iter()
-            .map(|x| x.value().unwrap())
-            .collect::<Vec<_>>();
+            .map(|x| x.value().unwrap().into())
+            .collect::<Vec<u8>>();
         let bit_decomposition_be = BitDecomposition::<254, _>::to_bits_be(&numbervar, &mut cs)
             .into_iter()
-            .map(|x| x.value().unwrap())
-            .collect::<Vec<_>>();
+            .map(|x| x.value().unwrap().into())
+            .collect::<Vec<u8>>();
         assert_eq!(
             bit_decomposition_le,
-            bit_decomposition_be
-                .clone()
-                .into_iter()
-                .rev()
-                .collect::<Vec<_>>(),
+            bit_decomposition_be.into_iter().rev().collect::<Vec<_>>(),
             "Little-endian and big-endian representations of number are not each other's reverse."
         );
-        println!("Little endian: {bit_decomposition_le:?}");
-        println!("Big endian: {bit_decomposition_be:?}");
+        bit_decomposition_le
     }
 }

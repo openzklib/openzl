@@ -9,11 +9,21 @@ use crate::{
 use alloc::vec::Vec;
 use core::marker::PhantomData;
 
+#[cfg(feature = "constraint")]
+use crate::constraint::R1CS;
+
+#[cfg(feature = "constraint")]
+use eclair::bool::{BitDecomposition, Bool};
+
 #[cfg(feature = "serde")]
 use openzl_util::serde::Serializer;
 
 /// Constraint Field Type
 type ConstraintField<C> = <<C as ProjectiveCurve>::BaseField as Field>::BasePrimeField;
+
+/// Compiler Type
+#[cfg(feature = "constraint")]
+type Compiler<C> = R1CS<ConstraintField<C>>;
 
 /// Converts `scalar` to the bit representation of `O`.
 #[inline]
@@ -95,4 +105,16 @@ where
     C: ProjectiveCurve,
 {
     <<C as ProjectiveCurve>::ScalarField as PrimeField>::Params::MODULUS_BITS as usize
+}
+
+#[cfg(feature = "constraint")]
+impl<C, CV, const BITS: usize> BitDecomposition<BITS, Compiler<C>> for ScalarVar<C, CV>
+where
+    C: ProjectiveCurve,
+    CV: CurveVar<C, ConstraintField<C>>,
+{
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut Compiler<C>) -> [Bool<Compiler<C>>; BITS] {
+        self.0.to_bits_le(compiler)
+    }
 }

@@ -79,6 +79,60 @@ pub trait AssertEq: Assert {
 
 impl<COM> AssertEq for COM where COM: Assert {}
 
+/// Bit Decomposition
+pub trait BitDecomposition<const BITS: usize, COM = ()>
+where
+    COM: Has<bool> + ?Sized,
+{
+    /// Returns the little-endian bit representation of `self`, with trailing zeroes.
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut COM) -> [Bool<COM>; BITS] {
+        let mut res = self.to_bits_be(compiler);
+        res.reverse();
+        res
+    }
+
+    /// Returns the big-endian bit representation of `self`, with leading zeroes.
+    #[inline]
+    fn to_bits_be(&self, compiler: &mut COM) -> [Bool<COM>; BITS] {
+        let mut res = self.to_bits_le(compiler);
+        res.reverse();
+        res
+    }
+}
+
+impl BitDecomposition<1> for bool {
+    #[inline]
+    fn to_bits_le(&self, _: &mut ()) -> [bool; 1] {
+        [*self]
+    }
+}
+
+/// Implements [`BitDecomposition`] for the given `$type`.
+macro_rules! impl_bit_decomposition {
+    ($($type:tt),* $(,)?) => {
+        $(
+            impl BitDecomposition<{Self::BITS as usize}> for $type {
+                #[inline]
+                fn to_bits_le(&self, _: &mut ()) -> [bool; Self::BITS as usize] {
+                    let mut bits = [false; Self::BITS as usize];
+                    let mut counter = 0;
+                    for byte in (*self).to_le_bytes() {
+                        for i in 0..8 {
+                            let power = 1 << i;
+                            bits[counter] = ((power & byte) > 0);
+                            counter += 1;
+                        }
+                    }
+                    bits
+                }
+            }
+        )*
+    }
+}
+
+impl_bit_decomposition!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128);
+
 /// Conditional Selection
 pub trait ConditionalSelect<COM = ()>: Sized
 where

@@ -24,13 +24,13 @@ maintenance = { status = "actively-developed" }
 
 [features]
 # Algebra
-algebra = ["ec", "ff", "r1cs-std", "serialize"]
+algebra = ["ec", "ff", "r1cs", "serialize"]
 
 # Allocation
 alloc = ["eclair/alloc", "openzl-crypto/alloc", "openzl-util/alloc"]
 
-# Constraint
-constraint = ["ff", "num-integer", "r1cs-std", "relations"]
+# Constraint Systems
+constraint = ["ff", "num-integer", "r1cs", "relations"]
 
 # Full Feature Set
 full = [
@@ -40,14 +40,17 @@ full = [
     "bn254",
     "bw6-761",
     "cp6-782",
+    "curve25519",
     "ec",
     "ed-on-bls12-377",
     "ed-on-bls12-381",
+    "ed-on-bls12-381-bandersnatch",
     "ed-on-bn254",
     "ed-on-bw6-761",
     "ed-on-cp6-782",
     "ed-on-mnt4-298",
     "ed-on-mnt4-753",
+    "ed25519",
     "ff",
     "gm17",
     "groth16",
@@ -61,6 +64,10 @@ full = [
     "poly-commit",
     "r1cs-std",
     "relations",
+    "secp256k1",
+    "secp256r1",
+    "secp384r1",
+    "secq256k1",
     "serde",
     "serialize",
     "sponge",
@@ -70,6 +77,32 @@ full = [
 
 # Groth16 Proving System
 groth16 = ["ark-groth16", "constraint", "ec", "snark"]
+
+# R1CS Features
+r1cs = [
+    "curve25519?/r1cs",
+    "ed-on-bls12-377?/r1cs",
+    "ed-on-bls12-381-bandersnatch?/r1cs",
+    "ed-on-bls12-381?/r1cs",
+    "ed-on-bn254?/r1cs",
+    "ed-on-bw6-761?/r1cs",
+    "ed-on-cp6-782?/r1cs",
+    "ed-on-mnt4-298?/r1cs",
+    "ed-on-mnt4-753?/r1cs",
+    "ed25519?/r1cs",
+    "gm17?/r1cs",
+    "mnt4-298?/r1cs",
+    "mnt4-753?/r1cs",
+    "mnt6-298?/r1cs",
+    "mnt6-753?/r1cs",
+    "pallas?/r1cs",
+    "r1cs-std",
+    "secp256k1?/r1cs",
+    "secp256k1?/r1cs",
+    "secp256r1?/r1cs",
+    "secp384r1?/r1cs",
+    "vesta?/r1cs",
+]
 
 # Serde Serialization
 serde = ["alloc", "ark-std", "openzl-util/serde", "serialize"]
@@ -83,14 +116,17 @@ std = [
     "bn254?/std",
     "bw6-761?/std",
     "cp6-782?/std",
+    "curve25519?/std",
     "ec?/std",
     "ed-on-bls12-377?/std",
     "ed-on-bls12-381?/std",
+    "ed-on-bls12-381-bandersnatch?/std",
     "ed-on-bn254?/std",
     "ed-on-bw6-761?/std",
     "ed-on-cp6-782?/std",
     "ed-on-mnt4-298?/std",
     "ed-on-mnt4-753?/std",
+    "ed25519?/std",
     "ff?/std",
     "gm17?/std",
     "mnt4-298?/std",
@@ -104,6 +140,10 @@ std = [
     "poly-commit?/std",
     "r1cs-std?/std",
     "relations?/std",
+    "secp256k1?/std",
+    "secp256r1?/std",
+    "secp384r1?/std",
+    "secq256k1?/std",
     "serialize?/std",
     "sponge?/std",
     "vesta?/std",
@@ -111,39 +151,46 @@ std = [
 
 [dependencies]
 ark-groth16 = { version = "0.3.0", optional = true, default-features = false }
-ark-std = { version = "0.3.0", optional = true, default-features = false }
-bls12-377 = { package = "ark-bls12-377", version = "0.3.0", optional = true, default-features = false, features = ["curve"] }
-bls12-381 = { package = "ark-bls12-381", version = "0.3.0", optional = true, default-features = false, features = ["curve"] }
-bn254 = { package = "ark-bn254", version = "0.3.0", optional = true, default-features = false, features = ["curve"] }
-bw6-761 = { package = "ark-bw6-761", version = "0.3.0", optional = true, default-features = false }
-cp6-782 = { package = "ark-cp6-782", version = "0.3.0", optional = true, default-features = false }
-ec = { package = "ark-ec", version = "0.3.0", optional = true, default-features = false }
+ark-std = { version = "0.4.0", optional = true, default-features = false }
+bls12-377 = { package = "ark-bls12-377", version = "0.4.0", optional = true, default-features = false, features = ["curve"] }
+bls12-381 = { package = "ark-bls12-381", version = "0.4.0", optional = true, default-features = false, features = ["curve"] }
+bn254 = { package = "ark-bn254", version = "0.4.0", optional = true, default-features = false, features = ["curve"] }
+bw6-761 = { package = "ark-bw6-761", version = "0.4.0", optional = true, default-features = false }
+cp6-782 = { package = "ark-cp6-782", version = "0.4.0", optional = true, default-features = false }
+curve25519 = { package = "ark-curve25519", version = "0.4.0", optional = true, default-features = false }
+ec = { package = "ark-ec", version = "0.4.0", optional = true, default-features = false }
 eclair = { path = "../../eclair", default-features = false }
-ed-on-bls12-377 = { package = "ark-ed-on-bls12-377", version = "0.3.0", optional = true, default-features = false, features = ["r1cs"] }
-ed-on-bls12-381 = { package = "ark-ed-on-bls12-381", version = "0.3.0", optional = true, default-features = false, features = ["r1cs"] }
-ed-on-bn254 = { package = "ark-ed-on-bn254", version = "0.3.0", optional = true, default-features = false, features = ["r1cs"] }
-ed-on-bw6-761 = { package = "ark-ed-on-bw6-761", version = "0.3.0", optional = true, default-features = false, features = ["r1cs"] }
-ed-on-cp6-782 = { package = "ark-ed-on-cp6-782", version = "0.3.0", optional = true, default-features = false, features = ["r1cs"] }
-ed-on-mnt4-298 = { package = "ark-ed-on-mnt4-298", version = "0.3.0", optional = true, default-features = false, features = ["r1cs"] }
-ed-on-mnt4-753 = { package = "ark-ed-on-mnt4-753", version = "0.3.0", optional = true, default-features = false, features = ["r1cs"] }
-ff = { package = "ark-ff", version = "0.3.0", optional = true, default-features = false }
+ed-on-bls12-377 = { package = "ark-ed-on-bls12-377", version = "0.4.0", optional = true, default-features = false }
+ed-on-bls12-381 = { package = "ark-ed-on-bls12-381", version = "0.4.0", optional = true, default-features = false }
+ed-on-bls12-381-bandersnatch = { package = "ark-ed-on-bls12-381-bandersnatch", version = "0.4.0", optional = true, default-features = false }
+ed-on-bn254 = { package = "ark-ed-on-bn254", version = "0.4.0", optional = true, default-features = false }
+ed-on-bw6-761 = { package = "ark-ed-on-bw6-761", version = "0.4.0", optional = true, default-features = false }
+ed-on-cp6-782 = { package = "ark-ed-on-cp6-782", version = "0.4.0", optional = true, default-features = false }
+ed-on-mnt4-298 = { package = "ark-ed-on-mnt4-298", version = "0.4.0", optional = true, default-features = false }
+ed-on-mnt4-753 = { package = "ark-ed-on-mnt4-753", version = "0.4.0", optional = true, default-features = false }
+ed25519 = { package = "ark-ed25519", version = "0.4.0", optional = true, default-features = false }
+ff = { package = "ark-ff", version = "0.4.0", optional = true, default-features = false }
 gm17 = { package = "ark-gm17", version = "0.3.0", optional = true, default-features = false }
-mnt4-298 = { package = "ark-mnt4-298", version = "0.3.0", optional = true, default-features = false }
-mnt4-753 = { package = "ark-mnt4-753", version = "0.3.0", optional = true, default-features = false }
-mnt6-298 = { package = "ark-mnt6-298", version = "0.3.0", optional = true, default-features = false }
-mnt6-753 = { package = "ark-mnt6-753", version = "0.3.0", optional = true, default-features = false }
+mnt4-298 = { package = "ark-mnt4-298", version = "0.4.0", optional = true, default-features = false }
+mnt4-753 = { package = "ark-mnt4-753", version = "0.4.0", optional = true, default-features = false }
+mnt6-298 = { package = "ark-mnt6-298", version = "0.4.0", optional = true, default-features = false }
+mnt6-753 = { package = "ark-mnt6-753", version = "0.4.0", optional = true, default-features = false }
 num-integer = { version = "0.1.45", optional = true, default-features = false } 
 openzl-crypto = { path = "../../openzl-crypto", default-features = false }
 openzl-util = { path = "../../openzl-util", default-features = false }
-pallas = { package = "ark-pallas", version = "0.3.0", optional = true, default-features = false }
-poly = { package = "ark-poly", version = "0.3.0", optional = true, default-features = false }
+pallas = { package = "ark-pallas", version = "0.4.0", optional = true, default-features = false }
+poly = { package = "ark-poly", version = "0.4.0", optional = true, default-features = false }
 poly-commit = { package = "ark-poly-commit", version = "0.3.0", optional = true, default-features = false }
-r1cs-std = { package = "ark-r1cs-std", version = "0.3.1", optional = true, default-features = false }
-relations = { package = "ark-relations", version = "0.3.0", optional = true, default-features = false }
-serialize = { package = "ark-serialize", version = "0.3.0", optional = true, default-features = false, features = ["derive"] }
-snark = { package = "ark-snark", version = "0.3.0", optional = true, default-features = false }
+r1cs-std = { package = "ark-r1cs-std", version = "0.4.0", optional = true, default-features = false }
+relations = { package = "ark-relations", version = "0.4.0", optional = true, default-features = false }
+secp256k1 = { package = "ark-secp256k1", version = "0.4.0", optional = true, default-features = false }
+secp256r1 = { package = "ark-secp256r1", version = "0.4.0", optional = true, default-features = false }
+secp384r1 = { package = "ark-secp384r1", version = "0.4.0", optional = true, default-features = false }
+secq256k1 = { package = "ark-secq256k1", version = "0.4.0", optional = true, default-features = false }
+serialize = { package = "ark-serialize", version = "0.4.0", optional = true, default-features = false, features = ["derive"] }
+snark = { package = "ark-snark", version = "0.4.0", optional = true, default-features = false }
 sponge = { package = "ark-sponge", version = "0.3.0", optional = true, default-features = false }
-vesta = { package = "ark-vesta", version = "0.3.0", optional = true, default-features = false }
+vesta = { package = "ark-vesta", version = "0.4.0", optional = true, default-features = false }
 
 [dev-dependencies]
 openzl-plugin-arkworks = { path = ".", default-features = false, features = ["bn254"] }

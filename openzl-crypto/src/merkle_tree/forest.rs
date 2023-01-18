@@ -528,7 +528,6 @@ where
     fn default() -> Self {
         Self::new(BoxArray::from_unchecked(
             (0..N)
-                .into_iter()
                 .map(move |_| Default::default())
                 .collect::<Vec<_>>()
                 .into_boxed_slice(),
@@ -548,7 +547,6 @@ where
     fn new(parameters: &Parameters<C>) -> Self {
         Self::new(BoxArray::from_unchecked(
             (0..N)
-                .into_iter()
                 .map(move |_| T::new(parameters))
                 .collect::<Vec<_>>()
                 .into_boxed_slice(),

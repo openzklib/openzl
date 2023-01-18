@@ -25,6 +25,9 @@ pub use bw6_761;
 #[cfg(feature = "cp6-782")]
 pub use cp6_782;
 
+#[cfg(feature = "curve25519")]
+pub use curve25519;
+
 #[cfg(feature = "ec")]
 pub use ec;
 
@@ -33,6 +36,9 @@ pub use ed_on_bls12_377;
 
 #[cfg(feature = "ed-on-bls12-381")]
 pub use ed_on_bls12_381;
+
+#[cfg(feature = "ed-on-bls12-381-bandersnatch")]
+pub use ed_on_bls12_381_bandersnatch;
 
 #[cfg(feature = "ed-on-bn254")]
 pub use ed_on_bn254;
@@ -48,6 +54,9 @@ pub use ed_on_mnt4_298;
 
 #[cfg(feature = "ed-on-mnt4-753")]
 pub use ed_on_mnt4_753;
+
+#[cfg(feature = "ed25519")]
+pub use ed25519;
 
 #[cfg(feature = "gm17")]
 pub use gm17;
@@ -78,6 +87,18 @@ pub use r1cs_std;
 
 #[cfg(feature = "relations")]
 pub use relations;
+
+#[cfg(feature = "secp256k1")]
+pub use secp256k1;
+
+#[cfg(feature = "secp256r1")]
+pub use secp256r1;
+
+#[cfg(feature = "secp384r1")]
+pub use secp384r1;
+
+#[cfg(feature = "secq256k1")]
+pub use secq256k1;
 
 #[cfg(feature = "snark")]
 pub use snark;

@@ -20,7 +20,7 @@ use eclair::{
         mode::{self, Public, Secret},
         Constant, Variable,
     },
-    bool::{Assert, ConditionalSelect, ConditionalSwap},
+    bool::{Assert, BitDecomposition, ConditionalSelect, ConditionalSwap},
     num::{AssertWithinBitRange, Zero},
     ops::Add,
     Has,
@@ -135,9 +135,8 @@ where
             BITS < F::Params::MODULUS_BITS as usize,
             "BITS must be strictly less than modulus bits of `F`."
         );
-        let value_bits = value
-            .to_bits_le()
-            .expect("Bit decomposition is not allowed to fail.");
+        let value_bits =
+            ToBitsGadget::to_bits_le(value).expect("Bit decomposition is not allowed to fail.");
         for bit in &value_bits[BITS..] {
             bit.enforce_equal(&Boolean::FALSE)
                 .expect("Enforcing equality is not allowed to fail.");
@@ -194,6 +193,17 @@ where
             .expect("This is given to us to mutate so it can't be borrowed by anyone else.");
         *target_cs = precomputed_cs;
         Ok(())
+    }
+}
+
+impl<F> BitDecomposition<1, R1CS<F>> for Boolean<F>
+where
+    F: PrimeField,
+{
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut R1CS<F>) -> [Boolean<F>; 1] {
+        let _ = compiler;
+        [self.clone()]
     }
 }
 
@@ -257,6 +267,22 @@ where
         let _ = compiler;
         self.is_eq(rhs)
             .expect("Equality checking is not allowed to fail.")
+    }
+}
+
+impl<F, const BITS: usize> BitDecomposition<BITS, R1CS<F>> for FpVar<F>
+where
+    F: PrimeField,
+{
+    #[inline]
+    fn to_bits_le(&self, compiler: &mut R1CS<F>) -> [Boolean<F>; BITS] {
+        let _ = compiler;
+        assert_eq!(
+            BITS,
+            F::Params::MODULUS_BITS as usize,
+            "BITS must be equal to MODULUS BITS"
+        );
+        ToBitsGadget::to_bits_le(self).expect("Bit decomposition is not allowed to fail.").try_into().expect("Obtaining an array of size BITS from a vector of length BITS is not allowed to fail.")
     }
 }
 
@@ -491,6 +517,7 @@ mod tests {
         bn254::Fr,
         constraint::fp::Fp,
         ff::BigInteger,
+        r1cs_std::R1CSVar,
         rand::{OsRng, Rand, RngCore},
     };
     use alloc::vec::Vec;
@@ -568,5 +595,42 @@ mod tests {
         test_assert_within_range::<_, Fr, 32, 32>(&mut rng);
         test_assert_within_range::<_, Fr, 64, 32>(&mut rng);
         test_assert_within_range::<_, Fr, 128, 32>(&mut rng);
+    }
+
+    /// Checks the bit decompositions of small [`FpVar`]s.
+    #[test]
+    fn check_bit_decomposition() {
+        for number in 1..6 {
+            let bit_decomposition_le = compare_bit_decomposition(number);
+            println!("Number: {number}\nDecomposition: {bit_decomposition_le:?}");
+        }
+        let mut rng = OsRng;
+        let random_number = rng.gen();
+        let bit_decomposition_le = compare_bit_decomposition(random_number);
+        println!("Number: {random_number}\nDecomposition: {bit_decomposition_le:?}");
+    }
+
+    /// Computes the little endian and big endian bit decompositions of the [`FpVar`] representation
+    /// of `n` and checks they are each other's reverse. Returns the little endian decomposition.
+    #[inline]
+    fn compare_bit_decomposition(n: u64) -> Vec<u8> {
+        let mut cs = R1CS::<Fr>::for_proofs();
+        let number = Fp(n.into());
+        let numbervar = number.as_known::<Public, FpVar<Fr>>(&mut cs);
+        let bit_decomposition_le = BitDecomposition::<254, _>::to_bits_le(&numbervar, &mut cs)
+            .into_iter()
+            .map(|x| x.value().unwrap().into())
+            .collect::<Vec<u8>>();
+        let bit_decomposition_be_reversed =
+            BitDecomposition::<254, _>::to_bits_be(&numbervar, &mut cs)
+                .into_iter()
+                .map(|x| x.value().unwrap().into())
+                .rev()
+                .collect::<Vec<u8>>();
+        assert_eq!(
+            bit_decomposition_le, bit_decomposition_be_reversed,
+            "Little-endian and big-endian representations of number are not each other's reverse."
+        );
+        bit_decomposition_le
     }
 }

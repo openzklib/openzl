@@ -24,8 +24,9 @@ maintenance = { status = "actively-developed" }
 
 [features]
 # Allocation
-alloc = ["openzl-util/alloc"]
+alloc = ["openzl-crypto/alloc", "openzl-util/alloc"]
 
 [dependencies]
+openzl-crypto = { path = "../openzl-crypto", default-features = false }
 openzl-derive = { path = "../openzl-derive", default-features = false }
 openzl-util = { path = "../openzl-util", default-features = false }

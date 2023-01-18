@@ -359,6 +359,17 @@ where
     }
 }
 
+#[component]
+impl<K, E> Hybrid<K, E> {
+    type Header = E::Header where E: HeaderType;
+    type Ciphertext = Ciphertext<K, E> where K: EphemeralPublicKeyType, E: CiphertextType;
+    type EncryptionKey = EncryptionKey<K> where K: PublicKeyType;
+    type DecryptionKey = DecryptionKey<K> where K: SecretKeyType;
+    type Plaintext = E::Plaintext where E: PlaintextType;
+    type Randomness = Randomness<K, E> where K: EphemeralSecretKeyType, E: RandomnessType;
+    type DecryptedPlaintext = E::DecryptedPlaintext where E: DecryptedPlaintextType;
+}
+
 impl<K, E> HeaderType for Hybrid<K, E>
 where
     E: HeaderType,

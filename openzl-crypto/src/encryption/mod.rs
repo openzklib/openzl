@@ -142,15 +142,8 @@ where
 /// Encryption Types
 ///
 /// This `trait` encapsulates all the types required for [`Encrypt::encrypt`].
-pub trait EncryptionTypes:
-    CiphertextType + EncryptionKeyType + HeaderType + PlaintextType + RandomnessType
-{
-}
-
-impl<T> EncryptionTypes for T where
-    T: CiphertextType + EncryptionKeyType + HeaderType + PlaintextType + RandomnessType
-{
-}
+#[component]
+pub type Encryption: Ciphertext + EncryptionKey + Header + Plaintext + Randomness;
 
 /// Encryption
 pub trait Encrypt<COM = ()>: EncryptionTypes {
@@ -203,15 +196,8 @@ where
 /// Decryption Types
 ///
 /// This `trait` encapsulates all the types required for [`Decrypt::decrypt`].
-pub trait DecryptionTypes:
-    CiphertextType + DecryptedPlaintextType + DecryptionKeyType + HeaderType
-{
-}
-
-impl<T> DecryptionTypes for T where
-    T: CiphertextType + DecryptedPlaintextType + DecryptionKeyType + HeaderType
-{
-}
+#[component]
+pub type Decryption: Ciphertext + DecryptedPlaintext + DecryptionKey + Header;
 
 /// Decryption
 pub trait Decrypt<COM = ()>: DecryptionTypes {

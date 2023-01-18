@@ -111,7 +111,7 @@ std = [
 
 [dependencies]
 ark-groth16 = { version = "0.3.0", optional = true, default-features = false }
-ark-std = { version = "0.3.0", optional = true, default-features = false }
+ark-std = { version = "0.4.0", optional = true, default-features = false }
 bls12-377 = { package = "ark-bls12-377", version = "0.3.0", optional = true, default-features = false, features = ["curve"] }
 bls12-381 = { package = "ark-bls12-381", version = "0.3.0", optional = true, default-features = false, features = ["curve"] }
 bn254 = { package = "ark-bn254", version = "0.3.0", optional = true, default-features = false, features = ["curve"] }

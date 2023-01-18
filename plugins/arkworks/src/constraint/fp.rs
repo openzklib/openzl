@@ -5,8 +5,9 @@ use alloc::vec::Vec;
 use core::iter;
 use eclair::{
     self,
-    bool::{Bool, ConditionalSelect},
+    bool::{BitDecomposition, Bool, ConditionalSelect},
 };
+use ff::BigInteger;
 use openzl_crypto::{
     algebra::{Group, Ring},
     constraint::{Input, ProofSystem},
@@ -126,6 +127,23 @@ where
     #[inline]
     fn eq(&self, rhs: &Self, _: &mut ()) -> bool {
         PartialEq::eq(self, rhs)
+    }
+}
+
+impl<F, const BITS: usize> BitDecomposition<BITS> for Fp<F>
+where
+    F: PrimeField,
+{
+    #[inline]
+    fn to_bits_le(&self, _: &mut ()) -> [Bool<()>; BITS] {
+        assert_eq!(
+            BITS,
+            F::Params::MODULUS_BITS as usize,
+            "BITS must be equal to MODULUS BITS"
+        );
+        self.0.into_repr().to_bits_le().try_into().expect(
+            "Obtaining an array of size BITS from a vector of length BITS is not allowed to fail.",
+        )
     }
 }
 

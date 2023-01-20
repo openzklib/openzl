@@ -14,4 +14,7 @@ pub mod field;
 pub mod poseidon;
 
 #[doc(inline)]
+pub use num_bigint;
+
+#[doc(inline)]
 pub use starky;

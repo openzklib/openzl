@@ -82,7 +82,7 @@ where
     }
 
     #[inline]
-    fn from_u64(elem: u64) -> Self {
+    fn from_u32(elem: u32) -> Self {
         Self(F::from(elem))
     }
 }
@@ -212,7 +212,7 @@ where
     }
 
     #[inline]
-    fn from_parameter(point: Self::ParameterField) -> Self::Field {
+    fn from_parameter(point: Self::ParameterField, _: &mut ()) -> Self::Field {
         point
     }
 }
@@ -263,7 +263,7 @@ where
     }
 
     #[inline]
-    fn from_parameter(point: Self::ParameterField) -> Self::Field {
+    fn from_parameter(point: Self::ParameterField, _: &mut Compiler<Self>) -> Self::Field {
         FpVar::Constant(point.0)
     }
 }

@@ -311,7 +311,7 @@ pub mod bls12_381 {
     impl FieldGeneration for BlsScalar {
         const MODULUS_BITS: usize = 255;
 
-        fn from_u64(elem: u64) -> Self {
+        fn from_u32(elem: u32) -> Self {
             Self(Fr::from(elem))
         }
 

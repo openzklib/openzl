@@ -28,18 +28,20 @@ ecdsa = ["plonky2_ecdsa"]
 
 # Standard Library
 std = [
-    "anyhow/std",
-    "openzl-crypto/std",
-    "openzl-util/std",
-    "plonky2/std",
-    "starky/std",
+    "anyhow/std", 
+    "num-bigint/std",
+    "openzl-crypto/std", 
+    "openzl-util/std", 
+    "plonky2/std", 
+    "starky/std"
 ]
 
 [dependencies]
 anyhow = { version = "1.0.66", default-features = false }
 eclair = { path = "../../eclair", default-features = false }
+num-bigint = { version = "0.4.3", default-features = false }
 openzl-crypto = { path = "../../openzl-crypto", default-features = false }
 openzl-util = { path = "../../openzl-util", default-features = false }
-plonky2 = { git = "https://github.com/openzklib/plonky2", branch = "feat/circuit-data-serde", default-features = false }
-plonky2_ecdsa = { git = "https://github.com/openzklib/plonky2", branch = "feat/circuit-data-serde", optional = true, default-features = false }
-starky = { git = "https://github.com/openzklib/plonky2", branch = "feat/circuit-data-serde", default-features = false }
+plonky2 = { git = "https://github.com/openzklib/plonky2", default-features = false }
+plonky2_ecdsa = { git = "https://github.com/openzklib/plonky2", optional = true, default-features = false }
+starky = { git = "https://github.com/openzklib/plonky2", default-features = false }

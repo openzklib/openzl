@@ -66,8 +66,8 @@ pub trait FieldGeneration {
     /// Number of bits of modulus of the field.
     const MODULUS_BITS: usize;
 
-    /// Converts a `u64` value to a field element.
-    fn from_u64(elem: u64) -> Self;
+    /// Converts a `u32` value to a field element.
+    fn from_u32(elem: u32) -> Self;
 
     /// Converts from `bits` into a field element in big endian order, returning `None` if `bits`
     /// are out of range.
@@ -150,7 +150,7 @@ pub trait Field<COM = ()>: ParameterFieldType {
     fn add_const_assign(lhs: &mut Self::Field, rhs: &Self::ParameterField, compiler: &mut COM);
 
     /// Converts a constant parameter `point` for permutation state.
-    fn from_parameter(point: Self::ParameterField) -> Self::Field;
+    fn from_parameter(point: Self::ParameterField, compiler: &mut COM) -> Self::Field;
 }
 
 /// Poseidon Permutation Specification

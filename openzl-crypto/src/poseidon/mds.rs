@@ -85,13 +85,13 @@ where
     where
         F: FieldGeneration,
     {
-        let ys: Vec<F> = (t as u64..2 * t as u64).map(F::from_u64).collect(); // Change u64 to integer mod order(F)
+        let ys: Vec<F> = (t as u32..2 * t as u32).map(F::from_u32).collect(); // TODO: Change u64 to integer mod order(F)
         SquareMatrix::new_unchecked(Matrix::new_unchecked(
-            (0..t as u64)
+            (0..t as u32)
                 .map(|x| {
                     ys.iter()
                         .map(|y| {
-                            F::add(&F::from_u64(x), y)
+                            F::add(&F::from_u32(x), y)
                                 .inverse()
                                 .expect("`x+y` is invertible.")
                         })

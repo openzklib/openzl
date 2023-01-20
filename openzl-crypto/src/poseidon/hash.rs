@@ -86,8 +86,8 @@ where
 
     /// Builds a new [`Hasher`] over `permutation` using `T` to generate the domain tag.
     #[inline]
-    pub fn from_permutation(permutation: Permutation<S, COM>) -> Self {
-        Self::new(permutation, S::from_parameter(T::domain_tag()))
+    pub fn from_permutation(permutation: Permutation<S, COM>, compiler: &mut COM) -> Self {
+        Self::new(permutation, S::from_parameter(T::domain_tag(), compiler))
     }
 
     /// Computes the hash over `input` in the given `compiler` and returns the untruncated state.
@@ -116,7 +116,7 @@ where
 
     #[inline]
     fn new_constant(this: &Self::Type, compiler: &mut COM) -> Self {
-        Self::from_permutation(this.permutation.as_constant(compiler))
+        Self::from_permutation(this.permutation.as_constant(compiler), compiler)
     }
 }
 
@@ -173,10 +173,10 @@ where
     }
 }
 
-impl<D, S, T, const ARITY: usize, COM> Sample<D> for Hasher<S, T, ARITY, COM>
+impl<D, S, T, const ARITY: usize> Sample<D> for Hasher<S, T, ARITY>
 where
-    S: Specification<COM>,
-    Permutation<S, COM>: Sample<D>,
+    S: Specification,
+    Permutation<S>: Sample<D>,
     S::ParameterField: NativeField + FieldGeneration,
     T: DomainTag<S>,
 {
@@ -185,6 +185,6 @@ where
     where
         R: RngCore + ?Sized,
     {
-        Self::from_permutation(rng.sample(distribution))
+        Self::from_permutation(rng.sample(distribution), &mut ())
     }
 }

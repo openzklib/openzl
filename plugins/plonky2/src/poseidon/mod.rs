@@ -1,4 +1,4 @@
-//! Poseidon Arkworks Backend
+//! Poseidon Plonky2 Backend
 
 use crate::{
     base::{field::goldilocks_field::GoldilocksField, util::bits_u64},
@@ -10,6 +10,7 @@ use eclair::{
     alloc::Constant,
     ops::{Add, Mul, Sub},
 };
+use num_bigint::BigUint;
 use openzl_crypto::poseidon::{
     self, encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
     ParameterFieldType, SBoxExponent,
@@ -79,14 +80,26 @@ where
 
     #[inline]
     fn try_from_bits_be(bits: &[bool]) -> Option<Self> {
-        //F::from_repr(F::BigInt::from_bits_be(bits)).map(Self)
-        todo!()
+        let mut bytes = Vec::new();
+        let mut acc: u8 = 0;
+        let mut bits = bits.to_vec();
+        bits.reverse();
+        for bits8 in bits.chunks(8) {
+            for bit in bits8.iter().rev() {
+                acc <<= 1;
+                acc += *bit as u8;
+            }
+            bytes.push(acc);
+            acc = 0;
+        }
+        Some(Self(F::from_noncanonical_biguint(BigUint::from_bytes_be(
+            &bytes,
+        ))))
     }
 
     #[inline]
-    fn from_u64(elem: u64) -> Self {
-        //Self(F::from_canonical_u32(elem as u32))
-        todo!() // Change this function
+    fn from_u32(elem: u32) -> Self {
+        Self(F::from_canonical_u32(elem))
     }
 }
 
@@ -136,11 +149,11 @@ impl<COM> Constant<COM> for TwoPowerMinusOneDomainTag {
 impl<S> DomainTag<S> for TwoPowerMinusOneDomainTag
 where
     S: Specification + ParameterFieldType<ParameterField = Fp<S::Field>>,
+    S::Field: From<u32>,
 {
     #[inline]
     fn domain_tag() -> Fp<<S as Specification>::Field> {
-        //Fp(S::Field::from(((1 << (S::WIDTH - 1)) - 1) as u128))
-        todo!()
+        Fp(S::Field::from(((1 << (S::WIDTH - 1)) - 1) as u32))
     }
 }
 
@@ -216,7 +229,7 @@ where
     }
 
     #[inline]
-    fn from_parameter(point: Self::ParameterField) -> Self::Field {
+    fn from_parameter(point: Self::ParameterField, _: &mut ()) -> Self::Field {
         point
     }
 }
@@ -272,9 +285,11 @@ where
     }
 
     #[inline]
-    fn from_parameter(point: Self::ParameterField) -> Self::Field {
-        //Field::new_constant(&point.0, compiler)
-        todo!() // How?
+    fn from_parameter(
+        point: Self::ParameterField,
+        compiler: &mut Compiler<Self, D>,
+    ) -> Self::Field {
+        Field::new_constant(&point.0, compiler)
     }
 }
 
@@ -317,26 +332,14 @@ impl<const D: usize, const ARITY: usize> poseidon::SBoxExponent
     const SBOX_EXPONENT: u64 = 7;
 }
 
-// impl poseidon::Constants for Spec<bn254::Fr, 2> {
-//     const WIDTH: usize = 3;
-//     const FULL_ROUNDS: usize = 8;
-//     const PARTIAL_ROUNDS: usize = 55;
-// }
+impl<const D: usize> poseidon::Constants for Spec<GoldilocksField, D, 7> {
+    const WIDTH: usize = 8;
+    const FULL_ROUNDS: usize = 8;
+    const PARTIAL_ROUNDS: usize = 22;
+}
 
-// impl poseidon::Constants for Spec<bn254::Fr, 3> {
-//     const WIDTH: usize = 4;
-//     const FULL_ROUNDS: usize = 8;
-//     const PARTIAL_ROUNDS: usize = 55;
-// }
-
-// impl poseidon::Constants for Spec<bn254::Fr, 4> {
-//     const WIDTH: usize = 5;
-//     const FULL_ROUNDS: usize = 8;
-//     const PARTIAL_ROUNDS: usize = 56;
-// }
-
-// impl poseidon::Constants for Spec<bn254::Fr, 5> {
-//     const WIDTH: usize = 6;
-//     const FULL_ROUNDS: usize = 8;
-//     const PARTIAL_ROUNDS: usize = 56;
-// }
+impl<const D: usize> poseidon::Constants for Spec<GoldilocksField, D, 11> {
+    const WIDTH: usize = 12;
+    const FULL_ROUNDS: usize = 8;
+    const PARTIAL_ROUNDS: usize = 22;
+}

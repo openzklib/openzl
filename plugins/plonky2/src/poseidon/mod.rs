@@ -5,6 +5,7 @@ use crate::{
     compiler::Compiler as PlonkCompiler,
     field::{Extendable, Field, Fp, RichField},
 };
+use alloc::vec::Vec;
 use core::marker::PhantomData;
 use eclair::{
     alloc::Constant,

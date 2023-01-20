@@ -1,2 +1,2 @@
 [workspace]
-members = ["eclair", "openzl", "openzl-*", "plugins/*"]
+members = ["eclair", "examples/*", "openzl", "openzl-*", "plugins/*"]

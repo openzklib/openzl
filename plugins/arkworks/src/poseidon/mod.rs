@@ -9,8 +9,9 @@ use core::marker::PhantomData;
 use eclair::alloc::Constant;
 use openzl_crypto::poseidon::{
     self, encryption::BlockElement, hash::DomainTag, Constants, FieldGeneration, NativeField,
-    ParameterFieldType,
+    ParameterFieldType, SBoxExponent,
 };
+use openzl_util::derivative;
 
 #[cfg(test)]
 pub mod test;
@@ -19,12 +20,9 @@ pub mod test;
 type Compiler<S> = R1CS<<S as Specification>::Field>;
 
 /// Poseidon Permutation Specification.
-pub trait Specification: Constants {
+pub trait Specification: Constants + SBoxExponent {
     /// Field Type
     type Field: PrimeField;
-
-    /// S-BOX Exponenet
-    const SBOX_EXPONENT: u64;
 }
 
 impl<F> NativeField for Fp<F>
@@ -84,7 +82,7 @@ where
     }
 
     #[inline]
-    fn from_u64(elem: u64) -> Self {
+    fn from_u32(elem: u32) -> Self {
         Self(F::from(elem))
     }
 }
@@ -143,19 +141,16 @@ where
 }
 
 /// Poseidon Specification Configuration
-#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Spec<F, const ARITY: usize>(PhantomData<F>)
-where
-    F: PrimeField;
+#[derive(derivative::Derivative)]
+#[derivative(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct Spec<F, const ARITY: usize>(PhantomData<F>);
 
 impl<F, const ARITY: usize> Specification for Spec<F, ARITY>
 where
     F: PrimeField,
-    Self: poseidon::Constants,
+    Self: poseidon::Constants + SBoxExponent,
 {
     type Field = F;
-
-    const SBOX_EXPONENT: u64 = 5;
 }
 
 impl<F, const ARITY: usize, COM> Constant<COM> for Spec<F, ARITY>
@@ -217,7 +212,7 @@ where
     }
 
     #[inline]
-    fn from_parameter(point: Self::ParameterField) -> Self::Field {
+    fn from_parameter(point: Self::ParameterField, _: &mut ()) -> Self::Field {
         point
     }
 }
@@ -268,7 +263,7 @@ where
     }
 
     #[inline]
-    fn from_parameter(point: Self::ParameterField) -> Self::Field {
+    fn from_parameter(point: Self::ParameterField, _: &mut Compiler<Self>) -> Self::Field {
         FpVar::Constant(point.0)
     }
 }
@@ -295,6 +290,10 @@ where
             .pow_by_constant([Self::SBOX_EXPONENT])
             .expect("Exponentiation is not allowed to fail.");
     }
+}
+
+impl<const ARITY: usize> SBoxExponent for Spec<bn254::Fr, ARITY> {
+    const SBOX_EXPONENT: u64 = 5;
 }
 
 impl poseidon::Constants for Spec<bn254::Fr, 2> {

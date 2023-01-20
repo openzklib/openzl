@@ -66,8 +66,8 @@ pub trait FieldGeneration {
     /// Number of bits of modulus of the field.
     const MODULUS_BITS: usize;
 
-    /// Converts a `u64` value to a field element.
-    fn from_u64(elem: u64) -> Self;
+    /// Converts a `u32` value to a field element.
+    fn from_u32(elem: u32) -> Self;
 
     /// Converts from `bits` into a field element in big endian order, returning `None` if `bits`
     /// are out of range.
@@ -112,6 +112,16 @@ pub trait Constants {
     const ADDITIVE_ROUND_KEYS_COUNT: usize = Self::ROUNDS * Self::WIDTH;
 }
 
+/// Poseidon S-Box Exponent
+///
+/// For Poseidon implementations that use an `x^n` s-box with `n > 0`, this helper `trait` can be
+/// used to mark the exponent `n` for convenience. For `n = -1` the s-box "power" needs to be
+/// specified in the [`Specification::apply_sbox`] method.
+pub trait SBoxExponent {
+    /// S-Box Exponent Value
+    const SBOX_EXPONENT: u64;
+}
+
 /// Parameter Field Type
 #[component]
 pub type ParameterField;
@@ -140,7 +150,7 @@ pub trait Field<COM = ()>: ParameterFieldType {
     fn add_const_assign(lhs: &mut Self::Field, rhs: &Self::ParameterField, compiler: &mut COM);
 
     /// Converts a constant parameter `point` for permutation state.
-    fn from_parameter(point: Self::ParameterField) -> Self::Field;
+    fn from_parameter(point: Self::ParameterField, compiler: &mut COM) -> Self::Field;
 }
 
 /// Poseidon Permutation Specification

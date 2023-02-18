@@ -1,0 +1,37 @@
+[package]
+name = "openzl-plugin-halo2"
+version = "0.0.0"
+edition = "2021"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/openzklib/openzl"
+homepage = "https://openzl.org"
+documentation = "https://docs.rs/openzl-plugin-halo2"
+categories = [""]
+keywords = [""]
+description = "Open ZL Halo2 Plugin"
+
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg doc_cfg" cargo +nightly doc --all-features --open
+all-features = true
+rustdoc-args = ["--cfg", "doc_cfg"]
+
+[badges]
+is-it-maintained-issue-resolution = { repository = "openzklib/openzl" }
+is-it-maintained-open-issues = { repository = "openzklib/openzl" }
+maintenance = { status = "actively-developed" }
+
+[features]
+# Standard Library
+std = [
+    "openzl-crypto/std",
+    "openzl-util/std",
+]
+
+[dependencies]
+eclair = { path = "../../eclair", default-features = false }
+halo2_gadgets = { git = "https://github.com/openzklib/halo2", default-features = false }
+halo2_proofs = { git = "https://github.com/openzklib/halo2", default-features = false }
+openzl-crypto = { path = "../../openzl-crypto", default-features = false }
+openzl-util = { path = "../../openzl-util", default-features = false }

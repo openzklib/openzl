@@ -5,8 +5,12 @@
 #![forbid(rustdoc::broken_intra_doc_links)]
 #![forbid(missing_docs)]
 
+extern crate alloc;
+
 #[doc(inline)]
 pub use halo2_gadgets as gadgets;
 
 #[doc(inline)]
 pub use halo2_proofs as proofs;
+
+pub mod compiler;
